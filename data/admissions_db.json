@@ -1,0 +1,223 @@
+{
+  "version": 2,
+  "users": [
+    {
+      "id": "FAC-2026-001",
+      "email": "dean.admissions@muthamizh.ac.in",
+      "fullName": "Dr. Meenakshi Sundaram",
+      "phone": "+91 98401 83192",
+      "passwordHash": "2edc56a0f61aa16bd4ba67cde71ff6472aac68b9a1d7056e334675d684b97c39065b228cd3874101ebda475a49c2d2f6caed817e2b6101c22862a486c856782c",
+      "salt": "d051eb779436e89007f6ec274866bfa6",
+      "role": "faculty",
+      "facultyDesignation": "Dean of Academic Admissions & Executive Producer",
+      "facultyDepartment": "Academic Council & Jaya TV Studio Operations",
+      "isEmailVerified": true,
+      "registeredAt": "2026-08-28T08:18:01.485Z",
+      "lastLoginAt": "2026-09-18T04:18:01.485Z",
+      "admissionStatus": "Admission Confirmed",
+      "updatesSubscribed": true
+    },
+    {
+      "id": "FAC-2026-002",
+      "email": "faculty.cinematography@muthamizh.ac.in",
+      "fullName": "Prof. R. Ramanathan",
+      "phone": "+91 98402 11223",
+      "passwordHash": "9d9a567d8fccadbe03555955c53290817aff9a8743b6e7e9f5e7e816e9bf32ff9061a755e95921fed3c1976886acb11deceb8e930b00801ee810f0929f1428ff",
+      "salt": "19bd8ec958edc505c4e9821e323fca34",
+      "role": "faculty",
+      "facultyDesignation": "HOD Broadcast Cinematography & Senior DoP",
+      "facultyDepartment": "Department of Visual Media & Camera Operations",
+      "isEmailVerified": true,
+      "registeredAt": "2026-09-01T12:18:01.557Z",
+      "lastLoginAt": "2026-09-18T04:18:01.557Z",
+      "admissionStatus": "Admission Confirmed",
+      "updatesSubscribed": true
+    },
+    {
+      "id": "FAC-2026-003",
+      "email": "faculty.ai@muthamizh.ac.in",
+      "fullName": "Prof. Anand Natarajan",
+      "phone": "+91 98403 33445",
+      "passwordHash": "ae4d9089336bf5d024f2c7749d2da9fd2de6695e357b519fe9c7cbf58896c4ca1b646dc29b9c5042ab9363a92b16cec5b668034b11d0d6c10dc9c135433b1d5e",
+      "salt": "3c447a9989f021da06a834b4ecf8fb4d",
+      "role": "faculty",
+      "facultyDesignation": "Lead Faculty AI Engineering & Virtual Labs",
+      "facultyDepartment": "School of Computing & Broadcast Automation",
+      "isEmailVerified": true,
+      "registeredAt": "2026-09-05T16:18:01.606Z",
+      "lastLoginAt": "2026-09-18T04:18:01.606Z",
+      "admissionStatus": "Admission Confirmed",
+      "updatesSubscribed": true
+    }
+  ],
+  "registrations": [],
+  "sessions": [],
+  "auditLogs": [
+    {
+      "id": "AUD-1789893621823-37011d",
+      "action": "SIGNUP_OTP_DISPATCHED",
+      "performedBy": "development.mavissatcom@gmail.com",
+      "timestamp": "2026-09-20T08:40:21.824Z",
+      "details": "Sign-up OTP dispatched for role student",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "AUD-1789893153943-caa2ce",
+      "action": "SIGNUP_OTP_DISPATCHED",
+      "performedBy": "gashok7094@gmail.com",
+      "timestamp": "2026-09-20T08:32:33.943Z",
+      "details": "Sign-up OTP dispatched for role student",
+      "ipAddress": "49.205.76.94"
+    },
+    {
+      "id": "AUD-1789892645412-cd3d35",
+      "action": "SIGNUP_OTP_DISPATCHED",
+      "performedBy": "raman.faculty@muthamizh.ac.in",
+      "timestamp": "2026-09-20T08:24:05.412Z",
+      "details": "Sign-up OTP dispatched for role faculty",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "AUD-1789892631215-f543d1",
+      "action": "SIGNUP_OTP_DISPATCHED",
+      "performedBy": "testcandidate@example.com",
+      "timestamp": "2026-09-20T08:23:51.216Z",
+      "details": "Sign-up OTP dispatched for role student",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "AUD-1789705088106-c3d760",
+      "action": "OTP_DISPATCHED",
+      "performedBy": "admissions.test@example.com",
+      "timestamp": "2026-09-18T04:18:08.106Z",
+      "details": "Verification OTP dispatched for student",
+      "ipAddress": "127.0.0.1"
+    }
+  ],
+  "circulars": [
+    {
+      "id": "CIRC-2026-04",
+      "title": "Admissions 2026 Studio Assessment & Entrance Schedules Announced",
+      "category": "Admissions",
+      "date": "March 2026",
+      "summary": "Screening interviews and vision mixing assessment slots for the 2026 cohort are now open for all verified applicants.",
+      "urgent": true,
+      "publishedBy": "Dr. Meenakshi Sundaram (Dean Admissions)"
+    },
+    {
+      "id": "CIRC-2026-03",
+      "title": "100% Online Virtual Labs Infrastructure Upgrade",
+      "category": "Curriculum & Labs",
+      "date": "February 2026",
+      "summary": "Cisco Packet Tracer virtual enterprise topologies and cloud GPU workstations for AI Software Engineering students deployed.",
+      "urgent": false,
+      "publishedBy": "Prof. Anand Natarajan (Lead Faculty AI)"
+    },
+    {
+      "id": "CIRC-2026-02",
+      "title": "Jaya TV Network Newsroom & MCR Studio Immersion Dates",
+      "category": "Studio Broadcast",
+      "date": "February 2026",
+      "summary": "Hands-on floor training for Broadcast Cinematography and PCR Direction commences at Chennai satellite uplink facility.",
+      "urgent": false,
+      "publishedBy": "Prof. R. Ramanathan (HOD Cinematography)"
+    },
+    {
+      "id": "CIRC-2026-01",
+      "title": "Mavis Satcom Limited 2026 Media Fellowship & Placement Drives",
+      "category": "Placement & Network",
+      "date": "January 2026",
+      "summary": "Top 20 percentile graduates eligible for direct induction into Jaya TV Network broadcast and digital operations.",
+      "urgent": false,
+      "publishedBy": "Academic Council"
+    }
+  ],
+  "facultyInvitations": [],
+  "otpChallenges": {
+    "admissions.test@example.com": {
+      "email": "admissions.test@example.com",
+      "otpHash": "4197575aaa881c1848c62b14c05260431bd6468767971582952935ced46d383d",
+      "purpose": "verification",
+      "expiresAt": 1789705685296,
+      "attempts": 1,
+      "maxAttempts": 5,
+      "createdAt": 1789705085296,
+      "fullName": "Test Candidate",
+      "role": "student"
+    },
+    "testcandidate@example.com": {
+      "email": "testcandidate@example.com",
+      "otpHash": "9f5c88341d589aae704865389784d4e96a66d6c38317c51ea8605dbf54644ab1",
+      "purpose": "signup",
+      "expiresAt": 1789893228495,
+      "attempts": 0,
+      "maxAttempts": 5,
+      "createdAt": 1789892628495,
+      "signupData": {
+        "fullName": "Test Candidate",
+        "phone": "9876543210",
+        "passwordHash": "a77e4ec38692e4ae938e449153971131297ae774d2c711e42660b8a3d19abb73e4e6d3f4e792fe203bd2bd0ea2edff2e9fe1506ee1ed2f8158c858f25e7bfd96",
+        "salt": "1c623031d223c66759ccc1b183305fd4",
+        "role": "student",
+        "programInterest": "AI-Assisted Software Development",
+        "updatesSubscribed": true
+      }
+    },
+    "raman.faculty@muthamizh.ac.in": {
+      "email": "raman.faculty@muthamizh.ac.in",
+      "otpHash": "fa76e86103b941877b66fc966fba5e302ea9185b1103214a176610ef4acfcccb",
+      "purpose": "signup",
+      "expiresAt": 1789893243455,
+      "attempts": 0,
+      "maxAttempts": 5,
+      "createdAt": 1789892643456,
+      "signupData": {
+        "fullName": "Dr K Raman",
+        "phone": "9876543211",
+        "passwordHash": "3132f1f12df6c216345b0decee24bc1fdbf7f06d5c0067c4ba00a7660ae3c4cbff353046b3ec6ab8117eb5356f7622b66c3ac41ce025c0786709228df0d92d2e",
+        "salt": "3697f1b3b609a9d8bd88e2384b77a2c3",
+        "role": "faculty",
+        "facultyDepartment": "School of Computing & AI Engineering",
+        "facultyDesignation": "Professor & Dean",
+        "programInterest": "AI-Assisted Software Development & Agentic Engineering",
+        "updatesSubscribed": true
+      }
+    },
+    "gashok7094@gmail.com": {
+      "email": "gashok7094@gmail.com",
+      "otpHash": "0b6488895c4b5dc2b20e3abf0c444d479dca3b767951f28230bd3bb6aa9cc8bf",
+      "purpose": "signup",
+      "expiresAt": 1789893751025,
+      "attempts": 0,
+      "maxAttempts": 5,
+      "createdAt": 1789893151025,
+      "signupData": {
+        "fullName": "Ashok",
+        "phone": "7092348721",
+        "passwordHash": "d1fd0e6648285a3b00b6335de3779826a203f17ddbdaf97d946bd0aee191f1fc335af847b29abcd95426c7684e6ddfcd37355d6291aaf64576e39104dd2f6cad",
+        "salt": "591a0f19d89ee7fae7de144c093f9d33",
+        "role": "student",
+        "programInterest": "AI-Assisted Software Development & Agentic Engineering",
+        "updatesSubscribed": true
+      }
+    },
+    "development.mavissatcom@gmail.com": {
+      "email": "development.mavissatcom@gmail.com",
+      "otpHash": "95008319e62c66de1a98cab7da393013ace560e8c30d494f1eb821e162360e39",
+      "purpose": "signup",
+      "expiresAt": 1789894218480,
+      "attempts": 0,
+      "maxAttempts": 5,
+      "createdAt": 1789893618480,
+      "signupData": {
+        "fullName": "Admissions Test Candidate",
+        "phone": "9876543210",
+        "passwordHash": "dceced9fd77f94d256891fa277cdbe761f688164e215bcbe4bdc8e029025124bf5b2db1eff6d76478ebe63fca8d7e6bcd60f4039e6334eddef3eb90ac53ea9a6",
+        "salt": "9f66281bb2702422a968398f5fdc5dbe",
+        "role": "student",
+        "programInterest": "AI-Assisted Software Development & Agentic Engineering",
+        "updatesSubscribed": true
+      }
+    }
+  }
+}

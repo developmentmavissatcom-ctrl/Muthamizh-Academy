@@ -1,0 +1,6 @@
+{
+  "name": "Muthamizh Academy",
+  "description": "Muthamizh Academy - Partner Institute of Jaya TV Network / Mavis Satcom Limited. Premier media institute for Filmmaking, Broadcast Journalism, and Digital Media.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

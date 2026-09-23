@@ -1,0 +1,198 @@
+================================================================================
+           MUTHAMIZH ACADEMY — FULL TECHNICAL REPORT & CODEBASE ARCHITECTURE
+      (Partner Institute of Mavis Satcom Limited & Jaya TV Satellite Network)
+================================================================================
+
+1. SYSTEM OVERVIEW & ARCHITECTURE
+--------------------------------------------------------------------------------
+The Muthamizh Academy web application is an interactive full-stack portal built
+for high-performance admissions, curriculum discovery, and real-time AI student
+counseling.
+
+Technology Stack:
+• Frontend: React 18, TypeScript, Tailwind CSS, Lucide React Icons, Motion
+• Backend: Node.js, Express.js (Port 3000, 0.0.0.0 host binding)
+• AI Integration: Google GenAI SDK (@google/genai) using Gemini 3.6 Flash
+• Multimedia: Custom HTML5 scroll-scrubbed video canvas + parallax transform
+
+High-Level Architecture Diagram:
++------------------------------------------------------------------------------+
+|                             CLIENT (Browser SPA)                             |
+|                                                                              |
+|  React 18 + TypeScript + Vite + Tailwind CSS                                 |
+|  ├── Dynamic Scroll-Synced Parallax Video Engine (/public/BG.mp4)            |
+|  ├── Tabbed Navigation & Glassmorphism Surfaces                              |
+|  ├── Interactive Course Catalog & Syllabus Modals                            |
+|  ├── Astra AI Admission Counselor (Speech Recognition + Text-to-Speech)      |
+|  └── Multi-Step Application Modal & Admin Lead Management Dashboard          |
++--------------------------------------┬---------------------------------------+
+                                       │ HTTP REST API JSON
+                                       ▼
++------------------------------------------------------------------------------+
+|                      BACKEND SERVER (Node.js + Express)                      |
+|                                                                              |
+|  server.ts running on Port 3000 (0.0.0.0 host binding)                       |
+|  ├── GET  /api/health                (Heartbeat check)                       |
+|  ├── POST /api/chat                  (Gemini 3.6 Flash AI Counselor)         |
+|  ├── POST /api/register              (New Applicant Registration)            |
+|  ├── GET  /api/registrations         (Admin Applicant Data Retrieval)        |
+|  └── Vite Dev Middleware / Express Static Production Engine                  |
++------------------------------------------------------------------------------+
+
+
+================================================================================
+2. DIRECTORY & FILE STRUCTURE
+================================================================================
+/
+├── public/
+│   ├── BG.mp4                         # HD scroll-synced background video
+│   ├── intro.mp4                      # Cinematic website intro video
+│   ├── JAYA TV.png                    # Jaya TV Network brand emblem
+│   ├── ChatGPT Image Aug 5...png      # Muthamizh Academy official crest emblem
+│   ├── f1.jpg, f2.jpg, f3.jpg         # Faculty portraits (Dean & HODs)
+│   └── light.jpg                      # Studio lighting asset
+├── server.ts                          # Express server, REST endpoints & Gemini AI logic
+├── src/
+│   ├── App.tsx                        # Root application component & state router
+│   ├── main.tsx                       # React DOM entry point
+│   ├── index.css                      # Tailwind CSS root imports & custom scrollbar rules
+│   ├── types.ts                       # Shared TypeScript interfaces and data models
+│   ├── data/
+│   │   ├── coursesData.ts             # Program catalog, syllabus modules, tools, fees
+│   │   └── facultyData.ts             # Faculty profiles, network credits, alumni stories
+│   └── components/
+│       ├── ScrollVideoBackground.tsx  # Scroll-scrubbing & parallax video canvas
+│       ├── WebsiteIntroOverlay.tsx    # First-visit cinematic intro player
+│       ├── HeaderNav.tsx              # Co-branded navigation, tab switcher, live phone CTA
+│       ├── HeroSection.tsx            # Broadcast studio hero banner with key statistics
+│       ├── TrendingCourses.tsx        # Filterable program cards with 3D tilt & tool tags
+│       ├── CourseModal.tsx            # Comprehensive syllabus & curriculum dialog
+│       ├── AstraAICounselor.tsx       # AI Counselor with speech synthesis & voice input
+│       ├── ApplicationFormModal.tsx   # Direct admission registration modal
+│       ├── AdminRegistrationsModal.tsx# Admin dashboard with search, filters & CSV export
+│       ├── AboutSection.tsx           # Institutional heritage & Jaya TV partnership
+│       ├── CampusLifeSection.tsx      # PCR, OB Van, Studio floor & dubbing suite showcase
+│       ├── FacultySection.tsx         # Faculty mentors & student placement achievements
+│       ├── MuthamizhLogo.tsx          # Scalable official brand logo component
+│       └── Footer.tsx                 # Campus address, hotline, quick links & legal credits
+
+
+================================================================================
+3. COMPONENT & SUBSYSTEM BREAKDOWN (CODE POV)
+================================================================================
+
+3.1. DYNAMIC SCROLL-SYNCED PARALLAX VIDEO (/src/components/ScrollVideoBackground.tsx)
+--------------------------------------------------------------------------------
+• Position: Mounted as a fixed backdrop ('fixed inset-0 pointer-events-none z-0')
+  across the entire page.
+• Scroll Interpolation (LERP): Listens to window scroll events and computes:
+    scrollFraction = scrollY / (documentHeight - windowHeight)
+• Target Calculations:
+    targetTime = scrollFraction * Math.max(0.01, video.duration - 0.02)
+    targetParallax = -scrollFraction * 96px
+• Smooth Render Loop: Uses window.requestAnimationFrame to smoothly interpolate
+  video.currentTime and apply CSS 3D transforms:
+    transform: translate3d(0, ${currentParallax}px, 0) scale(1.12)
+• Visual Result: The background video scrubs precisely as the user scrolls,
+  creating deep parallax perspective beneath translucent glassmorphic cards.
+
+
+3.2. STATE MANAGEMENT & NAVIGATION ORCHESTRATION (/src/App.tsx)
+--------------------------------------------------------------------------------
+App.tsx is the central controller for client-side state:
+• Active Tab Router: Toggles between 'home', 'courses', 'about', 'faculty',
+  and 'campus' without page reloads.
+• Modal Visibility Controls:
+  - isApplyModalOpen: Triggers the multi-step admission registration form.
+  - selectedCourseForModal: Controls the comprehensive Course Syllabus dialog.
+  - isAstraOpen: Toggles the Astra AI floating window and drawer.
+  - isAdminOpen: Toggles the protected administrative leads manager.
+  - showIntro: Plays the full-screen cinematic video overlay on initial visit.
+• Synchronization: Maintains registrations list in state and keeps records
+  synced across direct form submissions and automated AI conversational bookings.
+
+
+3.3. COURSE CATALOG & SYLLABUS ENGINE (/src/components/TrendingCourses.tsx & CourseModal.tsx)
+--------------------------------------------------------------------------------
+• Categorization: Filters programs dynamically across:
+  - All Programs
+  - PG Diplomas (1-Year Full-Time)
+  - Short-Term Certifications (3 to 6 Months)
+  - Evening & Weekend Batches (Working Professionals)
+• Visual Design: Emerald and amber gradients matching the academy's official
+  emblem, 3D hover elevation, equipment tags, and Jaya TV internship highlights.
+• Syllabus Modal: Detailed breakdown of core curriculum modules, production gear
+  (RED/ARRI Cinema Cameras, Sony FX6, Avid, DaVinci Resolve, Pro Tools),
+  duration, eligibility, and direct "Apply with Astra AI" deep-links.
+
+
+3.4. ASTRA AI ADMISSION COUNSELOR (/src/components/AstraAICounselor.tsx & /api/chat)
+--------------------------------------------------------------------------------
+• Engine: Server-side Gemini 3.6 Flash model invoked via POST /api/chat.
+• Speech Recognition: Uses browser SpeechRecognition/webkitSpeechRecognition
+  to allow applicants to speak their questions hands-free.
+• Text-to-Speech (TTS): Synthesizes Astra's spoken responses in real-time using
+  window.speechSynthesis with tuned pitch and cadence.
+• Automated Lead Capture Protocol:
+  - Astra is primed to collect applicant credentials (Name, Email, Phone, Course,
+    Education).
+  - Astra embeds structured applicant data inside XML blocks:
+      <registration_data>{...}</registration_data>
+  - The client intercepts this block, registers the candidate via POST /api/register,
+    and displays a verified admission confirmation badge in the chat window.
+
+
+3.5. ADMISSION FORM & ADMIN LEADS DASHBOARD (/src/components/ApplicationFormModal.tsx & AdminRegistrationsModal.tsx)
+--------------------------------------------------------------------------------
+• Direct Registration Modal:
+  - Real-time client-side validation for phone, email, and program interest.
+  - Instantly generates sequential reference IDs (e.g., REG-2026-001).
+• Admin Dashboard:
+  - Visual summary cards (total admissions, course popularity breakdown).
+  - Search and filter by candidate name, phone number, or program.
+  - Export utilities: One-click CSV and JSON exports for admissions staff.
+
+
+3.6. BACKEND API LAYER & EXPRESS ROUTER (/server.ts)
+--------------------------------------------------------------------------------
+• Port & Ingress: Runs Express on port 3000, listening on host 0.0.0.0.
+• Security: Keeps process.env.GEMINI_API_KEY secure on the server side.
+• Endpoints:
+  1. GET /api/health
+     - Verifies service uptime and returns server status.
+  2. GET /api/registrations
+     - Returns in-memory database of registered candidates.
+  3. POST /api/register
+     - Validates payload, assigns sequential registration ID, and saves record.
+  4. POST /api/chat
+     - Formats conversational history and prompts Gemini with Muthamizh Academy's
+       course offerings, fees, Jaya TV credentials, and admission rules.
+• Static Serving: Runs Vite middleware in development mode and serves compiled
+  production assets from /dist in production.
+
+
+================================================================================
+4. SUMMARY OF USER FLOWS
+================================================================================
+1. Landing & Exploration:
+   User arrives -> Background video synchronizes with scroll position -> User browses
+   hero metrics, course offerings, faculty credentials, and campus studios.
+
+2. Course Inquiries:
+   User clicks "Syllabus" -> Explores module breakdowns and camera equipment.
+
+3. AI Guided Counseling:
+   User opens Astra AI via floating button -> Types or speaks inquiries -> Astra
+   provides tailored guidance on courses, fees, and career paths.
+
+4. Admission Registration:
+   User completes the application form or provides details in chat -> Backend records
+   the applicant and issues a formal Registration ID.
+
+5. Admissions Management:
+   Administrative staff open the Admin Portal -> Search leads -> Export applicant
+   reports directly to CSV or JSON.
+
+================================================================================
+                                END OF REPORT
+================================================================================
