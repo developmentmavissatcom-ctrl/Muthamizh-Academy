@@ -1,10 +1,42 @@
 import { FacultyMember, AlumniStory } from '../types';
 
+export interface DepartmentInfo {
+  id: string;
+  name: string;
+  shortName: string;
+  tagline: string;
+  description: string;
+  focusAreas: string[];
+  status: 'active' | 'upcoming';
+}
+
+export const DEPARTMENTS: DepartmentInfo[] = [
+  {
+    id: 'news',
+    name: 'News Department',
+    shortName: 'News & Media',
+    tagline: 'Television Journalism, PCR Direction & Prime-Time Broadcast Anchoring',
+    description: 'Spearheaded by veteran news directors, chief editors, and satellite broadcast anchors from Jaya TV Network.',
+    focusAreas: ['News Gathering', 'Broadcast Anchoring', 'PCR & Studio Output', 'Editorial Planning', 'Digital Journalism'],
+    status: 'active'
+  },
+  {
+    id: 'it',
+    name: 'IT Department',
+    shortName: 'Information Technology & AI',
+    tagline: 'School of Computing, AI Systems, Full-Stack Architecture & Agentic Engineering',
+    description: 'Curated curriculum led by industry software architects, AI researchers, and cloud DevOps specialists.',
+    focusAreas: ['AI & Agentic Workflows', 'Full-Stack Web Systems', 'Cloud Infrastructure', 'Model Context Protocol (MCP)', 'Enterprise Software'],
+    status: 'active'
+  }
+];
+
 export const FACULTY_DATA: FacultyMember[] = [
   {
   id: 'fac-4',
   name: 'Joseph Anto Amalgeethan',
   role: 'Veteran Media Professional & Production Specialist',
+  department: 'News Department',
   experience: '30+ Years in Television & Media Production',
   expertise: [
     'Television Production',
@@ -20,6 +52,7 @@ export const FACULTY_DATA: FacultyMember[] = [
   id: 'fac-5',
   name: 'M. Ganesan',
   role: 'Chief News Editor & Senior Journalism Professional',
+  department: 'News Department',
   experience: '25+ Years in Journalism & News Media',
   expertise: [
     'News Gathering',
@@ -36,6 +69,7 @@ export const FACULTY_DATA: FacultyMember[] = [
   id: 'fac-8',
   name: 'Prabhakaran Periyasamy',
   role: 'Deputy Editor & Senior News Professional',
+  department: 'News Department',
   experience: '20+ Years in News & Media',
   expertise: [
     'Editorial Planning',
@@ -54,6 +88,7 @@ export const FACULTY_DATA: FacultyMember[] = [
   id: 'fac-6',
   name: 'Vinitha S',
   role: 'News Presenter, Anchor & Digital Host',
+  department: 'News Department',
   experience: '10 Years in Television & Digital Media',
   expertise: [
     'News Presentation',
@@ -71,6 +106,7 @@ export const FACULTY_DATA: FacultyMember[] = [
   id: 'fac-7',
   name: 'Sigamani',
   role: 'Journalist, News Anchor & Broadcast Trainer',
+  department: 'News Department',
   experience: '8+ Years in Journalism & Broadcast Media',
   expertise: [
     'News Reporting',
@@ -84,6 +120,28 @@ export const FACULTY_DATA: FacultyMember[] = [
   bio: 'Dynamic and energetic media professional with over 8 years of experience across reporting, sub-editing, output management, production, live television anchoring and news reading. Currently focused on training aspiring news anchors and broadcast journalists through structured, professional and industry-oriented training.',
   image: '/f7.jpeg',
   networkCredit: 'Jaya TV News'
+  },
+  {
+  id: 'fac-9',
+  name: 'Ashok',
+  role: 'Senior Software Developer & Network Engineer',
+  department: 'IT Department',
+  experience: '3+ Years in Software Development & Technical Support',
+  expertise: [
+    'Network Engineering & CCNA',
+    'Full-Stack Development',
+    'Cyber Security',
+    'Linux Administration',
+    'AI Engineering',
+    'Server & Domain Management',
+    'Firewall Configuration',
+    'Hardware & Software Troubleshooting',
+    'Photography & Video Editing',
+    'Graphic & Logo Design'
+  ],
+  bio: 'Adaptable technology professional with experience across network engineering, software development, cybersecurity, Linux, AI and technical support. Skilled in setting up, installing, configuring and managing desktops, servers, domains and firewalls, with hands-on experience resolving hardware and software issues. Brings additional creative expertise in photography, logo design, video editing and Canva, along with strong communication, presentation, problem-solving and risk-management skills.',
+  image: '/f2.jpg',
+  networkCredit: 'Jaya TV Technology & Software'
   }
 ];
 

@@ -54,6 +54,13 @@
   "sessions": [],
   "auditLogs": [
     {
+      "id": "aud-1790130136093",
+      "action": "FACULTY_MEMBER_UPLOADED",
+      "performedBy": "System / Faculty Desk",
+      "resource": "Faculty: Dr. S. Karthikeyan (IT Department)",
+      "timestamp": "2026-09-23T02:22:16.093Z"
+    },
+    {
       "id": "AUD-1789893621823-37011d",
       "action": "SIGNUP_OTP_DISPATCHED",
       "performedBy": "development.mavissatcom@gmail.com",
@@ -133,6 +140,7 @@
     }
   ],
   "facultyInvitations": [],
+  "facultyMembers": [],
   "otpChallenges": {
     "admissions.test@example.com": {
       "email": "admissions.test@example.com",

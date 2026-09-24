@@ -46,6 +46,7 @@ interface FacultyPortalProps {
   onFacultyLoginSuccess: (user: UserProfile) => void;
   onFacultyLogout: () => void;
   onSwitchToStudentView: () => void;
+  onNavigateToFacultyTab?: () => void;
 }
 
 const ADMISSION_STATUSES: AdmissionStatus[] = [
@@ -62,7 +63,8 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
   currentUser,
   onFacultyLoginSuccess,
   onFacultyLogout,
-  onSwitchToStudentView
+  onSwitchToStudentView,
+  onNavigateToFacultyTab
 }) => {
   const isFaculty = currentUser && (currentUser.role === 'faculty' || currentUser.role === 'admin');
 
@@ -632,6 +634,17 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
 
           {/* Quick Actions & Navigation */}
           <div className="flex flex-wrap items-center gap-3">
+            {onNavigateToFacultyTab && (
+              <button
+                onClick={onNavigateToFacultyTab}
+                className="px-4 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#00c878]/40 hover:border-[#00c878] text-xs font-mono font-bold transition-all flex items-center gap-2 cursor-pointer"
+                title="View Faculty Directory across News & IT Departments"
+              >
+                <GraduationCap className="w-3.5 h-3.5 text-[#00c878]" />
+                <span>View Faculty Directory</span>
+              </button>
+            )}
+
             <button
               onClick={() => {
                 fetchInvitations();

@@ -295,6 +295,12 @@ export default function App() {
                 setActiveTab('home');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
+              onNavigateToFacultyTab={() => {
+                setPortalMode('student');
+                localStorage.setItem('muthamizh_portal_mode', 'student');
+                setActiveTab('faculty');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               onFacultyLoginSuccess={(user) => {
                 const token = localStorage.getItem('muthamizh_auth_token') || '';
                 handleAuthSuccess(user, token);

@@ -62,11 +62,15 @@ export interface FacultyMember {
   id: string;
   name: string;
   role: string;
+  department?: 'News Department' | 'IT Department' | string;
   experience: string;
   expertise: string[];
   bio: string;
   image: string;
   networkCredit: string;
+  email?: string;
+  phone?: string;
+  isCustomUploaded?: boolean;
 }
 
 export interface AlumniStory {

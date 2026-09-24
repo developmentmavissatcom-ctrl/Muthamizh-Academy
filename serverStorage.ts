@@ -128,6 +128,22 @@ export interface OtpChallenge {
   };
 }
 
+export interface StoredFacultyMember {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  experience: string;
+  expertise: string[];
+  bio: string;
+  image: string;
+  networkCredit: string;
+  email?: string;
+  phone?: string;
+  isCustomUploaded?: boolean;
+  createdAt: number;
+}
+
 interface DatabaseSchema {
   version: number;
   users: StoredUser[];
@@ -136,6 +152,7 @@ interface DatabaseSchema {
   auditLogs: AuditLogEntry[];
   circulars: CircularItem[];
   facultyInvitations: FacultyInvitation[];
+  facultyMembers: StoredFacultyMember[];
   otpChallenges: Record<string, OtpChallenge>;
 }
 
@@ -151,6 +168,7 @@ class StorageEngine {
     auditLogs: [],
     circulars: [],
     facultyInvitations: [],
+    facultyMembers: [],
     otpChallenges: {}
   };
 
@@ -175,6 +193,7 @@ class StorageEngine {
           auditLogs: Array.isArray(parsed.auditLogs) ? parsed.auditLogs : [],
           circulars: Array.isArray(parsed.circulars) ? parsed.circulars : [],
           facultyInvitations: Array.isArray(parsed.facultyInvitations) ? parsed.facultyInvitations : [],
+          facultyMembers: Array.isArray(parsed.facultyMembers) ? parsed.facultyMembers : [],
           otpChallenges: parsed.otpChallenges && typeof parsed.otpChallenges === 'object' ? parsed.otpChallenges : {}
         };
 
@@ -441,6 +460,27 @@ class StorageEngine {
       inv.usedAt = Date.now();
       this.persist();
     }
+  }
+
+  // --- Department Faculty Roster & Uploads ---
+  public getFacultyMembers(): StoredFacultyMember[] {
+    return this.db.facultyMembers;
+  }
+
+  public addFacultyMember(member: StoredFacultyMember): StoredFacultyMember {
+    this.db.facultyMembers.unshift(member);
+    this.persist();
+    return member;
+  }
+
+  public deleteFacultyMember(id: string): boolean {
+    const idx = this.db.facultyMembers.findIndex(f => f.id === id);
+    if (idx !== -1) {
+      this.db.facultyMembers.splice(idx, 1);
+      this.persist();
+      return true;
+    }
+    return false;
   }
 }
 
