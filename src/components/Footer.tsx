@@ -35,12 +35,17 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Col 1: Brand & Institution Overview */}
           <div className="space-y-4">
-            <button
-              onClick={() => handleNavClick('home')}
-              className="text-left focus:outline-none group"
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('home');
+              }}
+              className="text-left focus:outline-none group block"
+              aria-label="Muthamizh Academy Home"
             >
               <MuthamizhLogo size="md" showSubtext={true} />
-            </button>
+            </a>
 
             <p className="text-[12px] text-[#9bb0a5] leading-relaxed">
               Muthamizh Academy is a premier media & cinema institution operating in direct partnership with <strong className="text-[#f5f7f6]">Mavis Satcom Limited (Jaya TV Network)</strong>, offering immersive satellite broadcast floor training and modern digital production programs.
@@ -59,53 +64,77 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
             <ul className="space-y-2 text-[12px] text-[#9bb0a5]">
               <li>
-                <button
-                  onClick={() => handleNavClick('home')}
-                  className="hover:text-[#00c878] transition-colors text-left"
+                <a
+                  href="/"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('home');
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left block"
                 >
                   Home Studio
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('about')}
-                  className="hover:text-[#00c878] transition-colors text-left"
+                <a
+                  href="/about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('about');
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left block"
                 >
                   About Muthamizh Academy
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('courses')}
-                  className="hover:text-[#00c878] transition-colors text-left"
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left block"
                 >
                   Academic Programs & Syllabus
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('campus')}
-                  className="hover:text-[#00c878] transition-colors text-left"
+                <a
+                  href="/campus"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('campus');
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left block"
                 >
                   Campus Life & Studio Floors
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('gallery')}
+                <a
+                  href="/gallery"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('gallery');
+                  }}
                   className="hover:text-[#00c878] transition-colors text-left flex items-center gap-1.5"
                 >
                   <span>Studio & Campus Gallery</span>
                   <span className="text-[9px] font-mono px-1.5 py-0.2 bg-[#00c878]/15 text-[#00c878] rounded">New</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('faculty')}
-                  className="hover:text-[#00c878] transition-colors text-left"
+                <a
+                  href="/faculty"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('faculty');
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left block"
                 >
                   Faculty & Jaya TV Mentors
-                </button>
+                </a>
               </li>
             </ul>
           </div>
@@ -117,52 +146,76 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
             <ul className="space-y-2 text-[12px] text-[#9bb0a5]">
               <li>
-                <button
-                  onClick={() => handleNavClick('courses')}
-                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1"
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1 block"
                 >
                   Broadcast Cinematography & Multi-Cam Rigs
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('courses')}
-                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1"
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1 block"
                 >
                   Television Direction & PCR Control
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('courses')}
-                  className="hover:text-sky-400 transition-colors text-left line-clamp-1"
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-sky-400 transition-colors text-left line-clamp-1 block"
                 >
                   AI-Assisted Software Dev & Agentic Eng (Online)
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('courses')}
-                  className="hover:text-sky-400 transition-colors text-left line-clamp-1"
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-sky-400 transition-colors text-left line-clamp-1 block"
                 >
                   Enterprise IT Support & Cisco Cloud (Online)
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('courses')}
-                  className="hover:text-sky-400 transition-colors text-left line-clamp-1"
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-sky-400 transition-colors text-left line-clamp-1 block"
                 >
                   Media Law, Ethics & Copyright (Online)
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick('courses')}
-                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1"
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1 block"
                 >
                   Sound Engineering & Multi-Track Mixing
-                </button>
+                </a>
               </li>
             </ul>
           </div>
@@ -230,21 +283,27 @@ export const Footer: React.FC<FooterProps> = ({
             © 2026 Muthamizh Academy Private Limited & Mavis Satcom Limited (Jaya TV Network). All rights reserved.
           </div>
           <div className="flex items-center gap-4">
-            
-            <span>•</span>
-            <button
-              onClick={() => handleNavClick('courses')}
+            <a
+              href="/courses"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('courses');
+              }}
               className="hover:text-[#f5f7f6] transition-colors"
             >
               Curricula
-            </button>
+            </a>
             <span>•</span>
-            <button
-              onClick={() => handleNavClick('about')}
+            <a
+              href="/about"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('about');
+              }}
               className="hover:text-[#f5f7f6] transition-colors"
             >
               About
-            </button>
+            </a>
           </div>
         </div>
 

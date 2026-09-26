@@ -129,7 +129,6 @@ export const FACULTY_DATA: FacultyMember[] = [
   experience: '3+ Years in Software Development & Technical Support',
   expertise: [
     'Network Engineering & CCNA',
-    'Full-Stack Development',
     'Cyber Security',
     'Linux Administration',
     'AI Engineering',

@@ -2018,6 +2018,93 @@ app.get("/api/media/stream/:fileId", mediaStreamLimiter, (req, res) => {
   requestStream(initialUrl);
 });
 
+// ==================== SEO & CRAWLER DISCOVERY ENDPOINTS ====================
+const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://muthamizhacademy.com/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://muthamizhacademy.com/courses</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://muthamizhacademy.com/about</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://muthamizhacademy.com/campus</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://muthamizhacademy.com/faculty</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://muthamizhacademy.com/gallery</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://muthamizhacademy.com/admissions</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://muthamizhacademy.com/contact</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>`;
+
+const ROBOTS_TXT = `# Robots.txt for Muthamizh Academy (https://muthamizhacademy.com/)
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /public/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.webp$
+Allow: /*.mp4$
+Allow: /*.svg$
+
+# Disallow private and administrative endpoints
+Disallow: /api/
+Disallow: /faculty/
+Disallow: /admin
+Disallow: /auth/
+
+# Sitemap location
+Sitemap: https://muthamizhacademy.com/sitemap.xml
+`;
+
+app.get("/sitemap.xml", (req, res) => {
+  res.setHeader("Content-Type", "application/xml; charset=utf-8");
+  res.status(200).send(SITEMAP_XML.trim());
+});
+
+app.get("/robots.txt", (req, res) => {
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.status(200).send(ROBOTS_TXT.trim());
+});
+
 // Setup Vite Development or Static Production middleware
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {

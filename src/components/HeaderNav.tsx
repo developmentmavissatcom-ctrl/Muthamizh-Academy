@@ -105,8 +105,10 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
       <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-3 flex items-center justify-between gap-4">
         
         {/* Left: Official Brand Logo */}
-        <button
-          onClick={() => {
+        <a
+          href={portalMode === 'faculty' ? '/faculty-portal' : '/'}
+          onClick={(e) => {
+            e.preventDefault();
             if (portalMode === 'faculty') {
               setActiveTab('faculty_portal');
             } else {
@@ -114,15 +116,20 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             }
           }}
           className="text-left group focus:outline-none shrink-0"
+          aria-label="Muthamizh Academy Home"
         >
           <MuthamizhLogo size="md" showSubtext={true} />
-        </button>
+        </a>
 
         {/* Center: Navigation Links */}
         {portalMode === 'student' ? (
-          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
-            <button
-              onClick={() => setActiveTab('home')}
+          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2" aria-label="Main Navigation">
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('home');
+              }}
               className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === 'home'
                   ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
@@ -130,10 +137,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               }`}
             >
               Home
-            </button>
+            </a>
 
-            <button
-              onClick={() => setActiveTab('about')}
+            <a
+              href="/about"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('about');
+              }}
               className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === 'about'
                   ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
@@ -141,12 +152,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               }`}
             >
               About Us
-            </button>
+            </a>
 
             {/* Courses Mega Dropdown */}
             <div className="relative group">
-              <button
-                onClick={() => {
+              <a
+                href="/courses"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('courses');
                   setCoursesDropdownOpen(!coursesDropdownOpen);
                 }}
@@ -158,7 +171,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               >
                 <span>Courses</span>
                 <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
-              </button>
+              </a>
 
               {/* Dropdown Menu */}
               <div className="absolute top-full left-0 mt-2 w-72 bg-[#070b09] border border-[#16241f] rounded-2xl shadow-2xl p-2 hidden group-hover:block animate-in fade-in zoom-in-95 duration-150 z-50">
@@ -215,8 +228,12 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               </div>
             </div>
 
-            <button
-              onClick={() => setActiveTab('campus')}
+            <a
+              href="/campus"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('campus');
+              }}
               className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === 'campus'
                   ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
@@ -224,10 +241,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               }`}
             >
               Campus Life
-            </button>
+            </a>
 
-            <button
-              onClick={() => setActiveTab('gallery')}
+            <a
+              href="/gallery"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('gallery');
+              }}
               className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'gallery'
                   ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
@@ -236,10 +257,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             >
               <Camera className="w-4 h-4 text-[#00c878]" />
               <span>Gallery</span>
-            </button>
+            </a>
 
-            <button
-              onClick={() => setActiveTab('faculty')}
+            <a
+              href="/faculty"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('faculty');
+              }}
               className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
                 activeTab === 'faculty'
                   ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
@@ -247,11 +272,15 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               }`}
             >
               Faculty
-            </button>
+            </a>
 
             {/* Highlighted Student Tracker Link */}
-            <button
-              onClick={() => setActiveTab('tracker')}
+            <a
+              href="/tracker"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('tracker');
+              }}
               className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'tracker'
                   ? 'bg-[#00c878]/20 text-[#00c878] border border-[#00c878] shadow-md font-mono'
@@ -261,7 +290,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             >
               <Radio className="w-3.5 h-3.5 text-[#00c878] animate-pulse" />
               <span>My Tracker</span>
-            </button>
+            </a>
           </nav>
         ) : (
           /* Faculty Mode Center Badge */
@@ -421,63 +450,77 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
 
           {/* Links */}
           {portalMode === 'student' ? (
-            <div className="space-y-1 pt-1">
-              <button
-                onClick={() => {
+            <div className="space-y-1 pt-1" aria-label="Mobile Navigation">
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('home');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
+                className="block w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
               >
                 Home
-              </button>
-              <button
-                onClick={() => {
+              </a>
+              <a
+                href="/about"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('about');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
+                className="block w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
               >
                 About Us
-              </button>
-              <button
-                onClick={() => {
+              </a>
+              <a
+                href="/courses"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('courses');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
+                className="block w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
               >
                 Courses (11 Programs)
-              </button>
-              <button
-                onClick={() => {
+              </a>
+              <a
+                href="/campus"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('campus');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
+                className="block w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
               >
                 Campus Life & Amenities
-              </button>
-              <button
-                onClick={() => {
+              </a>
+              <a
+                href="/faculty"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('faculty');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
+                className="block w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
               >
                 Faculty
-              </button>
-              <button
-                onClick={() => {
+              </a>
+              <a
+                href="/gallery"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('gallery');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
+                className="block w-full text-left px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#121a17] text-[#f5f7f6]"
               >
                 Gallery
-              </button>
-              <button
-                onClick={() => {
+              </a>
+              <a
+                href="/tracker"
+                onClick={(e) => {
+                  e.preventDefault();
                   setActiveTab('tracker');
                   setMobileMenuOpen(false);
                 }}
@@ -485,7 +528,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               >
                 <Radio className="w-4 h-4 animate-pulse" />
                 <span>My Application Tracker</span>
-              </button>
+              </a>
             </div>
           ) : (
             <div className="p-3 rounded-xl bg-[#121a17] text-xs font-mono text-[#e6ad54] border border-[#e6ad54]/30 space-y-2">

@@ -1,6 +1,6 @@
 {
   "name": "Muthamizh Academy",
-  "description": "Muthamizh Academy - Partner Institute of Jaya TV Network / Mavis Satcom Limited. Premier media institute for Filmmaking, Broadcast Journalism, and Digital Media.",
+  "description": "Muthamizh Academy in Chennai is a premier media and television education institute partnered with Jaya TV Network / Mavis Satcom. Hands-on training in broadcasting, cinematography, television direction, digital media, sound engineering, and AI media production.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

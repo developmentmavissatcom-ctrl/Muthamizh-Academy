@@ -22,12 +22,62 @@ import { COURSES_DATA } from './data/coursesData';
 import { StudentApplicationTracker } from './components/student/StudentApplicationTracker';
 import { FacultyPortal } from './components/faculty/FacultyPortal';
 
+const TAB_SEO_CONFIG: Record<NavTab, { title: string; path: string }> = {
+  home: {
+    title: 'Muthamizh Academy | Media, Television & Digital Media Education',
+    path: '/'
+  },
+  about: {
+    title: 'Muthamizh Academy | About Us',
+    path: '/about'
+  },
+  courses: {
+    title: 'Muthamizh Academy | Courses & Academic Curricula',
+    path: '/courses'
+  },
+  campus: {
+    title: 'Muthamizh Academy | Studio Floors & Campus Life',
+    path: '/campus'
+  },
+  faculty: {
+    title: 'Muthamizh Academy | Faculty & Industry Mentors',
+    path: '/faculty'
+  },
+  gallery: {
+    title: 'Muthamizh Academy | Campus & Studio Gallery',
+    path: '/gallery'
+  },
+  tracker: {
+    title: 'Muthamizh Academy | Application Status Tracker',
+    path: '/tracker'
+  },
+  admin: {
+    title: 'Muthamizh Academy | Administration',
+    path: '/admin'
+  },
+  faculty_portal: {
+    title: 'Muthamizh Academy | Faculty Admissions Console',
+    path: '/faculty-portal'
+  }
+};
+
 export default function App() {
   const [portalMode, setPortalMode] = useState<PortalMode>(() => {
     const saved = localStorage.getItem('muthamizh_portal_mode') as PortalMode;
     return saved === 'faculty' ? 'faculty' : 'student';
   });
-  const [activeTab, setActiveTab] = useState<NavTab>('home');
+  const [activeTab, setActiveTab] = useState<NavTab>(() => {
+    if (typeof window !== 'undefined') {
+      const raw = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
+      if (raw === 'about') return 'about';
+      if (raw === 'courses' || raw === 'admissions') return 'courses';
+      if (raw === 'campus') return 'campus';
+      if (raw === 'faculty') return 'faculty';
+      if (raw === 'gallery') return 'gallery';
+      if (raw === 'tracker') return 'tracker';
+    }
+    return 'home';
+  });
   const [selectedCourseCategory, setSelectedCourseCategory] = useState<CourseCategory | 'all'>('all');
   
   // User Authentication State
@@ -181,14 +231,58 @@ export default function App() {
     setActiveTab('home');
   };
 
-  // When activeTab changes
+  // When activeTab changes: update scroll, document.title, canonical URL, and browser URL
   useEffect(() => {
     if (activeTab === 'admin') {
       setAdminModalOpen(true);
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    const config = TAB_SEO_CONFIG[activeTab] || TAB_SEO_CONFIG.home;
+    document.title = config.title;
+
+    // Sync Canonical link
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      const canonicalHref = `https://muthamizhacademy.com${config.path === '/' ? '/' : config.path}`;
+      canonicalLink.setAttribute('href', canonicalHref);
+    }
+
+    // Sync browser URL without full refresh
+    if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+      const currentPath = window.location.pathname;
+      if (currentPath !== config.path && !(config.path === '/' && (currentPath === '' || currentPath === '/'))) {
+        window.history.replaceState(null, '', config.path);
+      }
+    }
   }, [activeTab]);
+
+  // Support browser Back/Forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const raw = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
+      if (raw === 'about') setActiveTab('about');
+      else if (raw === 'courses' || raw === 'admissions') setActiveTab('courses');
+      else if (raw === 'campus') setActiveTab('campus');
+      else if (raw === 'faculty') setActiveTab('faculty');
+      else if (raw === 'gallery') setActiveTab('gallery');
+      else if (raw === 'tracker') setActiveTab('tracker');
+      else setActiveTab('home');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Check if user directly arrived via admissions URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const raw = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
+      if (raw === 'admissions') {
+        setApplyModalOpen(true);
+      }
+    }
+  }, []);
 
   // Global keydown for ⌘K
   useEffect(() => {
