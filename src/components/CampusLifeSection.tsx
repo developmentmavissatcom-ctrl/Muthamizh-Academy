@@ -46,34 +46,36 @@ export const CampusLifeSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {facilities.map((fac, idx) => {
             const Icon = fac.icon;
             return (
               <div
                 key={idx}
-                className="p-6 rounded-3xl bg-[#0b100e] border border-[#16241f] hover:border-[#00c878]/50 transition-all duration-300 group hover:-translate-y-1 shadow-lg"
+                className="p-5 sm:p-6 rounded-3xl bg-[#0b100e] border border-[#16241f] hover:border-[#00c878]/50 transition-all duration-300 group hover:-translate-y-1 shadow-lg flex flex-col justify-between"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#121a17] border border-[#16241f] flex items-center justify-center text-[#00c878] mb-4 group-hover:scale-110 group-hover:border-[#00c878]/40 transition-transform">
-                  <Icon className="w-6 h-6" />
+                <div>
+                  <div className="w-12 h-12 rounded-2xl bg-[#121a17] border border-[#16241f] flex items-center justify-center text-[#00c878] mb-4 group-hover:scale-110 group-hover:border-[#00c878]/40 transition-transform">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#e6ad54] bg-[#050706] px-2.5 py-1 rounded-lg border border-[#16241f]">
+                    {fac.badge}
+                  </span>
+                  <h3 className="text-base sm:text-lg font-bold text-[#f5f7f6] mt-3 group-hover:text-[#00c878] transition-colors">
+                    {fac.title}
+                  </h3>
+                  <p className="text-xs text-[#8a9690] mt-2 leading-relaxed">
+                    {fac.desc}
+                  </p>
                 </div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#e6ad54] bg-[#050706] px-2.5 py-1 rounded-lg border border-[#16241f]">
-                  {fac.badge}
-                </span>
-                <h3 className="text-lg font-bold text-[#f5f7f6] mt-3 group-hover:text-[#00c878] transition-colors">
-                  {fac.title}
-                </h3>
-                <p className="text-xs text-[#8a9690] mt-2 leading-relaxed">
-                  {fac.desc}
-                </p>
               </div>
             );
           })}
         </div>
 
         {/* Studio Gallery Preview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          <div className="relative h-64 sm:h-72 rounded-3xl overflow-hidden border border-[#16241f] group shadow-xl bg-[#0b100e]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-4">
+          <div className="relative h-56 sm:h-72 lg:h-80 rounded-3xl overflow-hidden border border-[#16241f] group shadow-xl bg-[#0b100e]">
             <img
               src="/src/assets/images/hero_broadcast_studio_1785852745647.jpg"
               alt="Jaya TV Studio Floor"
@@ -87,7 +89,7 @@ export const CampusLifeSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative h-64 sm:h-72 rounded-3xl overflow-hidden border border-[#16241f] group shadow-xl bg-[#0b100e]">
+          <div className="relative h-56 sm:h-72 lg:h-80 rounded-3xl overflow-hidden border border-[#16241f] group shadow-xl bg-[#0b100e]">
             <img
               src="/camera_setup.png"
               alt="Cinema Camera Setup"

@@ -180,18 +180,18 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
 
             {/* Master Headline */}
             <div className="space-y-4 max-w-2xl">
-              <h1 className="text-4xl sm:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-[#f5f7f6] tracking-tight leading-[1.08] font-sans">
+              <h1 className="text-3xl sm:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-[#f5f7f6] tracking-tight leading-[1.1] font-sans">
                 THE NEXT ERA OF <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00c878] via-[#e6ad54] to-[#f5f7f6]">
                   BROADCAST & FILM
                 </span>
               </h1>
 
-              <p className="text-lg sm:text-xl xl:text-2xl font-serif text-[#e6ad54] font-medium tracking-wide">
+              <p className="text-base sm:text-xl xl:text-2xl font-serif text-[#e6ad54] font-medium tracking-wide">
                 Muthamizh Academy • Professional Television & Cinema Academy
               </p>
 
-              <p className="text-[#8a9690] text-sm sm:text-base leading-relaxed">
+              <p className="text-[#8a9690] text-xs sm:text-base leading-relaxed">
                 Step inside 10,000+ sq.ft of active satellite television production floors. Direct hands-on training with Advanced Camera Setup, multi-cam vision mixers, newsroom teleprompters, and Jaya TV senior showrunners.
               </p>
             </div>
@@ -267,7 +267,7 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
               {/* STACKED CARD 2 (Farthest In Queue - Lined up in the back) */}
               <div 
                 onClick={handleNextSlide}
-                className="absolute -top-4 sm:-top-5 -right-3 sm:-right-4 w-full h-full rounded-3xl sm:rounded-[32px] bg-[#040705] border border-[#16241f] shadow-2xl scale-[0.93] z-0 opacity-40 hover:opacity-60 transition-all duration-500 cursor-pointer overflow-hidden group pointer-events-auto"
+                className="absolute -top-3 sm:-top-5 -right-2 sm:-right-4 w-full h-full rounded-2xl sm:rounded-3xl lg:rounded-[32px] bg-[#040705] border border-[#16241f] shadow-2xl scale-[0.93] z-0 opacity-40 hover:opacity-60 transition-all duration-500 cursor-pointer overflow-hidden group pointer-events-auto"
                 title={`In Queue: ${queuedVideo.title}`}
               >
                 <video
@@ -288,7 +288,7 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
               {/* STACKED CARD 1 (Next in line - Lined up directly behind active card) */}
               <div 
                 onClick={handleNextSlide}
-                className="absolute -top-2 sm:-top-2.5 -right-1.5 sm:-right-2 w-full h-full rounded-3xl sm:rounded-[32px] bg-[#070c09] border border-[#00c878]/30 shadow-2xl scale-[0.97] z-10 opacity-75 hover:opacity-95 transition-all duration-500 cursor-pointer overflow-hidden group pointer-events-auto"
+                className="absolute -top-1.5 sm:-top-2.5 -right-1 sm:-right-2 w-full h-full rounded-2xl sm:rounded-3xl lg:rounded-[32px] bg-[#070c09] border border-[#00c878]/30 shadow-2xl scale-[0.97] z-10 opacity-75 hover:opacity-95 transition-all duration-500 cursor-pointer overflow-hidden group pointer-events-auto"
                 title={`Next in line: ${nextVideo.title}`}
               >
                 <video
@@ -317,7 +317,7 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
                   animate="animate"
                   exit="exit"
                   onClick={handleNextSlide}
-                  className="relative z-20 w-full h-full rounded-3xl sm:rounded-[32px] bg-black border border-[#16241f] hover:border-[#00c878]/60 shadow-[0_25px_60px_rgba(0,0,0,0.85)] overflow-hidden cursor-pointer group"
+                  className="relative z-20 w-full h-full rounded-2xl sm:rounded-3xl lg:rounded-[32px] bg-black border border-[#16241f] hover:border-[#00c878]/60 shadow-[0_25px_60px_rgba(0,0,0,0.85)] overflow-hidden cursor-pointer group"
                   title="Click to slide to next video"
                 >
                   <video
@@ -335,9 +335,9 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
                   />
 
                   {/* Top Live Camera Overlay */}
-                  <div className="absolute top-3.5 left-3.5 z-30 flex items-center gap-2 pointer-events-none">
-                    <span className="px-2.5 py-1 rounded-lg bg-black/75 border border-[#00c878]/40 text-[#00c878] font-mono text-xs font-bold flex items-center gap-1.5 backdrop-blur-md shadow-md">
-                      <span className="w-2 h-2 rounded-full bg-[#00c878] animate-ping" />
+                  <div className="absolute top-2.5 sm:top-3.5 left-2.5 sm:left-3.5 z-30 flex items-center gap-2 pointer-events-none">
+                    <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-black/75 border border-[#00c878]/40 text-[#00c878] font-mono text-[10px] sm:text-xs font-bold flex items-center gap-1.5 backdrop-blur-md shadow-md">
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#00c878] animate-ping" />
                       {currentVideo.tag}
                     </span>
                     <span className="px-2.5 py-1 rounded-lg bg-black/60 border border-white/10 text-[#f5f7f6] font-mono text-[11px] backdrop-blur-md hidden sm:inline-block shadow-sm">
@@ -353,30 +353,30 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
                     />
                   </div>
 
-                  {/* Audio Mute/Unmute Toggle Button */}
-                  <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1.5 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {/* Audio Mute/Unmute Toggle Button (Always accessible on touch, hover on desktop) */}
+                  <div className="absolute bottom-2.5 sm:bottom-3.5 right-2.5 sm:right-3.5 flex items-center gap-1.5 z-30 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleMute();
                       }}
-                      className="p-2 rounded-xl bg-black/75 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] border border-white/15 transition-colors backdrop-blur-md shadow-lg"
+                      className="p-1.5 sm:p-2 rounded-xl bg-black/75 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] border border-white/15 transition-colors backdrop-blur-md shadow-lg"
                       title={isMuted ? 'Unmute' : 'Mute'}
                     >
                       {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
                     </button>
                   </div>
 
-                  {/* Hover Navigation Arrows */}
+                  {/* Hover Navigation Arrows (Always accessible on touch, hover on desktop) */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePrevSlide();
                     }}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/65 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] transition-all opacity-0 group-hover:opacity-100 z-30 shadow-xl border border-white/15 backdrop-blur-md"
+                    className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 p-1.5 sm:p-2 rounded-full bg-black/65 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] transition-all opacity-85 sm:opacity-0 sm:group-hover:opacity-100 z-30 shadow-xl border border-white/15 backdrop-blur-md"
                     title="Previous Reel"
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                   
                   <button
@@ -384,10 +384,10 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
                       e.stopPropagation();
                       handleNextSlide();
                     }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/65 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] transition-all opacity-0 group-hover:opacity-100 z-30 shadow-xl border border-white/15 backdrop-blur-md"
+                    className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-1.5 sm:p-2 rounded-full bg-black/65 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] transition-all opacity-85 sm:opacity-0 sm:group-hover:opacity-100 z-30 shadow-xl border border-white/15 backdrop-blur-md"
                     title="Next Reel"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </motion.div>
               </AnimatePresence>

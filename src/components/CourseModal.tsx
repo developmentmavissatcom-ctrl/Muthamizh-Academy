@@ -438,10 +438,10 @@ export const CourseModal: React.FC<CourseModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 sm:p-5 bg-[#050706] border-t border-[#16241f] shrink-0 flex items-center justify-between gap-3 font-mono">
+        <div className="p-3.5 sm:p-5 bg-[#050706] border-t border-[#16241f] shrink-0 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 font-mono">
           <button
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-bold text-xs border border-[#16241f] transition-colors"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-bold text-xs border border-[#16241f] transition-colors text-center"
           >
             Close
           </button>
@@ -458,10 +458,10 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                 onOpenAstraWithCourse(applyTitle);
               }
             }}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-extrabold text-xs shadow-lg hover:scale-105 transition-all flex items-center gap-2"
+            className="w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-extrabold text-xs shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2 text-center"
           >
-            <GraduationCap className="w-4 h-4 text-[#050706]" />
-            <span>{activeTrack ? `Apply Now • ${activeTrack.durationLabel} (${activeTrack.fee})` : 'Apply Now'}</span>
+            <GraduationCap className="w-4 h-4 text-[#050706] shrink-0" />
+            <span className="truncate">{activeTrack ? `Apply Now • ${activeTrack.durationLabel} (${activeTrack.fee})` : 'Apply Now'}</span>
           </button>
         </div>
 

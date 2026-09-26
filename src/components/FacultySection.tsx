@@ -299,13 +299,13 @@ export const FacultySection: React.FC = () => {
 
       {/* Comprehensive Faculty Profile Modal */}
       {selectedFaculty && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
-          <div className="relative w-full max-w-2xl bg-[#070b09] text-[#f5f7f6] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
+          <div className="relative w-full max-w-2xl bg-[#070b09] text-[#f5f7f6] border border-[#16241f] rounded-3xl p-5 sm:p-8 shadow-2xl space-y-5 sm:space-y-6 max-h-[90vh] overflow-y-auto">
             
             {/* Header & Close Button */}
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[#050706] shrink-0 border border-[#16241f] shadow">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 sm:pt-0">
+              <div className="flex items-center gap-3.5 sm:gap-4">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[#050706] shrink-0 border border-[#16241f] shadow">
                   <img
                     src={selectedFaculty.image}
                     alt={selectedFaculty.name}
@@ -320,21 +320,21 @@ export const FacultySection: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <span className="px-2.5 py-0.5 rounded-full bg-[#121a17] text-[#00c878] border border-[#00c878]/30 text-[10px] font-mono font-bold">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
+                    <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-[#121a17] text-[#00c878] border border-[#00c878]/30 text-[9px] sm:text-[10px] font-mono font-bold">
                       {selectedFaculty.department || 'News Department'}
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-[#121a17] text-[#e6ad54] border border-[#e6ad54]/30 text-[10px] font-mono font-bold">
+                    <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-[#121a17] text-[#e6ad54] border border-[#e6ad54]/30 text-[9px] sm:text-[10px] font-mono font-bold">
                       {selectedFaculty.networkCredit}
                     </span>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#f5f7f6] tracking-tight">
+                  <h3 className="text-lg sm:text-2xl font-bold text-[#f5f7f6] tracking-tight">
                     {selectedFaculty.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-[#00c878] font-medium mt-0.5">
                     {selectedFaculty.role}
                   </p>
-                  <p className="text-xs text-[#8a9690] font-mono font-semibold mt-1">
+                  <p className="text-[11px] sm:text-xs text-[#8a9690] font-mono font-semibold mt-0.5 sm:mt-1">
                     {selectedFaculty.experience}
                   </p>
                 </div>
@@ -343,7 +343,7 @@ export const FacultySection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedFaculty(null)}
-                className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] transition-colors cursor-pointer"
+                className="absolute top-4 right-4 sm:static p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] transition-colors cursor-pointer"
                 title="Close Window"
               >
                 <X className="w-5 h-5" />

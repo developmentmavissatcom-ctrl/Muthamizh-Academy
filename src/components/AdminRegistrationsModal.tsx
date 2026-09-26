@@ -85,7 +85,7 @@ export const AdminRegistrationsModal: React.FC<AdminRegistrationsModalProps> = (
       <div className="relative w-full max-w-6xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(0,200,120,0.15)] overflow-hidden max-h-[92vh] flex flex-col font-sans">
         
         {/* Header */}
-        <div className="p-6 bg-[#050706] border-b border-[#16241f] flex flex-wrap items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 bg-[#050706] border-b border-[#16241f] flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-2xl bg-[#00c878]/15 border border-[#00c878]/30 flex items-center justify-center text-[#00c878] font-bold shadow-[0_0_20px_rgba(0,200,120,0.15)]">
               <ShieldCheck className="w-6 h-6" />

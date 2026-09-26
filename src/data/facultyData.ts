@@ -140,9 +140,25 @@ export const FACULTY_DATA: FacultyMember[] = [
     'Graphic & Logo Design'
   ],
   bio: 'Adaptable technology professional with experience across network engineering, software development, cybersecurity, Linux, AI and technical support. Skilled in setting up, installing, configuring and managing desktops, servers, domains and firewalls, with hands-on experience resolving hardware and software issues. Brings additional creative expertise in photography, logo design, video editing and Canva, along with strong communication, presentation, problem-solving and risk-management skills.',
-  image: '/f2.jpg',
+  image: '/f2.png',
   networkCredit: 'Jaya TV Technology & Software'
-  }
+  },
+  {
+  id: 'fac-10',
+  name: 'Malik Basha R',
+  role: 'Web Developer',
+  department: 'IT Department',
+  experience: 'Computer Science Engineering Graduate',
+  expertise: [
+    'Frontend Web Development',
+    'Responsive Web Design',
+    'UI/UX Design',
+    'Computer & Networking'
+  ],
+  bio: 'Computer Science Engineering graduate and Web Developer with an interest in frontend technologies and emerging digital tools. Focuses on making technical concepts simple, practical and easy to understand for beginners and students. Uses a learn-by-doing approach through live demonstrations, practical exercises and real-world mini projects to help students build practical digital skills and confidence.',
+  image: '/f10.jpeg',
+  networkCredit: 'Jaya TV Technology & Software'
+}
 ];
 
 export const ALUMNI_DATA: AlumniStory[] = [

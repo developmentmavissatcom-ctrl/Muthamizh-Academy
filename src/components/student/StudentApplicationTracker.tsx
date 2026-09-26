@@ -213,7 +213,7 @@ export const StudentApplicationTracker: React.FC<StudentApplicationTrackerProps>
             />
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 relative z-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 relative z-10">
             {MILESTONES.map((item, idx) => {
               const isPast = currentStep > item.step;
               const isCurrent = currentStep === item.step;

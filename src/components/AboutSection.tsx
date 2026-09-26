@@ -34,37 +34,37 @@ export const AboutSection: React.FC = () => {
               Muthamizh Academy was founded to redefine media education in South India. Unlike conventional film institutes that rely on outdated theoretical lectures, our students train inside active, live broadcasting environments.
             </p>
 
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#0b100e] border border-[#16241f] shadow-lg">
-                <div className="w-10 h-10 rounded-xl bg-[#00c878]/15 border border-[#00c878]/30 flex items-center justify-center text-[#00c878] shrink-0 font-mono font-bold text-sm">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-start gap-3 sm:gap-4 p-3.5 sm:p-5 rounded-2xl bg-[#0b100e] border border-[#16241f] shadow-lg">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#00c878]/15 border border-[#00c878]/30 flex items-center justify-center text-[#00c878] shrink-0 font-mono font-bold text-xs sm:text-sm">
                   01
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-[#f5f7f6]">Live Satellite Studio Floor Access</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-[#f5f7f6]">Live Satellite Studio Floor Access</h4>
                   <p className="text-xs text-[#8a9690] mt-1 leading-relaxed">
                     Operate multi-camera setups, teleprompters, digital switcher consoles, and professional studio floor lighting under real prime-time conditions.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#0b100e] border border-[#16241f] shadow-lg">
-                <div className="w-10 h-10 rounded-xl bg-[#e6ad54]/15 border border-[#e6ad54]/30 flex items-center justify-center text-[#e6ad54] shrink-0 font-mono font-bold text-sm">
+              <div className="flex items-start gap-3 sm:gap-4 p-3.5 sm:p-5 rounded-2xl bg-[#0b100e] border border-[#16241f] shadow-lg">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#e6ad54]/15 border border-[#e6ad54]/30 flex items-center justify-center text-[#e6ad54] shrink-0 font-mono font-bold text-xs sm:text-sm">
                   02
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-[#f5f7f6]">Mavis Satcom Newsroom Exposure</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-[#f5f7f6]">Mavis Satcom Newsroom Exposure</h4>
                   <p className="text-xs text-[#8a9690] mt-1 leading-relaxed">
                     Learn live news anchoring, teleprompter reading, outdoor broadcast (OB Van) reporting, and investigative journalism with Jaya TV senior editors.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#0b100e] border border-[#16241f] shadow-lg">
-                <div className="w-10 h-10 rounded-xl bg-[#00c878]/15 border border-[#00c878]/30 flex items-center justify-center text-[#00c878] shrink-0 font-mono font-bold text-sm">
+              <div className="flex items-start gap-3 sm:gap-4 p-3.5 sm:p-5 rounded-2xl bg-[#0b100e] border border-[#16241f] shadow-lg">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#00c878]/15 border border-[#00c878]/30 flex items-center justify-center text-[#00c878] shrink-0 font-mono font-bold text-xs sm:text-sm">
                   03
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-[#f5f7f6]">Direct Industry Mentorship & Placements</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-[#f5f7f6]">Direct Industry Mentorship & Placements</h4>
                   <p className="text-xs text-[#8a9690] mt-1 leading-relaxed">
                     Every PG Diploma candidate in the 2026 inaugural batch completes an intensive studio internship with placement support across Jaya TV Network and partner satellite channels.
                   </p>

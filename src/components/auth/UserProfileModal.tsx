@@ -144,10 +144,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="px-6 flex gap-2 border-b border-[#16241f] bg-[#0b100e]/40">
+        <div className="px-4 sm:px-6 flex gap-2 border-b border-[#16241f] bg-[#0b100e]/40 overflow-x-auto scrollbar-none">
           <button
             onClick={() => setActiveTab('status')}
-            className={`py-3 px-4 text-xs font-mono font-bold transition-all relative flex items-center gap-2 ${
+            className={`py-3 px-3 sm:px-4 text-xs font-mono font-bold transition-all relative flex items-center gap-2 whitespace-nowrap shrink-0 ${
               activeTab === 'status' ? 'text-[#00c878]' : 'text-[#8a9690] hover:text-[#f5f7f6]'
             }`}
           >
@@ -160,7 +160,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
           <button
             onClick={() => setActiveTab('updates')}
-            className={`py-3 px-4 text-xs font-mono font-bold transition-all relative flex items-center gap-2 ${
+            className={`py-3 px-3 sm:px-4 text-xs font-mono font-bold transition-all relative flex items-center gap-2 whitespace-nowrap shrink-0 ${
               activeTab === 'updates' ? 'text-[#00c878]' : 'text-[#8a9690] hover:text-[#f5f7f6]'
             }`}
           >

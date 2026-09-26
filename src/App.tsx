@@ -347,7 +347,7 @@ export default function App() {
 
                 {/* Student Quick Status & Application Bar */}
                 <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-6">
-                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#0b100e] via-[#121a17] to-[#0b100e] border border-[#00c878]/30 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#0b100e] via-[#121a17] to-[#0b100e] border border-[#00c878]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-[#00c878]/20 text-[#00c878] flex items-center justify-center border border-[#00c878]/40">
                         <span className="w-3 h-3 rounded-full bg-[#00c878] animate-ping" />

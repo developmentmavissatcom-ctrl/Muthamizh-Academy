@@ -471,7 +471,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className={`h-1.5 w-full transition-colors ${selectedRole === 'faculty' ? 'bg-gradient-to-r from-[#e6ad54] via-[#e6ad54] to-amber-600' : 'bg-gradient-to-r from-[#00c878] via-[#00c878] to-[#e6ad54]'}`} />
 
         {/* Modal Header */}
-        <div className="p-6 sm:p-7 pb-4 flex items-start justify-between border-b border-[#16241f]">
+        <div className="p-4 sm:p-7 pb-4 flex items-start justify-between border-b border-[#16241f]">
           <div className="space-y-1">
             <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider border ${
               selectedRole === 'faculty' 

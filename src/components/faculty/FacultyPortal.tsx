@@ -605,7 +605,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
     <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-6 space-y-8 animate-in fade-in duration-300">
       
       {/* Top Banner: Faculty Identity & Quick Control Bar */}
-      <div className="bg-[#0b100e] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-[#0b100e] border border-[#16241f] rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-4">
           
           <div className="flex items-center gap-4">
@@ -717,7 +717,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
         </div>
 
         {/* Real-time Telemetry Metrics Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6 pt-6 border-t border-[#16241f]">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-6 pt-6 border-t border-[#16241f]">
           <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
             <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Total Applicants</div>
             <div className="text-2xl font-black text-[#f5f7f6] font-mono mt-1">{metrics.total}</div>
@@ -742,7 +742,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
             <div className="text-[10px] text-[#00c878] font-mono mt-0.5">Seats Enrolled</div>
           </div>
 
-          <div className="col-span-2 sm:col-span-1 bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+          <div className="col-span-2 sm:col-span-3 lg:col-span-1 bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
             <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Studio Capacity</div>
             <div className="text-2xl font-black text-[#f5f7f6] font-mono mt-1">{metrics.studioCapacityPct}%</div>
             <div className="w-full bg-[#121a17] h-1.5 rounded-full mt-1.5 overflow-hidden">
@@ -756,7 +756,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
       </div>
 
       {/* Applications Management Section */}
-      <div className="bg-[#0b100e] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div className="bg-[#0b100e] border border-[#16241f] rounded-3xl p-4 sm:p-8 shadow-2xl space-y-6">
         
         {/* Controls Bar: Search & Filters */}
         <div className="flex flex-wrap items-center justify-between gap-4">

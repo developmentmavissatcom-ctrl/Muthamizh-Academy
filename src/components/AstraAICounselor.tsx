@@ -171,12 +171,12 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
   // FLOATING LAUNCHER BUTTON (CLOSED STATE)
   if (!isOpen) {
     return (
-      <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-2.5">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-2">
         {/* Floating Notification Tip */}
         {showNotificationTip && (
-          <div className="relative group bg-[#0b100e]/95 backdrop-blur-2xl border border-[#00c878]/40 text-[#f5f7f6] text-xs py-2.5 px-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-[280px] animate-in fade-in slide-in-from-bottom-3 duration-300">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#00c878] animate-ping shrink-0" />
-            <div className="flex-1 text-[11px] font-sans leading-tight">
+          <div className="relative group bg-[#0b100e]/95 backdrop-blur-2xl border border-[#00c878]/40 text-[#f5f7f6] text-xs py-2 px-3.5 sm:py-2.5 sm:px-4 rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-[calc(100vw-32px)] sm:max-w-[280px] animate-in fade-in slide-in-from-bottom-3 duration-300">
+            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#00c878] animate-ping shrink-0" />
+            <div className="flex-1 text-[10px] sm:text-[11px] font-sans leading-tight">
               <span className="text-[#e6ad54] font-bold block font-mono">ASTRA AI CONCIERGE</span>
               Explore 11 courses, online virtual labs & admissions!
             </div>
@@ -197,25 +197,25 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
         {/* Floating Trigger Pill */}
         <button
           onClick={onClose}
-          className="relative group bg-[#0b100e] hover:bg-[#121a17] text-white p-2.5 pr-5 rounded-full border border-[#00c878]/50 shadow-[0_10px_35px_rgba(0,200,120,0.35)] hover:shadow-[0_15px_45px_rgba(0,200,120,0.55)] hover:border-[#e6ad54] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3"
+          className="relative group bg-[#0b100e] hover:bg-[#121a17] text-white p-2 pr-4 sm:p-2.5 sm:pr-5 rounded-full border border-[#00c878]/50 shadow-[0_10px_35px_rgba(0,200,120,0.35)] hover:shadow-[0_15px_45px_rgba(0,200,120,0.55)] hover:border-[#e6ad54] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2.5 sm:gap-3"
           title="Open Astra AI Counselor"
         >
-          <div className="relative w-10 h-10 rounded-full bg-gradient-to-tr from-[#00c878] via-[#006b45] to-[#e6ad54] p-[1.5px] shrink-0">
+          <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-[#00c878] via-[#006b45] to-[#e6ad54] p-[1.5px] shrink-0">
             <div className="w-full h-full rounded-full bg-[#050706] flex items-center justify-center">
-              <Bot className="w-5 h-5 text-[#00c878] group-hover:rotate-12 transition-transform duration-300" />
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-[#00c878] group-hover:rotate-12 transition-transform duration-300" />
             </div>
-            <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+            <span className="absolute -top-1 -right-1 flex h-3 w-3 sm:h-3.5 sm:w-3.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00c878] opacity-75" />
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#00c878] border-2 border-[#050706]" />
+              <span className="relative inline-flex rounded-full h-3 w-3 sm:h-3.5 sm:w-3.5 bg-[#00c878] border-2 border-[#050706]" />
             </span>
           </div>
 
           <div className="text-left font-mono">
-            <div className="text-xs font-black tracking-wider text-[#00c878] flex items-center gap-1.5">
+            <div className="text-[11px] sm:text-xs font-black tracking-wider text-[#00c878] flex items-center gap-1.5">
               <span>ASTRA AI</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#00c878]/20 text-[#e6ad54] font-bold">2026</span>
+              <span className="text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded bg-[#00c878]/20 text-[#e6ad54] font-bold">2026</span>
             </div>
-            <div className="text-[10px] text-[#8a9690] font-sans font-medium">
+            <div className="text-[9px] sm:text-[10px] text-[#8a9690] font-sans font-medium">
               Concierge & Admissions
             </div>
           </div>
@@ -229,7 +229,7 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
 
   // ACTIVE EXPANDED MODAL
   return (
-    <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-[95vw] sm:w-[460px] h-[640px] max-h-[85vh] bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_40px_rgba(0,200,120,0.2)] flex flex-col overflow-hidden font-sans backdrop-blur-2xl animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-x-3 bottom-3 sm:inset-x-auto sm:right-6 sm:bottom-6 z-50 w-auto sm:w-[460px] h-[580px] sm:h-[640px] max-h-[88vh] bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_40px_rgba(0,200,120,0.2)] flex flex-col overflow-hidden font-sans backdrop-blur-2xl animate-in zoom-in-95 duration-200">
       
       {/* Concierge Header */}
       <div className="bg-[#050706] p-4 border-b border-[#16241f] flex items-center justify-between gap-2 shrink-0">

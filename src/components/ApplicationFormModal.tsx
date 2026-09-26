@@ -175,8 +175,8 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#050706]/85 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(0,200,120,0.15)] p-6 sm:p-8 space-y-6">
+    <div className="fixed inset-0 z-50 bg-[#050706]/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+      <div className="relative w-full max-w-lg bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(0,200,120,0.15)] p-5 sm:p-8 space-y-5 sm:space-y-6 max-h-[92vh] overflow-y-auto">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#16241f] pb-4">

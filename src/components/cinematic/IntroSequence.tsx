@@ -73,6 +73,19 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
         onEnded={() => handleFinish(true)}
         className="w-full h-full object-cover"
       />
+
+      {/* Skip Intro Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleFinish(true);
+        }}
+        className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 px-3.5 sm:px-4 py-2 rounded-xl bg-black/60 hover:bg-[#00c878] hover:text-[#050706] text-white border border-white/20 hover:border-[#00c878] text-xs font-mono font-bold backdrop-blur-md transition-all shadow-xl flex items-center gap-1.5 cursor-pointer"
+        title="Skip Intro"
+      >
+        <span>Skip Intro</span>
+        <span>→</span>
+      </button>
     </div>
   );
 };

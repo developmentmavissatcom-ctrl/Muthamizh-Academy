@@ -288,16 +288,16 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
 
           {/* USER AUTH & PORTAL STATE */}
           {currentUser ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Logged in User Pill */}
               <button
                 onClick={isFacultyUser ? handleSwitchToFaculty : onOpenUserProfile}
-                className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0b100e] hover:bg-[#121a17] text-[#f5f7f6] border text-xs font-mono transition-all group ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl bg-[#0b100e] hover:bg-[#121a17] text-[#f5f7f6] border text-xs font-mono transition-all group ${
                   isFacultyUser ? 'border-[#e6ad54]/50 hover:border-[#e6ad54]' : 'border-[#00c878]/50 hover:border-[#00c878]'
                 }`}
                 title={isFacultyUser ? "Faculty Console" : "Open Candidate Status & Updates"}
               >
-                <div className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs border ${
+                <div className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs border shrink-0 ${
                   isFacultyUser 
                     ? 'bg-[#e6ad54]/20 text-[#e6ad54] border-[#e6ad54]/40'
                     : 'bg-[#00c878]/20 text-[#00c878] border-[#00c878]/40'
@@ -322,7 +322,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               {/* Direct Logout Button */}
               <button
                 onClick={handleDirectLogout}
-                className="p-2 rounded-xl bg-[#0b100e] hover:bg-rose-950/40 text-[#8a9690] hover:text-rose-400 border border-[#16241f] hover:border-rose-800/50 transition-all"
+                className="p-2 rounded-xl bg-[#0b100e] hover:bg-rose-950/40 text-[#8a9690] hover:text-rose-400 border border-[#16241f] hover:border-rose-800/50 transition-all shrink-0"
                 title={`Log Out (${currentUser.role === 'faculty' ? 'Faculty' : 'Student'})`}
               >
                 <LogOut className="w-4 h-4" />
@@ -332,11 +332,11 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             /* Not logged in: Sign in CTA with Role Selection in Modal */
             <button
               onClick={onOpenAuthModal}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0b100e] hover:bg-[#121a17] text-[#00c878] hover:text-[#f5f7f6] border border-[#00c878]/40 hover:border-[#00c878] text-xs font-mono font-bold transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-[#0b100e] hover:bg-[#121a17] text-[#00c878] hover:text-[#f5f7f6] border border-[#00c878]/40 hover:border-[#00c878] text-xs font-mono font-bold transition-all shadow-sm shrink-0"
               title="Sign In or Register (Select Student or Faculty Portal)"
             >
               <User className="w-3.5 h-3.5 text-[#00c878]" />
-              <span>Sign In / Portal</span>
+              <span className="hidden sm:inline">Sign In / Portal</span>
             </button>
           )}
 
@@ -344,7 +344,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           {portalMode === 'faculty' ? (
             <button
               onClick={handleSwitchToStudent}
-              className="px-3.5 py-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#00c878]/40 font-mono text-xs font-bold transition-all flex items-center gap-1.5"
+              className="px-2.5 sm:px-3.5 py-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#00c878]/40 font-mono text-xs font-bold transition-all flex items-center gap-1.5 shrink-0"
               title="Return to Student View"
             >
               <GraduationCap className="w-3.5 h-3.5" />
@@ -354,7 +354,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             /* Student Apply CTA */
             <button
               onClick={onOpenApplyModal}
-              className="relative group overflow-hidden rounded-xl px-4 py-2 bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-extrabold text-xs sm:text-sm shadow-[0_5px_20px_rgba(0,200,120,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center gap-2 border border-[#00c878]/60 font-mono"
+              className="relative group overflow-hidden rounded-xl px-3 sm:px-4 py-2 bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-extrabold text-xs sm:text-sm shadow-[0_5px_20px_rgba(0,200,120,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center gap-1.5 sm:gap-2 border border-[#00c878]/60 font-mono shrink-0 whitespace-nowrap"
             >
               <span>Apply Now</span>
             </button>
