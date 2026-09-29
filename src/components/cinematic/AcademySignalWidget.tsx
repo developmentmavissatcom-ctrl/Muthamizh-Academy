@@ -7,8 +7,7 @@ import {
   Activity, 
   Users, 
   Volume2, 
-  Clock, 
-  Sparkles 
+  Clock
 } from 'lucide-react';
 
 export const AcademySignalWidget: React.FC<{ onOpenApplyModal: () => void }> = ({ onOpenApplyModal }) => {
@@ -87,7 +86,7 @@ export const AcademySignalWidget: React.FC<{ onOpenApplyModal: () => void }> = (
               onClick={onOpenApplyModal}
               className="w-full py-2 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] text-[#050706] font-mono font-bold text-xs shadow transition-all hover:scale-[1.02] flex items-center justify-center gap-1.5"
             >
-              <Sparkles className="w-3 h-3 text-[#050706]" />
+              <Radio className="w-3 h-3 text-[#050706]" />
               <span>Request Studio Tour & Pass</span>
             </button>
           </div>

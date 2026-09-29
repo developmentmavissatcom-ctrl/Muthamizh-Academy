@@ -12,7 +12,6 @@ import {
   UserCheck, 
   Radio, 
   RefreshCw, 
-  Sparkles, 
   ArrowRight,
   Tv,
   GraduationCap
@@ -311,7 +310,7 @@ export const StudentApplicationTracker: React.FC<StudentApplicationTrackerProps>
       {/* Helpful Instructions banner */}
       <div className="mt-6 p-4 rounded-2xl bg-[#121a17] border border-[#16241f] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#8a9690]">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#e6ad54] shrink-0" />
+          <Award className="w-4 h-4 text-[#e6ad54] shrink-0" />
           <span>Need assistance preparing for your faculty interview or studio assessment?</span>
         </div>
         <a

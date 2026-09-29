@@ -13,7 +13,6 @@ import {
   UserCheck, 
   Radio, 
   RefreshCw, 
-  Sparkles, 
   Search, 
   Filter, 
   SlidersHorizontal, 

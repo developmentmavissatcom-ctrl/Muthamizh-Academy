@@ -3,7 +3,7 @@ import { RegistrationRecord } from '../types';
 import { 
   X, Search, Download, RefreshCw, ShieldCheck, UserCheck, 
   Calendar, Phone, Mail, GraduationCap, TrendingUp, Users, 
-  CheckCircle2, Sparkles, Filter, PieChart, Activity
+  CheckCircle2, Filter, PieChart, Activity
 } from 'lucide-react';
 
 interface AdminRegistrationsModalProps {

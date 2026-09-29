@@ -3,7 +3,7 @@ import { RegistrationRecord, UserProfile } from '../types';
 import { COURSES_DATA } from '../data/coursesData';
 import { 
   X, Send, CheckCircle2, GraduationCap, Phone, Mail, User, 
-  BookOpen, Sparkles, Radio, ShieldCheck, ArrowRight, Activity,
+  BookOpen, Radio, ShieldCheck, ArrowRight, Activity,
   Globe, Laptop
 } from 'lucide-react';
 

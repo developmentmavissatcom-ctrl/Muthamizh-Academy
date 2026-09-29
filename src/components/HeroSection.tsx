@@ -1,5 +1,5 @@
 import React from 'react';
-import { Radio, Sparkles, GraduationCap, ArrowRight, Bot, Shield, CheckCircle2, Tv, Award, Users } from 'lucide-react';
+import { Radio, GraduationCap, ArrowRight, Bot, Shield, CheckCircle2, Tv, Award, Users } from 'lucide-react';
 
 interface HeroSectionProps {
   onOpenAstra: () => void;

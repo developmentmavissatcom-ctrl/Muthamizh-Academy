@@ -98,86 +98,396 @@ export const COURSES_DATA: Course[] = [
     jayaTvHandsOn: 'Build automated AI news summarization bots, broadcast asset tagging agents, and live program indexing tools.'
   },
   {
-    id: 'enterprise-it-support-network-engineering',
-    title: 'Enterprise IT Support, Cloud Infrastructure & Network Engineering',
-    category: 'online_learning',
-    categoryName: 'Online & Virtual Labs',
-    duration: '1 Months (Comprehensive & Job-Ready)',
-    mode: '100% Online (Virtual Labs, Packet Tracer & Remote IT Simulation)',
-    deliveryFormat: '100% Online with Virtual Network Labs & Live Mentorship',
-    isOnline: true,
-    eligibility: 'Open to All 10+2, Diploma & Degree Graduates Seeking Tech Careers',
-    description: 'Master the complete job-ready IT Support and Networking curriculum. Learn computer hardware, Windows administration, Active Directory, Cisco networking, IP addressing, TCP/IP, Wireshark, IT security, and cloud virtualization.',
-    badge: 'High Employment Rate',
-    highlight: '14 Hands-On Modules: Active Directory, Cisco Packet Tracer, Wireshark Packet Analysis, Cloud & Security',
-    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80',
-    tools: [
-      'Cisco Packet Tracer',
-      'Wireshark Network Analyzer',
-      'Windows Server & Active Directory',
-      'PowerShell & Bash CLI',
-      'AWS & Azure Cloud Virtualization',
-      'Enterprise Helpdesk Ticketing Systems'
-    ],
-    careerRoles: [
-      'IT Support Engineer (L1/L2)',
-      'Network Administrator',
-      'System Support Specialist',
-      'Broadcast IT Infrastructure Engineer',
-      'Help Desk Technical Lead'
-    ],
-    keyModules: [
-      'IT Support & Hardware Fundamentals (L1/L2 Escalations, Windows Administration)',
-      'Networking & IP Routing (OSI/TCP-IP, Subnetting, VLANs, 802.1Q, OSPF)',
-      'Security & Active Directory (Domain Controllers, GPOs, Firewalls, ACLs)',
-      'Network Monitoring & Tools (Wireshark, PowerShell Automation, Sysinternals)',
-      'Virtualization, Cloud & Real-World Lab Portfolios (Packet Tracer & Helpdesk Tickets)'
-    ],
-    chapters: [
-      {
-        title: 'Modules 1 to 4 — Hardware, Operating Systems & IP Addressing',
-        topics: [
-          '1. IT Support Fundamentals (Help Desk, L1/L2/L3 Roles, SLA Basics, Troubleshooting Methodology)',
-          '2. Computer Hardware & OS (CPU, RAM, Motherboard, BIOS/UEFI, Windows Permissions, Event Viewer)',
-          '3. Networking Fundamentals (LAN/WAN/WLAN, Topologies, Switches, Routers, OSI & TCP/IP Models, Cabling)',
-          '4. IP Addressing, Subnetting & Services (IPv4/IPv6, CIDR Subnetting, DHCP Troubleshooting, DNS Records, ARP)'
-        ]
-      },
-      {
-        title: 'Modules 5 to 8 — Protocols, Switching, Wireless & IT Security',
-        topics: [
-          '5. TCP/IP Protocols & Connectivity (TCP vs UDP, 3-Way Handshake, HTTP/SSH/RDP, NAT/PAT, VPNs)',
-          '6. Switching, VLANs & Routing (MAC Tables, VLANs, Trunking 802.1Q, Inter-VLAN Routing, OSPF Basics)',
-          '7. Wireless Networking (Wi-Fi 6, 2.4/5/6 GHz Bands, WPA2/WPA3, Access Point Config, Troubleshooting)',
-          '8. IT and Network Security (CIA Triad, MFA, Malware Defense, Firewalls, ACLs, Incident Response)'
-        ]
-      },
-      {
-        title: 'Modules 9 to 11 — Active Directory, PowerShell & Wireshark Analysis',
-        topics: [
-          '9. Windows Server & Active Directory (Domain Controllers, Users/Groups/OUs, Group Policy GPO, Share Permissions)',
-          '10. IT Support Tools & Troubleshooting (PowerShell, ping, tracert, nslookup, netstat, Remote Desktop, Printers)',
-          '11. Network Monitoring & Wireshark (SNMP, Syslog, Wireshark Packet Captures, DNS/HTTP/TCP Traffic Analysis)'
-        ]
-      },
-      {
-        title: 'Modules 12 to 14 — Cloud, Real-World Labs & Interview Preparation',
-        topics: [
-          '12. Virtualization, Cloud & Backup (VMs, Hypervisors, Azure/AWS IaaS/PaaS, Disaster Recovery, PowerShell Automation)',
-          '13. Practical Labs & Real-World IT Support (Windows IT Home Lab, Cisco Packet Tracer Topologies, Helpdesk Tickets)',
-          '14. Job and Interview Preparation (Interview Q&A, Active Directory Scenarios, IT Support Home-Lab Portfolio)'
-        ]
-      }
-    ],
-    fee: '₹5,000',
-    jayaTvHandsOn: 'Hands-on maintenance of satellite channel transmission network racks, SAN storage servers, and PCR workstations.'
+  id: 'ccna-networking-engineering',
+  title: 'CCNA Networking & Network Engineering',
+  category: 'online_learning',
+  categoryName: 'Online & Virtual Labs',
+  duration: '30 Days (20 Days Online + 10 Days Practical)',
+  mode: '20 Days Online + 10 Days Hands-On Training at Jaya TV Office',
+  deliveryFormat: '20 Days Live Online Classes with Cisco Packet Tracer + 10 Days On-Site Hardware & Network Engineering Labs',
+  isOnline: false,
+
+  eligibility: 'Open to Beginners, CS/IT Students, Diploma/Degree Students, IT Support Learners & Aspiring Network Engineers',
+
+  description: 'Build a strong foundation in computer networking and CCNA-level networking through live online classes, Cisco Packet Tracer simulations, IP addressing, subnetting, switching, VLANs, routing, OSPF, network services, security and troubleshooting, followed by 10 days of hands-on training with real Cisco routers, switches, servers, cabling and networking equipment at the Jaya TV office.',
+
+  badge: 'Industry-Ready Networking',
+
+  highlight: 'Learn Networking Fundamentals, Cisco Switching & Routing, VLANs, OSPF, IP Addressing, Network Security & Real-World Hardware Troubleshooting',
+
+  image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80',
+
+  tools: [
+    'Cisco Packet Tracer',
+    'Cisco IOS & CLI',
+    'Cisco Routers',
+    'Cisco Switches',
+    'Network Servers',
+    'Ethernet & RJ45 Cabling',
+    'Network Testing & Troubleshooting Tools',
+    'Wireshark',
+    'IP Addressing & Subnetting Tools',
+    'Live Jaya TV Network Infrastructure'
+  ],
+
+  careerRoles: [
+    'Network Engineer',
+    'Network Support Engineer',
+    'NOC Engineer',
+    'Network Administrator',
+    'IT Support Engineer',
+    'Network Technician',
+    'Infrastructure Support Engineer'
+  ],
+
+  keyModules: [
+    'Networking Fundamentals & Cisco Packet Tracer',
+    'IPv4, IPv6, Subnetting & Network Services',
+    'Cisco Switching, VLANs, Trunking & Routing',
+    'OSPF, DHCP, DNS, NAT & Network Security',
+    'Real Hardware Networking, Troubleshooting & Office Network Deployment'
+  ],
+
+  chapters: [
+    {
+      title: 'Chapter 1 — Networking Fundamentals & Packet Tracer Basics',
+      topics: [
+        '1.1 Introduction to Computer Networking (LAN, WAN, WLAN, Internet & Network Topologies)',
+        '1.2 Network Devices (PC, Switch, Router, Access Point & Server)',
+        '1.3 OSI & TCP/IP Models',
+        '1.4 Ethernet, MAC Addresses & Basic Network Communication',
+        '1.5 Introduction to Cisco Packet Tracer',
+        '1.6 Build Your First Network in Packet Tracer (PC-to-Switch & Basic Connectivity)'
+      ]
+    },
+
+    {
+      title: 'Chapter 2 — IP Addressing, Subnetting & Network Services',
+      topics: [
+        '2.1 IPv4 Addressing & Network Configuration',
+        '2.2 Subnet Masks, CIDR & Basic Subnetting',
+        '2.3 Default Gateway & Private/Public IP Addresses',
+        '2.4 IPv6 Addressing Fundamentals',
+        '2.5 DHCP, DNS, ARP & ICMP',
+        '2.6 Packet Tracer IP Configuration & Connectivity Labs'
+      ]
+    },
+
+    {
+      title: 'Chapter 3 — Cisco Switching, VLANs & Routing Simulation',
+      topics: [
+        '3.1 Cisco IOS & Basic CLI Commands in Packet Tracer',
+        '3.2 Switch Configuration & MAC Address Tables',
+        '3.3 VLANs & Access Port Configuration',
+        '3.4 Trunking & Inter-VLAN Routing',
+        '3.5 Static Routing & Default Routes',
+        '3.6 OSPF Fundamentals & Packet Tracer Routing Labs'
+      ]
+    },
+
+    {
+      title: 'Chapter 4 — Network Services, Security & Troubleshooting',
+      topics: [
+        '4.1 DHCP & DNS Configuration in Packet Tracer',
+        '4.2 NAT/PAT Fundamentals & Simulation',
+        '4.3 Basic Network Security, Passwords & SSH',
+        '4.4 ACL & Firewall Fundamentals',
+        '4.5 Network Troubleshooting (ping, tracert & Cisco show commands)',
+        '4.6 Complete Packet Tracer Network Project'
+      ]
+    },
+
+    {
+      title: 'Chapter 5 — Real Hardware Networking & Jaya TV Practical',
+      topics: [
+        '5.1 Cisco Router & Switch Hardware Identification',
+        '5.2 Physical Connections, Ethernet Cabling & RJ45',
+        '5.3 Console Access & Real Cisco IOS Configuration',
+        '5.4 VLAN, Trunking, Routing & OSPF on Real Devices',
+        '5.5 Server Connectivity, DHCP/NAT & Network Troubleshooting',
+        '5.6 Real-World Office Network Deployment & Final Practical Project'
+      ]
+    }
+  ],
+
+  trainingPlan: {
+    onlineTraining: {
+      duration: '20 Days',
+      format: 'Live Online Classes + Cisco Packet Tracer Simulation',
+      focus: [
+        'Networking Fundamentals',
+        'OSI & TCP/IP Models',
+        'Network Devices & Ethernet',
+        'IPv4 & IPv6',
+        'Subnetting & IP Address Planning',
+        'DHCP & DNS',
+        'Cisco IOS & CLI',
+        'Switching & MAC Address Tables',
+        'VLANs & Trunking',
+        'Inter-VLAN Routing',
+        'Static Routing',
+        'OSPF',
+        'NAT/PAT',
+        'Basic Network Security',
+        'Network Troubleshooting',
+        'Complete Packet Tracer Network Project'
+      ]
+    },
+
+    practicalTraining: {
+      duration: '10 Days',
+      location: 'Jaya TV Office',
+      format: 'Hands-On Hardware & Live Network Engineering Training',
+      focus: [
+        'Cisco Router Hardware',
+        'Cisco Switch Hardware',
+        'Network Servers',
+        'Ethernet & RJ45 Cabling',
+        'Console Access & Physical Device Configuration',
+        'VLAN & Trunk Configuration',
+        'Inter-VLAN Routing',
+        'Static Routing & OSPF',
+        'DHCP & NAT',
+        'Live Server Connectivity',
+        'Network Troubleshooting',
+        'Real Office Network Deployment'
+      ]
+    }
   },
+
+  practicalLabs: [
+    'Build and configure a basic LAN using Cisco Packet Tracer',
+    'Create IPv4 networks and perform subnetting exercises',
+    'Configure VLANs and trunk connections',
+    'Configure inter-VLAN routing',
+    'Configure static routes and default routes',
+    'Configure OSPF between multiple routers',
+    'Configure DHCP and DNS services',
+    'Configure NAT/PAT',
+    'Troubleshoot network connectivity using Cisco commands',
+    'Recreate simulated networks using real Cisco routers and switches'
+  ],
+
+  projects: [
+    'Project 1: Basic Office LAN using Cisco Packet Tracer',
+    'Project 2: Department-Based VLAN Network',
+    'Project 3: Inter-VLAN Routing & DHCP Network',
+    'Project 4: Multi-Router OSPF Network',
+    'Project 5: Complete Office Network using Real Cisco Hardware'
+  ],
+
+  assessment: [
+    'Online Networking Fundamentals Assessments',
+    'IPv4 & Subnetting Exercises',
+    'Cisco CLI Configuration Exercises',
+    'Cisco Packet Tracer Practical Labs',
+    'Online Network Troubleshooting Exercises',
+    'Real Hardware Configuration Assessment',
+    'Final Network Troubleshooting Challenge',
+    'Complete Office Network Capstone Project'
+  ],
+
+  certification: 'Course Completion Certificate in CCNA Networking & Network Engineering',
+
+  fee: '₹5,000',
+
+  jayaTvHandsOn: 'Transform simulation-based networking knowledge into real-world experience by configuring and troubleshooting live Cisco routers, switches, servers, network cabling and other networking infrastructure at the Jaya TV office. Students will recreate selected Packet Tracer networks on physical hardware and complete a real-world office network deployment project.'
+},
+
+{
+  id: 'manual-software-testing',
+  title: 'Manual Software Testing',
+  category: 'online_learning',
+  categoryName: 'Online Learning',
+  duration: '30 Days',
+  mode: '100% Online',
+  deliveryFormat: '30 Days Live Online Classes + Practical Testing Exercises + Real-Time Web Application Testing',
+  isOnline: true,
+
+  eligibility: 'Open to Beginners, CS/IT Students, Diploma/Degree Students, Graduates, Software Testing Aspirants & Working Professionals',
+
+  description: 'Build practical software testing skills through Manual Testing fundamentals, SDLC, STLC, web application testing, basic networking for testers, functional testing, test case design, defect management, Jira, regression testing and real-time web application testing — completely through online training.',
+
+  badge: 'Industry-Ready Manual Testing',
+
+  highlight: 'Learn Manual Testing, Web Testing, Basic Networking for Testers, Test Case Design, Bug Reporting, Jira & Real-Time Online QA Practices',
+
+  image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
+
+  tools: [
+    'Jira',
+    'Web Browsers',
+    'Google Chrome / Microsoft Edge',
+    'Chrome / Edge Developer Tools',
+    'Network Tab',
+    'Excel / Google Sheets',
+    'Test Case Management Tools',
+    'Bug Tracking Tools',
+    'Postman — Basic API Testing',
+    'Real Web Applications'
+  ],
+
+  careerRoles: [
+    'Manual Tester',
+    'Software Test Engineer',
+    'QA Tester',
+    'Quality Assurance Analyst',
+    'Test Analyst',
+    'Junior QA Engineer',
+    'Software Testing Associate'
+  ],
+
+  keyModules: [
+    'Software Testing & Web Application Fundamentals',
+    'Basic Networking & Web Communication for Testers',
+    'Testing Types, Levels & Techniques',
+    'Test Case Design & Test Execution',
+    'Defect Management, Jira & Real-Time Testing Project'
+  ],
+
+  chapters: [
+    {
+      title: 'Chapter 1 — Software Testing & Web Application Fundamentals',
+      topics: [
+        '1.1 Introduction to Software Testing & Quality Assurance',
+        '1.2 Software Development Life Cycle (SDLC) & Testing Life Cycle (STLC)',
+        '1.3 Verification, Validation & Testing Principles',
+        '1.4 Client-Server Architecture & Web Application Basics',
+        '1.5 Basic Networking — IP Address, DNS, Domain, URL & Ports',
+        '1.6 HTTP/HTTPS, Request, Response & Basic Web Communication'
+      ]
+    },
+
+    {
+      title: 'Chapter 2 — Testing Types, Levels & Web Networking',
+      topics: [
+        '2.1 Functional & Non-Functional Testing',
+        '2.2 Unit, Integration, System & Acceptance Testing',
+        '2.3 Smoke, Sanity, Regression & Retesting',
+        '2.4 Black-Box, Positive, Negative, Exploratory & Ad-hoc Testing',
+        '2.5 HTTP Methods — GET, POST, PUT & DELETE',
+        '2.6 HTTP Status Codes, Browser Developer Tools & Network Tab'
+      ]
+    },
+
+    {
+      title: 'Chapter 3 — Test Case Design & Test Execution',
+      topics: [
+        '3.1 Requirement Analysis & Test Scenario Creation',
+        '3.2 Test Case Writing & Test Data Preparation',
+        '3.3 Equivalence Partitioning',
+        '3.4 Boundary Value Analysis',
+        '3.5 Decision Table Testing',
+        '3.6 Test Execution & Requirement Traceability Matrix (RTM)'
+      ]
+    },
+
+    {
+      title: 'Chapter 4 — Defect Management & Jira',
+      topics: [
+        '4.1 Defect / Bug Life Cycle',
+        '4.2 Bug Identification & Reporting',
+        '4.3 Expected Result vs Actual Result',
+        '4.4 Severity vs Priority',
+        '4.5 Retesting & Regression After Bug Fixes',
+        '4.6 Jira — Bug Creation, Tracking & Management'
+      ]
+    },
+
+    {
+      title: 'Chapter 5 — Real-Time Online Manual Testing Project',
+      topics: [
+        '5.1 Real-World Requirement Analysis',
+        '5.2 Test Scenario, Test Case & Test Data Preparation',
+        '5.3 Functional, Positive, Negative & Regression Testing',
+        '5.4 Web Application Testing & Defect Identification',
+        '5.5 Jira Reporting, Retesting & Regression Testing',
+        '5.6 End-to-End Web Application Testing Project'
+      ]
+    }
+  ],
+
+  trainingPlan: {
+    onlineTraining: {
+      duration: '30 Days',
+      format: '100% Live Online Classes + Practical Testing Exercises + Real-Time Web Application Testing',
+      focus: [
+        'Software Testing Fundamentals',
+        'SDLC & STLC',
+        'Testing Principles',
+        'Client-Server Architecture',
+        'Basic Networking for Testers',
+        'IP Address & DNS Basics',
+        'HTTP & HTTPS',
+        'Request & Response',
+        'Functional & Non-Functional Testing',
+        'Testing Levels',
+        'Smoke & Sanity Testing',
+        'Regression & Retesting',
+        'Black-Box Testing',
+        'Positive & Negative Testing',
+        'HTTP Methods',
+        'HTTP Status Codes',
+        'Browser Developer Tools',
+        'Network Tab',
+        'Test Case Design',
+        'Test Data Preparation',
+        'Test Execution',
+        'Defect Reporting',
+        'Jira',
+        'Real-Time Web Application Testing'
+      ]
+    }
+  },
+
+  practicalLabs: [
+    'Understand client-server communication using a web application',
+    'Identify basic IP, DNS, domain, URL and HTTP/HTTPS concepts',
+    'Inspect HTTP requests and responses using Browser Developer Tools',
+    'Identify GET, POST, PUT and DELETE requests',
+    'Analyze HTTP status codes such as 200, 201, 400, 401, 403, 404 and 500',
+    'Test web application login, registration and form validation',
+    'Prepare functional and negative test cases',
+    'Perform smoke, sanity, regression and retesting',
+    'Apply equivalence partitioning and boundary value analysis',
+    'Identify and document software defects',
+    'Create and manage bugs using Jira',
+    'Perform complete end-to-end web application testing online'
+  ],
+
+  projects: [
+    'Project 1: Web Application Requirement & Test Scenario Analysis',
+    'Project 2: Test Case Design & Functional Testing Project',
+    'Project 3: Web Application Network & HTTP Testing Project',
+    'Project 4: Jira Defect Management & Regression Testing Project',
+    'Project 5: End-to-End Online Web Application Testing Project'
+  ],
+
+  assessment: [
+    'Software Testing Fundamentals Assessment',
+    'SDLC & STLC Assessment',
+    'Basic Networking for Testers Assessment',
+    'Testing Types & Techniques Exercises',
+    'Test Case Design Assessment',
+    'Functional Testing Practical',
+    'Bug Reporting & Severity/Priority Assessment',
+    'Jira Practical Exercise',
+    'Web Application Testing Assignment',
+    'Final End-to-End Manual Testing Project'
+  ],
+
+  certification: 'Course Completion Certificate in Manual Software Testing',
+
+  fee: '₹5,000',
+
+  onlineHandsOn: 'Gain practical Manual Testing experience through live online classes and guided hands-on exercises. Students will analyze real-world requirements, prepare test scenarios and test cases, execute functional and regression tests, inspect web requests using browser developer tools, identify defects, report bugs in Jira, perform retesting and complete an end-to-end web application testing project entirely online.'
+},
 
 
  
   {
-    id: 'television-news-reading-anchoring',
-    title: 'Television News Reading, Anchoring & Digital Journalism',
+    id: 'Television News Reading, Anchoring & Digital Journalism',
+    title: 'NEWS Reader Training Program',
     category: 'short_term',
     categoryName: 'Short Term',
     duration: '2 Weeks / 4 Weeks / Weekend Batches',

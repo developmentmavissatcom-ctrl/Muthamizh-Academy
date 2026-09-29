@@ -8,7 +8,6 @@ import {
   Wrench, 
   GraduationCap, 
   Bot, 
-  Sparkles, 
   BookOpen, 
   Tv, 
   Globe, 
@@ -116,7 +115,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
           {/* Overview & Highlight */}
           <div className="space-y-3">
             <div className="p-3.5 rounded-2xl bg-[#121a17] border border-[#00c878]/30 flex items-start gap-3">
-              <Sparkles className="w-4 h-4 text-[#e6ad54] shrink-0 mt-0.5" />
+              <Award className="w-4 h-4 text-[#e6ad54] shrink-0 mt-0.5" />
               <div>
                 <div className="text-xs font-mono font-bold text-[#e6ad54] uppercase tracking-wider">Key Focus & Outcome</div>
                 <div className="text-xs text-[#f5f7f6] mt-0.5">{course.highlight}</div>
@@ -393,7 +392,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <span>Studio Floor & Practical Project Exposure</span>
             </div>
             <p className="text-[#8a9690] leading-relaxed">
-              {course.jayaTvHandsOn}
+              {course.onlineHandsOn || course.jayaTvHandsOn}
             </p>
           </div>
 

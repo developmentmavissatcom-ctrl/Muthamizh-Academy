@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Tv, Mic, Monitor, Film, Layers, Sparkles } from 'lucide-react';
+import { Camera, Tv, Mic, Monitor, Film, Layers } from 'lucide-react';
 
 export const CampusLifeSection: React.FC = () => {
   const facilities = [
@@ -35,7 +35,7 @@ export const CampusLifeSection: React.FC = () => {
         
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#121a17] border border-[#e6ad54]/30 text-[#e6ad54] text-xs font-mono font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Tv className="w-3.5 h-3.5" />
             <span>World Class Studio Infrastructure</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#f5f7f6] tracking-tight font-sans">

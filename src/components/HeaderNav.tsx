@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { NavTab, CourseCategory, UserProfile, PortalMode } from '../types';
 import { MuthamizhLogo } from './MuthamizhLogo';
 import { 
   Radio, 
   ChevronDown, 
-  Sparkles, 
   GraduationCap, 
   Award, 
   Layers, 
@@ -130,13 +130,27 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 e.preventDefault();
                 setActiveTab('home');
               }}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`relative px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
                 activeTab === 'home'
-                  ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
+                  ? 'text-[#00c878]'
                   : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#0b100e]'
               }`}
             >
-              Home
+              {activeTab === 'home' && (
+                <>
+                  <motion.div
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-[#121a17] border border-[#00c878]/50 rounded-xl shadow-md z-0"
+                    transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                  />
+                  <motion.div
+                    layoutId="activeNavUnderline"
+                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-transparent via-[#00c878] to-transparent rounded-full shadow-[0_0_8px_rgba(0,200,120,0.8)] z-10"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                </>
+              )}
+              <span className="relative z-10">Home</span>
             </a>
 
             <a
@@ -145,13 +159,27 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 e.preventDefault();
                 setActiveTab('about');
               }}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`relative px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
                 activeTab === 'about'
-                  ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
+                  ? 'text-[#00c878]'
                   : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#0b100e]'
               }`}
             >
-              About Us
+              {activeTab === 'about' && (
+                <>
+                  <motion.div
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-[#121a17] border border-[#00c878]/50 rounded-xl shadow-md z-0"
+                    transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                  />
+                  <motion.div
+                    layoutId="activeNavUnderline"
+                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-transparent via-[#00c878] to-transparent rounded-full shadow-[0_0_8px_rgba(0,200,120,0.8)] z-10"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                </>
+              )}
+              <span className="relative z-10">About Us</span>
             </a>
 
             {/* Courses Mega Dropdown */}
@@ -163,14 +191,30 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                   setActiveTab('courses');
                   setCoursesDropdownOpen(!coursesDropdownOpen);
                 }}
-                className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                className={`relative px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5 ${
                   activeTab === 'courses'
-                    ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
+                    ? 'text-[#00c878]'
                     : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#0b100e]'
                 }`}
               >
-                <span>Courses</span>
-                <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
+                {activeTab === 'courses' && (
+                  <>
+                    <motion.div
+                      layoutId="activeNavPill"
+                      className="absolute inset-0 bg-[#121a17] border border-[#00c878]/50 rounded-xl shadow-md z-0"
+                      transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                    />
+                    <motion.div
+                      layoutId="activeNavUnderline"
+                      className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-transparent via-[#00c878] to-transparent rounded-full shadow-[0_0_8px_rgba(0,200,120,0.8)] z-10"
+                      transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                    />
+                  </>
+                )}
+                <span className="relative z-10 flex items-center gap-1">
+                  <span>Courses</span>
+                  <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
+                </span>
               </a>
 
               {/* Dropdown Menu */}
@@ -192,7 +236,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                   onClick={() => handleCategoryClick('short_term')}
                   className="w-full text-left px-3 py-2 rounded-xl text-xs hover:bg-[#121a17] hover:text-[#00c878] transition-colors flex items-center gap-2 text-[#f5f7f6]"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-[#e6ad54]" />
+                  <Award className="w-3.5 h-3.5 text-[#e6ad54]" />
                   <span>Certificate & Fast-Track (3-6 Mos)</span>
                 </button>
 
@@ -234,13 +278,27 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 e.preventDefault();
                 setActiveTab('campus');
               }}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`relative px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
                 activeTab === 'campus'
-                  ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
+                  ? 'text-[#00c878]'
                   : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#0b100e]'
               }`}
             >
-              Campus Life
+              {activeTab === 'campus' && (
+                <>
+                  <motion.div
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-[#121a17] border border-[#00c878]/50 rounded-xl shadow-md z-0"
+                    transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                  />
+                  <motion.div
+                    layoutId="activeNavUnderline"
+                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-transparent via-[#00c878] to-transparent rounded-full shadow-[0_0_8px_rgba(0,200,120,0.8)] z-10"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                </>
+              )}
+              <span className="relative z-10">Campus Life</span>
             </a>
 
             <a
@@ -249,14 +307,30 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 e.preventDefault();
                 setActiveTab('gallery');
               }}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5 ${
+              className={`relative px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5 ${
                 activeTab === 'gallery'
-                  ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
+                  ? 'text-[#00c878]'
                   : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#0b100e]'
               }`}
             >
-              <Camera className="w-4 h-4 text-[#00c878]" />
-              <span>Gallery</span>
+              {activeTab === 'gallery' && (
+                <>
+                  <motion.div
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-[#121a17] border border-[#00c878]/50 rounded-xl shadow-md z-0"
+                    transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                  />
+                  <motion.div
+                    layoutId="activeNavUnderline"
+                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-transparent via-[#00c878] to-transparent rounded-full shadow-[0_0_8px_rgba(0,200,120,0.8)] z-10"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                </>
+              )}
+              <span className="relative z-10 flex items-center gap-1.5">
+                <Camera className="w-4 h-4 text-[#00c878]" />
+                <span>Gallery</span>
+              </span>
             </a>
 
             <a
@@ -265,13 +339,27 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 e.preventDefault();
                 setActiveTab('faculty');
               }}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`relative px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
                 activeTab === 'faculty'
-                  ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-md'
+                  ? 'text-[#00c878]'
                   : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#0b100e]'
               }`}
             >
-              Faculty
+              {activeTab === 'faculty' && (
+                <>
+                  <motion.div
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-[#121a17] border border-[#00c878]/50 rounded-xl shadow-md z-0"
+                    transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                  />
+                  <motion.div
+                    layoutId="activeNavUnderline"
+                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-transparent via-[#00c878] to-transparent rounded-full shadow-[0_0_8px_rgba(0,200,120,0.8)] z-10"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                </>
+              )}
+              <span className="relative z-10">Faculty</span>
             </a>
 
             {/* Highlighted Student Tracker Link */}
@@ -281,15 +369,31 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 e.preventDefault();
                 setActiveTab('tracker');
               }}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5 ${
+              className={`relative px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5 ${
                 activeTab === 'tracker'
-                  ? 'bg-[#00c878]/20 text-[#00c878] border border-[#00c878] shadow-md font-mono'
-                  : 'text-[#00c878] hover:bg-[#121a17] font-mono'
+                  ? 'text-[#00c878]'
+                  : 'text-[#00c878] hover:bg-[#121a17]'
               }`}
               title="Track Your Application Progress"
             >
-              <Radio className="w-3.5 h-3.5 text-[#00c878] animate-pulse" />
-              <span>My Tracker</span>
+              {activeTab === 'tracker' && (
+                <>
+                  <motion.div
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-[#00c878]/20 border border-[#00c878] rounded-xl shadow-md z-0"
+                    transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                  />
+                  <motion.div
+                    layoutId="activeNavUnderline"
+                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-[#00c878] rounded-full shadow-[0_0_8px_rgba(0,200,120,0.9)] z-10"
+                    transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  />
+                </>
+              )}
+              <span className="relative z-10 flex items-center gap-1.5 font-mono">
+                <Radio className="w-3.5 h-3.5 text-[#00c878] animate-pulse" />
+                <span>My Tracker</span>
+              </span>
             </a>
           </nav>
         ) : (

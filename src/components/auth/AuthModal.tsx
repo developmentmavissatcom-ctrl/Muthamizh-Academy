@@ -9,7 +9,6 @@ import {
   Phone, 
   ShieldCheck, 
   KeyRound, 
-  Sparkles, 
   ArrowRight, 
   CheckCircle2, 
   RefreshCw, 

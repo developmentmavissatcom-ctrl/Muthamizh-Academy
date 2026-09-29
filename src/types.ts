@@ -54,8 +54,26 @@ export interface Course {
   keyModules: string[];
   chapters?: CourseChapter[];
   durationTracks?: DurationTrack[];
+  trainingPlan?: {
+    onlineTraining?: {
+      duration: string;
+      format: string;
+      focus: string[];
+    };
+    practicalTraining?: {
+      duration: string;
+      location: string;
+      format: string;
+      focus: string[];
+    };
+  };
+  practicalLabs?: string[];
+  projects?: string[];
+  assessment?: string[];
+  certification?: string;
   fee: string;
-  jayaTvHandsOn: string;
+  jayaTvHandsOn?: string;
+  onlineHandsOn?: string;
 }
 
 export interface FacultyMember {

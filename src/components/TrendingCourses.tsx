@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { Course, CourseCategory } from '../types';
 import { COURSES_DATA } from '../data/coursesData';
 import { 
-  Sparkles, 
   Clock, 
   ChevronRight, 
   Bot, 

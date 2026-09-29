@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { NavTab, CourseCategory, Course, RegistrationRecord, UserProfile, PortalMode } from './types';
 import { HeaderNav } from './components/HeaderNav';
 import { BroadcastHero } from './components/cinematic/BroadcastHero';
@@ -61,6 +62,180 @@ const TAB_SEO_CONFIG: Record<NavTab, { title: string; path: string }> = {
   }
 };
 
+/**
+ * User-Specified Transition Effects Pool:
+ * 1. Fade + Slide: Current tab content fades out and slides slightly left; new content fades in and slides from the right.
+ * 2. Scale + Fade: Old content gently scales down (1 → 0.98) while fading; new content scales up (0.98 → 1) while appearing.
+ * 3. Underline + Content Reveal: Animated underline moves smoothly beneath active tab; content appears with a subtle upward motion.
+ * 4. Sliding Panel: Content behaves like a horizontal carousel; switching tabs slides the new section into view.
+ * 5. Blur Transition: Content briefly becomes blurred while changing; new content sharpens into focus.
+ * 6. Morphing Indicator & Content Combo: Opacity + translateY + slight scale with buttery-smooth fade-in.
+ */
+interface TabTransitionEffect {
+  name: string;
+  initial: { opacity: number; x?: number; y?: number; scale?: number; filter?: string };
+  animate: { opacity: number; x?: number; y?: number; scale?: number; filter?: string; transition?: any };
+  exit: { opacity: number; x?: number; y?: number; scale?: number; filter?: string; transition?: any };
+}
+
+const TAB_TRANSITION_EFFECTS: TabTransitionEffect[] = [
+  // 1. Fade + Slide (Current tab fades out and slides slightly left; new fades in and slides from the right - buttery smooth)
+  {
+    name: 'Fade + Slide',
+    initial: { opacity: 0, x: 50, y: 0, scale: 1, filter: 'blur(3px)' },
+    animate: { 
+      opacity: 1, 
+      x: 0, 
+      y: 0, 
+      scale: 1, 
+      filter: 'blur(0px)',
+      transition: { 
+        duration: 0.58, 
+        ease: [0.16, 1, 0.3, 1],
+        opacity: { duration: 0.52, ease: [0.33, 1, 0.68, 1] } 
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      x: -35, 
+      y: 0, 
+      scale: 1, 
+      filter: 'blur(2px)',
+      transition: { duration: 0.22, ease: [0.4, 0, 1, 1] } 
+    }
+  },
+
+  // 2. Scale + Fade (Old gently scales down 1 -> 0.98 while fading; new scales up 0.98 -> 1 with gradual blooming fade)
+  {
+    name: 'Scale + Fade',
+    initial: { opacity: 0, scale: 0.975, x: 0, y: 0, filter: 'blur(3px)' },
+    animate: { 
+      opacity: 1, 
+      scale: 1, 
+      x: 0, 
+      y: 0, 
+      filter: 'blur(0px)',
+      transition: { 
+        duration: 0.56, 
+        ease: [0.16, 1, 0.3, 1],
+        opacity: { duration: 0.52, ease: [0.33, 1, 0.68, 1] } 
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.985, 
+      x: 0, 
+      y: 0, 
+      filter: 'blur(2px)',
+      transition: { duration: 0.22, ease: [0.4, 0, 1, 1] } 
+    }
+  },
+
+  // 3. Underline + Content Reveal (Content appears with subtle upward motion and luscious fade-in)
+  {
+    name: 'Underline + Content Reveal',
+    initial: { opacity: 0, y: 35, scale: 1, x: 0, filter: 'blur(3px)' },
+    animate: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1, 
+      x: 0, 
+      filter: 'blur(0px)',
+      transition: { 
+        duration: 0.6, 
+        ease: [0.16, 1, 0.3, 1],
+        opacity: { duration: 0.54, ease: [0.33, 1, 0.68, 1] } 
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -20, 
+      scale: 1, 
+      x: 0, 
+      filter: 'blur(2px)',
+      transition: { duration: 0.22, ease: [0.4, 0, 1, 1] } 
+    }
+  },
+
+  // 4. Sliding Panel (Content behaves like a horizontal carousel with smooth gliding fade-in)
+  {
+    name: 'Sliding Panel',
+    initial: { opacity: 0, x: 80, y: 0, scale: 1, filter: 'blur(3px)' },
+    animate: { 
+      opacity: 1, 
+      x: 0, 
+      y: 0, 
+      scale: 1, 
+      filter: 'blur(0px)',
+      transition: { 
+        duration: 0.6, 
+        ease: [0.16, 1, 0.3, 1],
+        opacity: { duration: 0.54, ease: [0.33, 1, 0.68, 1] } 
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      x: -80, 
+      y: 0, 
+      scale: 1, 
+      filter: 'blur(2px)',
+      transition: { duration: 0.24, ease: [0.4, 0, 1, 1] } 
+    }
+  },
+
+  // 5. Blur Transition (Content briefly blurs while changing; new content sharpens into focus like butter)
+  {
+    name: 'Blur Transition',
+    initial: { opacity: 0, filter: 'blur(12px)', scale: 0.99, x: 0, y: 0 },
+    animate: { 
+      opacity: 1, 
+      filter: 'blur(0px)', 
+      scale: 1, 
+      x: 0, 
+      y: 0,
+      transition: { 
+        duration: 0.58, 
+        ease: [0.16, 1, 0.3, 1],
+        opacity: { duration: 0.52, ease: [0.33, 1, 0.68, 1] } 
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      filter: 'blur(8px)', 
+      scale: 0.99, 
+      x: 0, 
+      y: 0,
+      transition: { duration: 0.22, ease: [0.4, 0, 1, 1] } 
+    }
+  },
+
+  // 6. Morphing Indicator & Content Combo (Opacity + translateY + slight scale with buttery-smooth fade-in)
+  {
+    name: 'Morphing Pill Combo',
+    initial: { opacity: 0, y: 30, scale: 0.985, x: 0, filter: 'blur(3px)' },
+    animate: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1, 
+      x: 0, 
+      filter: 'blur(0px)',
+      transition: { 
+        duration: 0.58, 
+        ease: [0.22, 1, 0.36, 1],
+        opacity: { duration: 0.54, ease: [0.33, 1, 0.68, 1] } 
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -18, 
+      scale: 0.985, 
+      x: 0, 
+      filter: 'blur(2px)',
+      transition: { duration: 0.22, ease: [0.4, 0, 1, 1] } 
+    }
+  }
+];
+
 export default function App() {
   const [portalMode, setPortalMode] = useState<PortalMode>(() => {
     const saved = localStorage.getItem('muthamizh_portal_mode') as PortalMode;
@@ -78,6 +253,31 @@ export default function App() {
     }
     return 'home';
   });
+
+  // Randomized smooth transition state
+  const [transitionEffectIndex, setTransitionEffectIndex] = useState(0);
+  const [transitionKey, setTransitionKey] = useState(0);
+  const prevTabRef = useRef(activeTab);
+
+  const triggerRandomTabTransition = () => {
+    setTransitionEffectIndex((prev) => {
+      let next = Math.floor(Math.random() * TAB_TRANSITION_EFFECTS.length);
+      if (next === prev) {
+        next = (next + 1) % TAB_TRANSITION_EFFECTS.length;
+      }
+      return next;
+    });
+    setTransitionKey((prev) => prev + 1);
+  };
+
+  const handleTabChange = (tab: NavTab) => {
+    triggerRandomTabTransition();
+    setActiveTab(tab);
+    if (tab !== 'admin') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const [selectedCourseCategory, setSelectedCourseCategory] = useState<CourseCategory | 'all'>('all');
   
   // User Authentication State
@@ -233,6 +433,11 @@ export default function App() {
 
   // When activeTab changes: update scroll, document.title, canonical URL, and browser URL
   useEffect(() => {
+    if (prevTabRef.current !== activeTab) {
+      prevTabRef.current = activeTab;
+      triggerRandomTabTransition();
+    }
+
     if (activeTab === 'admin') {
       setAdminModalOpen(true);
     } else {
@@ -341,12 +546,7 @@ export default function App() {
       {/* Top Header & Navigation */}
       <HeaderNav
         activeTab={activeTab}
-        setActiveTab={(tab) => {
-          setActiveTab(tab);
-          if (tab !== 'admin') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }}
+        setActiveTab={handleTabChange}
         portalMode={portalMode}
         setPortalMode={setPortalMode}
         onSelectCategory={(cat) => setSelectedCourseCategory(cat)}
@@ -367,120 +567,154 @@ export default function App() {
         }}
         onOpenFacultyLogin={() => {
           setPortalMode('faculty');
-          setActiveTab('faculty_portal');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          handleTabChange('faculty_portal');
         }}
         onOpenUserProfile={() => setUserProfileModalOpen(true)}
         onLogout={handleLogout}
       />
 
-      {/* Main Content Area */}
-      <main className="relative z-10 flex-1 w-full">
-        
-        {/* EXCLUSIVE FACULTY ADMISSIONS DESK */}
-        {(portalMode === 'faculty' || activeTab === 'faculty_portal') ? (
-          <div className="pt-2 pb-16 animate-in fade-in w-full">
-            <FacultyPortal
-              currentUser={currentUser}
-              onFacultyLogout={handleLogout}
-              onSwitchToStudentView={() => {
-                setPortalMode('student');
-                localStorage.setItem('muthamizh_portal_mode', 'student');
-                setActiveTab('home');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onNavigateToFacultyTab={() => {
-                setPortalMode('student');
-                localStorage.setItem('muthamizh_portal_mode', 'student');
-                setActiveTab('faculty');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onFacultyLoginSuccess={(user) => {
-                const token = localStorage.getItem('muthamizh_auth_token') || '';
-                handleAuthSuccess(user, token);
-              }}
-            />
-          </div>
-        ) : (
-          <>
-            {/* STUDENT APPLICATION PROGRESS TRACKER VIEW */}
-            {activeTab === 'tracker' && (
-              <div className="pt-8 pb-20 px-4 sm:px-6 max-w-5xl mx-auto animate-in fade-in w-full">
-                <StudentApplicationTracker
-                  currentUser={currentUser}
-                  onOpenAuthModal={() => {
-                    setAuthModalMode('login');
-                    setAuthModalOpen(true);
-                  }}
-                  onOpenApplyModal={handleOpenApplyModal}
-                />
-              </div>
-            )}
+      {/* Main Content Area with Smooth Randomized Transitions */}
+      <main className="relative z-10 flex-1 w-full overflow-x-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${activeTab}-${portalMode}-${transitionKey}`}
+            initial={TAB_TRANSITION_EFFECTS[transitionEffectIndex].initial}
+            animate={TAB_TRANSITION_EFFECTS[transitionEffectIndex].animate}
+            exit={TAB_TRANSITION_EFFECTS[transitionEffectIndex].exit}
+            className="w-full will-change-transform"
+          >
+          {/* EXCLUSIVE FACULTY ADMISSIONS DESK */}
+          {(portalMode === 'faculty' || activeTab === 'faculty_portal') ? (
+            <div className="pt-2 pb-16 w-full">
+              <FacultyPortal
+                currentUser={currentUser}
+                onFacultyLogout={handleLogout}
+                onSwitchToStudentView={() => {
+                  setPortalMode('student');
+                  localStorage.setItem('muthamizh_portal_mode', 'student');
+                  handleTabChange('home');
+                }}
+                onNavigateToFacultyTab={() => {
+                  setPortalMode('student');
+                  localStorage.setItem('muthamizh_portal_mode', 'student');
+                  handleTabChange('faculty');
+                }}
+                onFacultyLoginSuccess={(user) => {
+                  const token = localStorage.getItem('muthamizh_auth_token') || '';
+                  handleAuthSuccess(user, token);
+                }}
+              />
+            </div>
+          ) : (
+            <>
+              {/* STUDENT APPLICATION PROGRESS TRACKER VIEW */}
+              {activeTab === 'tracker' && (
+                <div className="pt-8 pb-20 px-4 sm:px-6 max-w-5xl mx-auto w-full">
+                  <StudentApplicationTracker
+                    currentUser={currentUser}
+                    onOpenAuthModal={() => {
+                      setAuthModalMode('login');
+                      setAuthModalOpen(true);
+                    }}
+                    onOpenApplyModal={handleOpenApplyModal}
+                  />
+                </div>
+              )}
 
-            {/* HOME VIEW: Studio OS Broadcast Experience */}
-            {activeTab === 'home' && (
-              <div className="space-y-0 w-full">
-                
-                {/* Broadcast Control Room Hero */}
-                <BroadcastHero
-                  onOpenAstra={() => {
-                    setAstraCourseContext(null);
-                    setAstraOpen(true);
-                  }}
-                  onExploreCourses={() => {
-                    setActiveTab('courses');
-                    const el = document.getElementById('courses-section');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  onOpenApplyModal={() => setApplyModalOpen(true)}
-                  onOpenDiscovery={() => {
-                    const el = document.getElementById('discovery-section');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                />
+              {/* HOME VIEW: Studio OS Broadcast Experience */}
+              {activeTab === 'home' && (
+                <div className="space-y-0 w-full">
+                  
+                  {/* Broadcast Control Room Hero */}
+                  <BroadcastHero
+                    onOpenAstra={() => {
+                      setAstraCourseContext(null);
+                      setAstraOpen(true);
+                    }}
+                    onExploreCourses={() => {
+                      handleTabChange('courses');
+                      const el = document.getElementById('courses-section');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    onOpenApplyModal={() => setApplyModalOpen(true)}
+                    onOpenDiscovery={() => {
+                      const el = document.getElementById('discovery-section');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  />
 
-                {/* Student Quick Status & Application Bar */}
-                <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-6">
-                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#0b100e] via-[#121a17] to-[#0b100e] border border-[#00c878]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#00c878]/20 text-[#00c878] flex items-center justify-center border border-[#00c878]/40">
-                        <span className="w-3 h-3 rounded-full bg-[#00c878] animate-ping" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-[#f5f7f6] font-mono flex items-center gap-2">
-                          <span>Student Admissions & Live Status Tracker</span>
-                          <span className="text-[10px] bg-[#00c878] text-[#050706] font-extrabold px-2 py-0.5 rounded uppercase">2026 Batch</span>
+                  {/* Student Quick Status & Application Bar */}
+                  <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-6">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#0b100e] via-[#121a17] to-[#0b100e] border border-[#00c878]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#00c878]/20 text-[#00c878] flex items-center justify-center border border-[#00c878]/40">
+                          <span className="w-3 h-3 rounded-full bg-[#00c878] animate-ping" />
                         </div>
-                        <p className="text-xs text-[#8a9690] mt-0.5">
-                          {currentUser 
-                            ? `Signed in as ${currentUser.fullName} • Status: ${currentUser.admissionStatus || 'Registered'}`
-                            : 'Sign in to monitor live application progress, interview schedules, faculty remarks & studio floor clearance.'}
-                        </p>
+                        <div>
+                          <div className="text-sm font-bold text-[#f5f7f6] font-mono flex items-center gap-2">
+                            <span>Student Admissions & Live Status Tracker</span>
+                            <span className="text-[10px] bg-[#00c878] text-[#050706] font-extrabold px-2 py-0.5 rounded uppercase">2026 Batch</span>
+                          </div>
+                          <p className="text-xs text-[#8a9690] mt-0.5">
+                            {currentUser 
+                              ? `Signed in as ${currentUser.fullName} • Status: ${currentUser.admissionStatus || 'Registered'}`
+                              : 'Sign in to monitor live application progress, interview schedules, faculty remarks & studio floor clearance.'}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-center gap-2 w-full md:w-auto">
-                      <button
-                        onClick={() => {
-                          setActiveTab('tracker');
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
-                        className="flex-1 md:flex-initial px-4 py-2 rounded-xl bg-[#16241f] hover:bg-[#1f332a] text-[#00c878] border border-[#00c878]/40 font-mono text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
-                      >
-                        <span>Check Status Tracker</span>
-                      </button>
-                      <button
-                        onClick={() => handleOpenApplyModal()}
-                        className="flex-1 md:flex-initial px-4 py-2 rounded-xl bg-[#00c878] hover:bg-[#00e087] text-[#050706] font-mono text-xs font-extrabold transition-colors flex items-center justify-center gap-1.5 shadow-md"
-                      >
-                        <span>Apply for 2026</span>
-                      </button>
+                      <div className="flex items-center gap-2 w-full md:w-auto">
+                        <button
+                          onClick={() => {
+                            handleTabChange('tracker');
+                          }}
+                          className="flex-1 md:flex-initial px-4 py-2 rounded-xl bg-[#16241f] hover:bg-[#1f332a] text-[#00c878] border border-[#00c878]/40 font-mono text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <span>Check Status Tracker</span>
+                        </button>
+                        <button
+                          onClick={() => handleOpenApplyModal()}
+                          className="flex-1 md:flex-initial px-4 py-2 rounded-xl bg-[#00c878] hover:bg-[#00e087] text-[#050706] font-mono text-xs font-extrabold transition-colors flex items-center justify-center gap-1.5 shadow-md"
+                        >
+                          <span>Apply for 2026</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Studio OS Curricula & Trending Courses */}
-                <div id="courses-section">
+                  {/* Studio OS Curricula & Trending Courses */}
+                  <div id="courses-section">
+                    <TrendingCourses
+                      onSelectCourse={(course) => setSelectedCourseForModal(course)}
+                      onOpenAstraWithCourse={handleOpenAstraWithCourse}
+                      onOpenApplyModal={handleOpenApplyModal}
+                      selectedCategory={selectedCourseCategory}
+                      setSelectedCategory={setSelectedCourseCategory}
+                    />
+                  </div>
+
+                  {/* About Institution Section */}
+                  <AboutSection />
+
+                  {/* Studio Floor Infrastructure Section */}
+                  <CampusLifeSection />
+
+                  {/* Jaya TV Showrunners & Faculty Mentors */}
+                  <FacultySection />
+                </div>
+              )}
+
+              {/* ABOUT VIEW */}
+              {activeTab === 'about' && (
+                <div className="pt-4 pb-16 w-full">
+                  <AboutSection />
+                  <CampusLifeSection />
+                </div>
+              )}
+
+              {/* COURSES VIEW */}
+              {activeTab === 'courses' && (
+                <div className="pt-4 pb-16 w-full">
                   <TrendingCourses
                     onSelectCourse={(course) => setSelectedCourseForModal(course)}
                     onOpenAstraWithCourse={handleOpenAstraWithCourse}
@@ -489,62 +723,32 @@ export default function App() {
                     setSelectedCategory={setSelectedCourseCategory}
                   />
                 </div>
+              )}
 
-                {/* About Institution Section */}
-                <AboutSection />
+              {/* CAMPUS VIEW */}
+              {activeTab === 'campus' && (
+                <div className="pt-4 pb-16 w-full">
+                  <CampusLifeSection />
+                </div>
+              )}
 
-                {/* Studio Floor Infrastructure Section */}
-                <CampusLifeSection />
+              {/* FACULTY VIEW */}
+              {activeTab === 'faculty' && (
+                <div className="pt-4 pb-16 w-full">
+                  <FacultySection />
+                </div>
+              )}
 
-                {/* Jaya TV Showrunners & Faculty Mentors */}
-                <FacultySection />
-              </div>
-            )}
-
-            {/* ABOUT VIEW */}
-            {activeTab === 'about' && (
-              <div className="pt-4 pb-16 animate-in fade-in w-full">
-                <AboutSection />
-                <CampusLifeSection />
-              </div>
-            )}
-
-            {/* COURSES VIEW */}
-            {activeTab === 'courses' && (
-              <div className="pt-4 pb-16 animate-in fade-in w-full">
-                <TrendingCourses
-                  onSelectCourse={(course) => setSelectedCourseForModal(course)}
-                  onOpenAstraWithCourse={handleOpenAstraWithCourse}
-                  onOpenApplyModal={handleOpenApplyModal}
-                  selectedCategory={selectedCourseCategory}
-                  setSelectedCategory={setSelectedCourseCategory}
-                />
-              </div>
-            )}
-
-            {/* CAMPUS VIEW */}
-            {activeTab === 'campus' && (
-              <div className="pt-4 pb-16 animate-in fade-in w-full">
-                <CampusLifeSection />
-              </div>
-            )}
-
-            {/* FACULTY VIEW */}
-            {activeTab === 'faculty' && (
-              <div className="pt-4 pb-16 animate-in fade-in w-full">
-                <FacultySection />
-              </div>
-            )}
-
-            {/* GALLERY VIEW */}
-            {activeTab === 'gallery' && (
-              <div className="pt-4 pb-16 animate-in fade-in w-full">
-                <GallerySection onOpenApplyModal={() => setApplyModalOpen(true)} />
-              </div>
-            )}
-          </>
-        )}
-
+              {/* GALLERY VIEW */}
+              {activeTab === 'gallery' && (
+                <div className="pt-4 pb-16 w-full">
+                  <GallerySection onOpenApplyModal={() => setApplyModalOpen(true)} />
+                </div>
+              )}
+            </>
+          )}
+        </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Floating Academy Signal Live Widget */}
@@ -554,7 +758,7 @@ export default function App() {
 
       {/* Footer */}
       <Footer
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         onOpenAstra={() => setAstraOpen(true)}
         onOpenApplyModal={() => setApplyModalOpen(true)}
       />

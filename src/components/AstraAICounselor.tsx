@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ChatMessage, RegistrationRecord } from '../types';
 import { COURSES_DATA } from '../data/coursesData';
 import { 
-  Bot, Send, X, Sparkles, 
+  Bot, Send, X, 
   UserCheck, ShieldCheck, RefreshCw, MessageSquare, 
   GraduationCap, Film, Zap, Radio, ChevronRight, HelpCircle,
   Compass, Scale, Activity, ArrowRight, CheckCircle2,
@@ -343,7 +343,7 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
                   >
                     {!isUser && (
                       <div className="flex items-center gap-1.5 mb-1.5 pb-1 border-b border-[#16241f] text-[10px] font-mono font-bold text-[#e6ad54] uppercase tracking-wider">
-                        <Sparkles className="w-3 h-3 text-[#e6ad54]" />
+                        <Bot className="w-3 h-3 text-[#e6ad54]" />
                         <span>Astra AI Concierge</span>
                       </div>
                     )}

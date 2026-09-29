@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   GALLERY_ITEMS, 
   GalleryCategory, 
-  GalleryItem,
-  DRIVE_FOLDER_URL
+  GalleryItem
 } from '../data/galleryData';
 import { 
   Camera, 
@@ -18,8 +17,6 @@ import {
   ChevronRight, 
   MapPin, 
   Info,
-  Sparkles,
-  FolderPlus,
   Search,
   Film,
   Play,
@@ -27,10 +24,8 @@ import {
   Volume2,
   VolumeX,
   Gauge,
-  HelpCircle,
-  CheckCircle2,
-  Copy,
-  ExternalLink
+  Calendar,
+  ArrowRight
 } from 'lucide-react';
 
 interface GallerySectionProps {
@@ -42,15 +37,12 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
   const [activeModalItem, setActiveModalItem] = useState<GalleryItem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [mediaFilter, setMediaFilter] = useState<'all' | 'images' | 'videos'>('all');
-  const [showGuideModal, setShowGuideModal] = useState(false);
-  const [copiedText, setCopiedText] = useState(false);
   const [visibleCount, setVisibleCount] = useState(18);
-  const [useDriveEmbed, setUseDriveEmbed] = useState(false);
 
   // Video playback controls inside modal
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [isSlowMo, setIsSlowMo] = useState(true);
+  const [isSlowMo, setIsSlowMo] = useState(false);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -58,15 +50,11 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
   }, [selectedCategory, mediaFilter, searchQuery]);
 
   useEffect(() => {
-    setUseDriveEmbed(false);
-  }, [activeModalItem]);
-
-  useEffect(() => {
-    if (activeModalItem?.videoSrc && modalVideoRef.current && !useDriveEmbed) {
+    if (activeModalItem?.videoSrc && modalVideoRef.current) {
       modalVideoRef.current.playbackRate = isSlowMo ? 0.5 : 1.0;
       modalVideoRef.current.play().catch(() => undefined);
     }
-  }, [activeModalItem, isSlowMo, useDriveEmbed]);
+  }, [activeModalItem, isSlowMo]);
 
   const toggleModalVideoPlay = () => {
     const video = modalVideoRef.current;
@@ -103,7 +91,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
     { id: 'edit_suites', label: 'Edit & Grading Suites', icon: <Sliders className="w-3.5 h-3.5" /> },
     { id: 'server_rooms', label: 'Server Rooms & MCR', icon: <Server className="w-3.5 h-3.5" /> },
     { id: 'classrooms', label: 'Classrooms & Labs', icon: <GraduationCap className="w-3.5 h-3.5" /> },
-    { id: 'equipment', label: 'Cinema Gear & Campus', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { id: 'equipment', label: 'Cinema Gear & Campus', icon: <Film className="w-3.5 h-3.5" /> },
   ];
 
   // Filtering Logic
@@ -145,13 +133,6 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
     setActiveModalItem(filteredItems[prevIndex]);
   };
 
-  const copyCodeSample = () => {
-    const code = `{\n  id: 'my-custom-photo',\n  title: 'Studio Floor 2',\n  category: 'studios',\n  categoryLabel: 'Television Studio',\n  image: '/gallery/studios/floor2.jpg',\n  description: '10,000 sq.ft live production stage.',\n  specs: ['10,000 Sq.Ft', 'DMX Lighting', 'Chroma Green'],\n  location: 'Floor 1 — Main Floor'\n}`;
-    navigator.clipboard.writeText(code);
-    setCopiedText(true);
-    setTimeout(() => setCopiedText(false), 2000);
-  };
-
   return (
     <section className="py-12 px-4 sm:px-6 lg:px-8 xl:px-12 w-full max-w-[1440px] mx-auto text-[#f5f7f6]">
       {/* Header Banner */}
@@ -169,285 +150,251 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
         </h2>
         
         <p className="text-[#8a9690] text-sm sm:text-base leading-relaxed">
-          Explore our 10,000+ sq.ft broadcast soundstages, 4K teleprompter newsrooms, Avid NLE edit suites, enterprise satellite MCR server rooms, and smart media lecture theatres.
+          Take a look inside our 10,000+ sq.ft broadcast soundstages, 4K teleprompter newsrooms, Avid NLE edit suites, enterprise satellite MCR server rooms, and campus facilities.
         </p>
-
       </div>
 
-      {/* Quick Search and Media Filters Bar */}
-      <div className="bg-[#0b100e] border border-[#16241f] rounded-2xl p-3 sm:p-4 mb-8 max-w-4xl mx-auto shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
-        {/* Search Input */}
-        <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-[#8a9690] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search facility (e.g. newsroom, Avid, chroma)..."
-            className="w-full pl-10 pr-8 py-2 rounded-xl bg-[#050706] border border-[#16241f] text-xs text-[#f5f7f6] placeholder-[#536159] focus:outline-none focus:border-[#00c878] font-mono transition-colors"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8a9690] hover:text-white"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-
-        {/* Media Type Filter (All / Photos / Videos) */}
-        <div className="flex items-center gap-1.5 bg-[#050706] p-1 rounded-xl border border-[#16241f] self-stretch sm:self-auto justify-center">
-          <button
-            onClick={() => setMediaFilter('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
-              mediaFilter === 'all'
-                ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-sm'
-                : 'text-[#8a9690] hover:text-[#f5f7f6]'
-            }`}
-          >
-            All Media
-          </button>
-
-          <button
-            onClick={() => setMediaFilter('images')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 ${
-              mediaFilter === 'images'
-                ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-sm'
-                : 'text-[#8a9690] hover:text-[#f5f7f6]'
-            }`}
-          >
-            <Camera className="w-3.5 h-3.5" />
-            <span>Photos</span>
-          </button>
-
-          <button
-            onClick={() => setMediaFilter('videos')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 ${
-              mediaFilter === 'videos'
-                ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-sm'
-                : 'text-[#8a9690] hover:text-[#f5f7f6]'
-            }`}
-          >
-            <Film className="w-3.5 h-3.5" />
-            <span>Video Reels</span>
-          </button>
-        </div>
-
-        {/* Results Counter */}
-        <div className="text-xs font-mono text-[#8a9690]">
-          Showing <span className="text-[#00c878] font-bold">{filteredItems.length}</span> items
-        </div>
-      </div>
-
-      {/* Category Navigation Pills */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-        {categories.map((cat) => {
-          const isActive = selectedCategory === cat.id;
-          const count = cat.id === 'all' 
-            ? GALLERY_ITEMS.length 
-            : GALLERY_ITEMS.filter(i => i.category === cat.id).length;
-
-          return (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border ${
-                isActive
-                  ? 'bg-[#00c878] text-[#050706] border-[#00c878] shadow-[0_4px_16px_rgba(0,200,120,0.3)] scale-[1.02]'
-                  : 'bg-[#0b100e]/80 text-[#8a9690] border-[#16241f] hover:text-[#f5f7f6] hover:border-[#00c878]/40 hover:bg-[#121a17]'
-              }`}
-            >
-              {cat.icon}
-              <span>{cat.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                isActive ? 'bg-[#050706] text-[#00c878]' : 'bg-[#16241f] text-[#8a9690]'
-              }`}>
-                {count}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* No Results Fallback */}
-      {filteredItems.length === 0 && (
-        <div className="p-12 text-center bg-[#0b100e] border border-[#16241f] rounded-2xl max-w-xl mx-auto space-y-3">
-          <Info className="w-8 h-8 text-[#e6ad54] mx-auto" />
-          <h4 className="text-base font-bold text-[#f5f7f6]">No facilities match your search</h4>
-          <p className="text-xs text-[#8a9690]">
-            Try clearing the search input or choosing &quot;All Facilities&quot; to view all photos and videos.
-          </p>
-          <button
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedCategory('all');
-              setMediaFilter('all');
-            }}
-            className="px-4 py-2 rounded-xl bg-[#121a17] text-[#00c878] border border-[#00c878]/40 text-xs font-mono font-bold"
-          >
-            Reset Filters
-          </button>
-        </div>
-      )}
-
-      {/* Gallery Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {filteredItems.slice(0, visibleCount).map((item) => {
-          const isVideo = item.mediaType === 'video' || Boolean(item.videoSrc);
-
-          return (
-            <div
-              key={item.id}
-              onClick={() => {
-                setActiveModalItem(item);
-                setIsSlowMo(true);
-                setIsPlaying(true);
-              }}
-              className="group relative bg-[#0b100e] border border-[#16241f] hover:border-[#00c878]/60 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_12px_30px_rgba(0,0,0,0.6)] cursor-pointer flex flex-col"
-            >
-              {/* Image / Video Poster Container */}
-              <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#050706]">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=80';
-                  }}
-                />
-                
-                {/* Category Pill Over Image */}
-                <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
-                  <span className="px-2.5 py-1 rounded-full bg-[#050706]/85 backdrop-blur-md border border-[#16241f] text-[11px] font-mono text-[#00c878] font-bold">
-                    {item.categoryLabel}
-                  </span>
-
-                  {/* Video Badge */}
-                  {isVideo && (
-                    <span className="px-2 py-0.5 rounded-full bg-red-600/90 text-white text-[10px] font-mono font-bold flex items-center gap-1 shadow-md">
-                      <Play className="w-2.5 h-2.5 fill-current" />
-                      <span>VIDEO</span>
-                    </span>
-                  )}
-                </div>
-
-                {/* Hover Expand Icon or Play overlay for videos */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                  {isVideo ? (
-                    <div className="w-12 h-12 rounded-full bg-[#00c878] text-[#050706] flex items-center justify-center shadow-2xl scale-95 group-hover:scale-100 transition-transform">
-                      <Play className="w-6 h-6 fill-current ml-0.5" />
-                    </div>
-                  ) : (
-                    <div className="p-2.5 rounded-xl bg-[#050706]/90 border border-[#00c878]/40 text-[#00c878]">
-                      <Maximize2 className="w-5 h-5" />
-                    </div>
-                  )}
-                </div>
-
-                {/* Gradient Scrim */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b100e] via-transparent to-transparent opacity-80" />
-              </div>
-
-              {/* Info Body */}
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  {item.location && (
-                    <div className="flex items-center gap-1.5 text-[11px] text-[#e6ad54] font-mono mb-1">
-                      <MapPin className="w-3 h-3 shrink-0 text-[#e6ad54]" />
-                      <span>{item.location}</span>
-                    </div>
-                  )}
-                  
-                  <h3 className="text-lg font-bold text-[#f5f7f6] group-hover:text-[#00c878] transition-colors leading-snug">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-xs text-[#8a9690] leading-relaxed mt-1.5 line-clamp-2">
-                    {item.description}
-                  </p>
-                </div>
-
-                {/* Tech Specs Chips */}
-                {item.specs && (
-                  <div className="pt-2 border-t border-[#16241f] flex flex-wrap gap-1.5">
-                    {item.specs.map((spec, sIdx) => (
-                      <span
-                        key={sIdx}
-                        className="px-2 py-0.5 rounded bg-[#121a17] text-[10px] font-mono text-[#8a9690] border border-[#16241f]"
-                      >
-                        {spec}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Pagination / Load More Controls */}
-      {filteredItems.length > visibleCount && (
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <button
-            onClick={() => setVisibleCount((prev) => prev + 18)}
-            className="px-6 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#00c878]/40 hover:border-[#00c878] text-xs font-mono font-bold transition-all shadow-md flex items-center gap-2"
-          >
-            <span>Load More Facilities (+18 remaining: {filteredItems.length - visibleCount})</span>
-          </button>
-          <button
-            onClick={() => setVisibleCount(filteredItems.length)}
-            className="px-4 py-2.5 rounded-xl bg-[#0b100e] hover:bg-[#121a17] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] text-xs font-mono transition-all"
-          >
-            Show All ({filteredItems.length})
-          </button>
-        </div>
-      )}
-
-      {/* Bottom CTA Banner */}
-      <div className="mt-16 p-8 rounded-2xl bg-[#0b100e] border border-[#16241f] flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div className="space-y-2 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 text-xs font-mono text-[#e6ad54]">
-            <Info className="w-3.5 h-3.5" />
-            <span>Campus Tours & Studio Visits Available</span>
+      {/* If Gallery is Empty: Clean, Prestigious Empty State */}
+      {GALLERY_ITEMS.length === 0 ? (
+        <div className="max-w-2xl mx-auto my-8 p-8 sm:p-12 rounded-3xl bg-[#0b100e]/95 border border-[#16241f] text-center space-y-6 shadow-2xl backdrop-blur-xl">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#121a17] border border-[#00c878]/30 flex items-center justify-center text-[#00c878] shadow-inner">
+            <Film className="w-8 h-8 text-[#00c878]" />
           </div>
-          <h4 className="text-xl font-bold text-[#f5f7f6]">
-            Experience the Jaya TV Network Studio Floor in Person
-          </h4>
-          <p className="text-xs text-[#8a9690] max-w-xl">
-            Book a counseling session or facility walk-through at our Ekkattuthangal, Chennai broadcast complex before finalizing admissions.
-          </p>
+
+          <div className="space-y-2">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-[#f5f7f6] font-sans">
+              Gallery Media Updating
+            </h3>
+            <p className="text-xs sm:text-sm text-[#8a9690] leading-relaxed max-w-lg mx-auto">
+              New official high-definition video reels, studio floor walkthroughs, and photography for the 2026 academic batch are currently being cataloged and will be published here shortly.
+            </p>
+          </div>
+
+          {/* Studio Campus Facts */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-left">
+            <div className="p-3 rounded-2xl bg-[#050706] border border-[#16241f]">
+              <div className="text-[#00c878] font-mono font-bold text-xs uppercase">Studio Floor</div>
+              <div className="text-sm font-bold text-[#f5f7f6] mt-0.5">10,000+ Sq.Ft</div>
+              <div className="text-[11px] text-[#8a9690]">Acoustic soundstages</div>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-[#050706] border border-[#16241f]">
+              <div className="text-[#e6ad54] font-mono font-bold text-xs uppercase">Location</div>
+              <div className="text-sm font-bold text-[#f5f7f6] mt-0.5">Chennai Campus</div>
+              <div className="text-[11px] text-[#8a9690]">Kalaimagal Nagar</div>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-[#050706] border border-[#16241f]">
+              <div className="text-[#38bdf8] font-mono font-bold text-xs uppercase">Partner Network</div>
+              <div className="text-sm font-bold text-[#f5f7f6] mt-0.5">Jaya TV</div>
+              <div className="text-[11px] text-[#8a9690]">Mavis Satcom Limited</div>
+            </div>
+          </div>
+
+          {/* Interactive CTA to Visit Campus in Person */}
+          <div className="pt-4 border-t border-[#16241f] flex flex-col sm:flex-row items-center justify-center gap-3">
+            {onOpenApplyModal && (
+              <button
+                onClick={onOpenApplyModal}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-[#00c878] to-[#008c54] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-mono font-bold text-xs shadow-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+              >
+                <Calendar className="w-4 h-4 text-[#050706]" />
+                <span>Schedule an In-Person Studio Tour</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#050706]" />
+              </button>
+            )}
+          </div>
         </div>
+      ) : (
+        /* If items exist, render normal filters and gallery grid */
+        <>
+          {/* Quick Search and Media Filters Bar */}
+          <div className="bg-[#0b100e] border border-[#16241f] rounded-2xl p-3 sm:p-4 mb-8 max-w-4xl mx-auto shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+            {/* Search Input */}
+            <div className="relative w-full sm:w-80">
+              <Search className="w-4 h-4 text-[#8a9690] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search facility (e.g. newsroom, Avid, chroma)..."
+                className="w-full pl-10 pr-8 py-2 rounded-xl bg-[#050706] border border-[#16241f] text-xs text-[#f5f7f6] placeholder-[#536159] focus:outline-none focus:border-[#00c878] font-mono transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8a9690] hover:text-white"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
 
-        {onOpenApplyModal && (
-          <button
-            onClick={onOpenApplyModal}
-            className="shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-bold text-xs sm:text-sm font-mono flex items-center gap-2 shadow-lg transition-transform hover:scale-105"
-          >
-            <GraduationCap className="w-4 h-4" />
-            <span>Schedule Campus Visit / Apply</span>
-          </button>
-        )}
-      </div>
+            {/* Media Type Filter (All / Photos / Videos) */}
+            <div className="flex items-center gap-1.5 bg-[#050706] p-1 rounded-xl border border-[#16241f] self-stretch sm:self-auto justify-center">
+              <button
+                onClick={() => setMediaFilter('all')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
+                  mediaFilter === 'all'
+                    ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-sm'
+                    : 'text-[#8a9690] hover:text-[#f5f7f6]'
+                }`}
+              >
+                All Media
+              </button>
 
-      {/* Lightbox / Modal for Full-Screen View */}
+              <button
+                onClick={() => setMediaFilter('images')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 ${
+                  mediaFilter === 'images'
+                    ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-sm'
+                    : 'text-[#8a9690] hover:text-[#f5f7f6]'
+                }`}
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <span>Photos</span>
+              </button>
+
+              <button
+                onClick={() => setMediaFilter('videos')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 ${
+                  mediaFilter === 'videos'
+                    ? 'bg-[#121a17] text-[#00c878] border border-[#00c878]/50 shadow-sm'
+                    : 'text-[#8a9690] hover:text-[#f5f7f6]'
+                }`}
+              >
+                <Film className="w-3.5 h-3.5" />
+                <span>Video Reels</span>
+              </button>
+            </div>
+
+            {/* Results Counter */}
+            <div className="text-xs font-mono text-[#8a9690]">
+              Showing <span className="text-[#00c878] font-bold">{filteredItems.length}</span> items
+            </div>
+          </div>
+
+          {/* Category Navigation Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+            {categories.map((cat) => {
+              const isActive = selectedCategory === cat.id;
+              const count = cat.id === 'all' 
+                ? GALLERY_ITEMS.length 
+                : GALLERY_ITEMS.filter(i => i.category === cat.id).length;
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border ${
+                    isActive
+                      ? 'bg-[#00c878] text-[#050706] border-[#00c878] shadow-[0_4px_16px_rgba(0,200,120,0.3)] scale-[1.02]'
+                      : 'bg-[#0b100e]/80 text-[#8a9690] border-[#16241f] hover:text-[#f5f7f6] hover:border-[#00c878]/40 hover:bg-[#121a17]'
+                  }`}
+                >
+                  {cat.icon}
+                  <span>{cat.label}</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                    isActive ? 'bg-[#050706] text-[#00c878]' : 'bg-[#16241f] text-[#8a9690]'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Gallery Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {filteredItems.slice(0, visibleCount).map((item) => {
+              const isVideo = item.mediaType === 'video' || Boolean(item.videoSrc);
+
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => setActiveModalItem(item)}
+                  className="group relative rounded-2xl overflow-hidden bg-[#0b100e] border border-[#16241f] hover:border-[#00c878]/60 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#00c878]/10 cursor-pointer flex flex-col"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-black">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter brightness-95"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                      <span className="px-2.5 py-1 rounded-lg bg-[#050706]/80 backdrop-blur-md border border-[#16241f] text-[10px] font-mono text-[#00c878] font-bold">
+                        {item.categoryLabel}
+                      </span>
+                    </div>
+
+                    {isVideo && (
+                      <div className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-600/90 text-white shadow-md">
+                        <Play className="w-3.5 h-3.5 fill-current" />
+                      </div>
+                    )}
+
+                    <div className="absolute bottom-3 right-3 p-2 rounded-xl bg-black/60 backdrop-blur-md text-[#8a9690] group-hover:text-white group-hover:bg-[#00c878] group-hover:text-[#050706] transition-all">
+                      <Maximize2 className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                    <div>
+                      <h3 className="text-base font-bold text-[#f5f7f6] group-hover:text-[#00c878] transition-colors line-clamp-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-[#8a9690] mt-1 line-clamp-2 leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    {item.location && (
+                      <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#e6ad54]">
+                        <MapPin className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{item.location}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Load More Button */}
+          {visibleCount < filteredItems.length && (
+            <div className="mt-12 text-center">
+              <button
+                onClick={() => setVisibleCount((prev) => prev + 12)}
+                className="px-6 py-3 rounded-xl bg-[#121a17] hover:bg-[#16241f] border border-[#00c878]/40 hover:border-[#00c878] text-[#00c878] font-mono text-xs font-bold transition-all shadow-md"
+              >
+                Load More Facilities (+12)
+              </button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Lightbox / Video Modal */}
       {activeModalItem && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 lg:p-10 animate-in fade-in duration-200">
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 animate-in fade-in duration-200"
+          onClick={() => setActiveModalItem(null)}
+        >
           <div 
-            className="relative w-full max-w-5xl bg-[#0b100e] border border-[#16241f] rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+            className="relative w-full max-w-5xl bg-[#0b100e] border border-[#16241f] rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-4 sm:p-5 border-b border-[#16241f] flex items-center justify-between gap-4 bg-[#070b09]">
-              <div>
+            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-[#16241f] bg-[#070b09]">
+              <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono text-[#00c878] uppercase tracking-wider font-bold">
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#00c878]/15 text-[#00c878] font-bold border border-[#00c878]/30">
                     {activeModalItem.categoryLabel}
                   </span>
-                  {activeModalItem.videoSrc && (
-                    <span className="px-2 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/40 text-[10px] font-mono font-bold">
+                  {(activeModalItem.mediaType === 'video' || activeModalItem.videoSrc) && (
+                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold border border-red-500/40">
                       VIDEO CLIP
                     </span>
                   )}
@@ -458,22 +405,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
               </div>
 
               <div className="flex items-center gap-2">
-                {activeModalItem.videoSrc && activeModalItem.drivePreviewUrl && (
-                  <button
-                    onClick={() => setUseDriveEmbed(!useDriveEmbed)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-colors ${
-                      useDriveEmbed
-                        ? 'bg-[#00c878]/20 text-[#00c878] border-[#00c878]'
-                        : 'bg-[#121a17] text-[#8a9690] border-[#16241f] hover:text-[#f5f7f6]'
-                    }`}
-                    title="Toggle Google Drive Embed Player"
-                  >
-                    <Tv className="w-3.5 h-3.5" />
-                    <span>{useDriveEmbed ? 'Drive Player' : 'Stream Player'}</span>
-                  </button>
-                )}
-
-                {activeModalItem.videoSrc && !useDriveEmbed && (
+                {activeModalItem.videoSrc && (
                   <button
                     onClick={toggleSlowMo}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-colors ${
@@ -499,15 +431,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
 
             {/* Modal Media Viewport */}
             <div className="relative flex-1 bg-black flex items-center justify-center overflow-hidden min-h-[300px] sm:min-h-[440px]">
-              {useDriveEmbed && activeModalItem.drivePreviewUrl ? (
-                <iframe
-                  src={activeModalItem.drivePreviewUrl}
-                  title={activeModalItem.title}
-                  className="w-full h-full min-h-[60vh] max-h-[65vh] border-0"
-                  allow="autoplay; encrypted-media; fullscreen"
-                  allowFullScreen
-                />
-              ) : activeModalItem.videoSrc ? (
+              {activeModalItem.videoSrc ? (
                 <div className="relative w-full h-full max-h-[65vh] flex items-center justify-center">
                   <video
                     ref={modalVideoRef}
@@ -583,136 +507,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
                     </div>
                   )}
                 </div>
-
-                {/* Open in Google Drive button */}
-                <a
-                  href={activeModalItem.driveViewUrl || activeModalItem.driveFolderUrl || activeModalItem.drivePreviewUrl || DRIVE_FOLDER_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#00c878]/15 hover:bg-[#00c878]/25 border border-[#00c878]/50 text-xs font-mono font-semibold text-[#00c878] transition-all shadow-sm"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Open in Google Drive</span>
-                </a>
               </div>
               <p className="text-xs sm:text-sm text-[#8a9690] leading-relaxed">
                 {activeModalItem.description}
               </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Interactive Guide Modal: How to Categorize & Fetch Photos */}
-      {showGuideModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-          <div 
-            className="relative w-full max-w-2xl bg-[#0b100e] border border-[#00c878]/40 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[#16241f] pb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-[#00c878]/20 text-[#00c878]">
-                  <FolderPlus className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-[#f5f7f6]">
-                    How to Categorize Pictures & Videos
-                  </h3>
-                  <p className="text-xs text-[#8a9690]">
-                    Simple 2-step process to fetch and organize media under specific tabs
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowGuideModal(false)}
-                className="p-2 rounded-xl bg-[#121a17] text-[#8a9690] hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Step 1: Folders Breakdown */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-mono font-bold text-[#e6ad54] uppercase tracking-wider flex items-center gap-2">
-                <span>Step 1: Put files in the folder</span>
-              </h4>
-              <p className="text-xs text-[#8a9690]">
-                Organize your images and videos inside the <code className="text-[#00c878]">/public/gallery/</code> directory:
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2.5 rounded-xl bg-[#050706] border border-[#16241f]">
-                  <div className="text-[#00c878] font-bold">/public/gallery/studios/</div>
-                  <div className="text-[#8a9690] text-[11px]">Tab: Studios & Soundstages</div>
-                </div>
-                <div className="p-2.5 rounded-xl bg-[#050706] border border-[#16241f]">
-                  <div className="text-[#00c878] font-bold">/public/gallery/newsrooms/</div>
-                  <div className="text-[#8a9690] text-[11px]">Tab: Newsrooms & PCR</div>
-                </div>
-                <div className="p-2.5 rounded-xl bg-[#050706] border border-[#16241f]">
-                  <div className="text-[#00c878] font-bold">/public/gallery/edit-suites/</div>
-                  <div className="text-[#8a9690] text-[11px]">Tab: Edit & Grading Suites</div>
-                </div>
-                <div className="p-2.5 rounded-xl bg-[#050706] border border-[#16241f]">
-                  <div className="text-[#00c878] font-bold">/public/gallery/server-rooms/</div>
-                  <div className="text-[#8a9690] text-[11px]">Tab: Server Rooms & MCR</div>
-                </div>
-                <div className="p-2.5 rounded-xl bg-[#050706] border border-[#16241f]">
-                  <div className="text-[#00c878] font-bold">/public/gallery/classrooms/</div>
-                  <div className="text-[#8a9690] text-[11px]">Tab: Classrooms & Labs</div>
-                </div>
-                <div className="p-2.5 rounded-xl bg-[#050706] border border-[#16241f]">
-                  <div className="text-[#00c878] font-bold">/public/gallery/equipment/</div>
-                  <div className="text-[#8a9690] text-[11px]">Tab: Cinema Gear & Campus</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 2: Register in galleryData.ts */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-mono font-bold text-[#e6ad54] uppercase tracking-wider">
-                  Step 2: Add to <code className="text-[#00c878]">galleryData.ts</code>
-                </h4>
-                <button
-                  onClick={copyCodeSample}
-                  className="flex items-center gap-1.5 text-xs text-[#00c878] font-mono hover:underline"
-                >
-                  {copiedText ? <CheckCircle2 className="w-3.5 h-3.5 text-[#00c878]" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copiedText ? 'Copied!' : 'Copy Snippet'}</span>
-                </button>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-[#050706] border border-[#16241f] text-[11px] font-mono text-[#8a9690] overflow-x-auto">
-                <pre className="text-[#f5f7f6]">
-{`{
-  id: 'studio-floor-custom',
-  title: 'Chroma Soundstage Floor',
-  category: 'studios', // Automatically appears in 'Studios' AND 'All Facilities'
-  categoryLabel: 'Television Studio',
-  image: '/gallery/studios/my-photo.jpg',
-  description: '10,000 sq.ft stage with motorized lights.',
-  specs: ['10,000 Sq.Ft', 'DMX Grid', 'Chroma Cyc'],
-  location: 'Studio Complex Floor 1'
-}`}
-                </pre>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#121a17] border border-[#00c878]/30 text-xs text-[#8a9690] leading-relaxed">
-                <span className="text-[#00c878] font-bold">Note on &quot;All Facilities&quot;: </span>
-                Every picture or video with any category automatically shows up in the <strong className="text-white">&quot;All Facilities&quot;</strong> tab without doing any extra work!
-              </div>
-            </div>
-
-            <div className="pt-2 text-right">
-              <button
-                onClick={() => setShowGuideModal(false)}
-                className="px-5 py-2.5 rounded-xl bg-[#00c878] text-[#050706] font-bold text-xs font-mono"
-              >
-                Got it, close guide
-              </button>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tv, Film, Award, CheckCircle2, Shield, Users, Radio, Sparkles } from 'lucide-react';
+import { Tv, Film, Award, CheckCircle2, Shield, Users, Radio } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
   return (

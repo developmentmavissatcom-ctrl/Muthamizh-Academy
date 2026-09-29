@@ -11,8 +11,7 @@ import {
   Code,
   Cpu,
   Layers,
-  Mail,
-  Sparkles
+  Mail
 } from 'lucide-react';
 
 export const FacultySection: React.FC = () => {

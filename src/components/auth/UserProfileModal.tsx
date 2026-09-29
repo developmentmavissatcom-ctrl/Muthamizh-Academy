@@ -17,7 +17,6 @@ import {
   ArrowRight,
   Tv,
   Radio,
-  Sparkles,
   MapPin,
   Award,
   UserCheck
