@@ -77,18 +77,6 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <a
-                  href="/about"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick('about');
-                  }}
-                  className="hover:text-[#00c878] transition-colors text-left block"
-                >
-                  About Muthamizh Academy
-                </a>
-              </li>
-              <li>
-                <a
                   href="/courses"
                   onClick={(e) => {
                     e.preventDefault();
@@ -134,6 +122,18 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-[#00c878] transition-colors text-left block"
                 >
                   Faculty & Jaya TV Mentors
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('about');
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left block"
+                >
+                  About Muthamizh Academy
                 </a>
               </li>
             </ul>

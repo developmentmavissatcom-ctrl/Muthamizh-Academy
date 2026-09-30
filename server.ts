@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import crypto from "crypto";
 import https from "https";
@@ -2084,6 +2085,8 @@ Allow: /*.jpeg$
 Allow: /*.webp$
 Allow: /*.mp4$
 Allow: /*.svg$
+Allow: /favicon.ico
+Allow: /*.ico$
 
 # Disallow private and administrative endpoints
 Disallow: /api/
@@ -2103,6 +2106,35 @@ app.get("/sitemap.xml", (req, res) => {
 app.get("/robots.txt", (req, res) => {
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.status(200).send(ROBOTS_TXT.trim());
+});
+
+// Explicit Favicon and static brand icon handlers BEFORE SPA catch-all & Vite fallback
+function sendStaticFavicon(res: express.Response, fileName: string, contentType: string) {
+  const publicFile = path.join(process.cwd(), "public", fileName);
+  const distFile = path.join(process.cwd(), "dist", fileName);
+  const target = fs.existsSync(publicFile) ? publicFile : fs.existsSync(distFile) ? distFile : null;
+  if (target) {
+    res.setHeader("Content-Type", contentType);
+    res.setHeader("Cache-Control", "public, max-age=86400, immutable");
+    return res.sendFile(target);
+  }
+  return res.status(404).end();
+}
+
+app.get("/favicon.ico", (req, res) => {
+  sendStaticFavicon(res, "favicon.ico", "image/x-icon");
+});
+
+app.get("/favicon-48x48.png", (req, res) => {
+  sendStaticFavicon(res, "favicon-48x48.png", "image/png");
+});
+
+app.get("/favicon-192x192.png", (req, res) => {
+  sendStaticFavicon(res, "favicon-192x192.png", "image/png");
+});
+
+app.get(["/apple-touch-icon.png", "/apple-touch-icon-precomposed.png"], (req, res) => {
+  sendStaticFavicon(res, "apple-touch-icon.png", "image/png");
 });
 
 // Setup Vite Development or Static Production middleware
@@ -2127,7 +2159,9 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
+    const publicPath = path.join(process.cwd(), "public");
     app.use(express.static(distPath));
+    app.use(express.static(publicPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });

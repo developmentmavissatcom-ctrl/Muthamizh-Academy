@@ -11,6 +11,8 @@ Allow: /*.jpeg$
 Allow: /*.webp$
 Allow: /*.mp4$
 Allow: /*.svg$
+Allow: /favicon.ico
+Allow: /*.ico$
 
 # Disallow private and administrative endpoints
 Disallow: /api/

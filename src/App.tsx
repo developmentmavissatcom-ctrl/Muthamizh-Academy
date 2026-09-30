@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { NavTab, CourseCategory, Course, RegistrationRecord, UserProfile, PortalMode } from './types';
 import { HeaderNav } from './components/HeaderNav';
 import { BroadcastHero } from './components/cinematic/BroadcastHero';
-import { AcademySignalWidget } from './components/cinematic/AcademySignalWidget';
 import { CommandPalette } from './components/cinematic/CommandPalette';
 import { IntroSequence } from './components/cinematic/IntroSequence';
 import { ScrollVideoBackground } from './components/ScrollVideoBackground';
@@ -485,11 +484,11 @@ export default function App() {
 
     const sections: { id: string; tab: NavTab }[] = [
       { id: 'hero-section', tab: 'home' },
-      { id: 'about-section', tab: 'about' },
       { id: 'courses-section', tab: 'courses' },
       { id: 'campus-section', tab: 'campus' },
       { id: 'gallery-section', tab: 'gallery' },
-      { id: 'faculty-section', tab: 'faculty' }
+      { id: 'faculty-section', tab: 'faculty' },
+      { id: 'about-section', tab: 'about' }
     ];
 
     const handleScroll = () => {
@@ -735,12 +734,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* 1. About Institution Section (About Us) */}
-                  <div id="about-section">
-                    <AboutSection />
-                  </div>
-
-                  {/* 2. Studio OS Curricula & Trending Courses (Courses) */}
+                  {/* 1. Studio OS Curricula & Academic Programs (Courses) */}
                   <div id="courses-section">
                     <TrendingCourses
                       onSelectCourse={(course) => setSelectedCourseForModal(course)}
@@ -751,27 +745,25 @@ export default function App() {
                     />
                   </div>
 
-                  {/* 3. Studio Floor Infrastructure Section (Campus Life) */}
+                  {/* 2. Studio Floor Infrastructure Section (Campus Life) */}
                   <div id="campus-section">
                     <CampusLifeSection />
                   </div>
 
-                  {/* 4. Campus & Studio Gallery Section (Gallery) */}
+                  {/* 3. Campus & Studio Gallery Section (Gallery) */}
                   <div id="gallery-section">
                     <GallerySection onOpenApplyModal={() => setApplyModalOpen(true)} />
                   </div>
 
-                  {/* 5. Jaya TV Showrunners & Faculty Mentors (Faculty) */}
+                  {/* 4. Jaya TV Showrunners & Faculty Mentors (Faculty) */}
                   <div id="faculty-section">
                     <FacultySection />
                   </div>
-                </div>
-              )}
 
-              {/* ABOUT VIEW */}
-              {activeTab === 'about' && (
-                <div className="pt-4 pb-16 w-full">
-                  <AboutSection />
+                  {/* 5. About Institution Section (About Us) */}
+                  <div id="about-section">
+                    <AboutSection />
+                  </div>
                 </div>
               )}
 
@@ -808,16 +800,18 @@ export default function App() {
                   <FacultySection />
                 </div>
               )}
+
+              {/* ABOUT VIEW */}
+              {activeTab === 'about' && (
+                <div className="pt-4 pb-16 w-full">
+                  <AboutSection />
+                </div>
+              )}
             </>
           )}
         </motion.div>
         </AnimatePresence>
       </main>
-
-      {/* Floating Academy Signal Live Widget */}
-      <AcademySignalWidget
-        onOpenApplyModal={() => setApplyModalOpen(true)}
-      />
 
       {/* Footer */}
       <Footer
