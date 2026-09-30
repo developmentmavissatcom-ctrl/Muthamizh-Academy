@@ -47,15 +47,15 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
 
             {/* Master Headline */}
             <div className="space-y-4 max-w-2xl">
-              <h1 className="text-3xl sm:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-[#f5f7f6] tracking-tight leading-[1.1] font-sans">
-                <span className="block text-xs sm:text-sm font-mono font-bold tracking-widest text-[#00c878] uppercase mb-2">
-                  Muthamizh Academy
-                </span>
+              <h1 className="text-xs sm:text-sm font-mono font-bold tracking-widest text-[#00c878] uppercase mb-2">
+                Muthamizh Academy
+              </h1>
+              <h2 className="text-3xl sm:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-[#f5f7f6] tracking-tight leading-[1.1] font-sans">
                 THE NEXT ERA OF <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00c878] via-[#e6ad54] to-[#f5f7f6]">
                   BROADCAST & FILM
                 </span>
-              </h1>
+              </h2>
 
               <p className="text-base sm:text-xl xl:text-2xl font-serif text-[#e6ad54] font-medium tracking-wide">
                 Muthamizh Academy • Professional Television & Cinema Academy

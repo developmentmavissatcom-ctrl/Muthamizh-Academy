@@ -454,6 +454,17 @@ export default function App() {
       canonicalLink.setAttribute('href', canonicalHref);
     }
 
+    // Sync Meta Description for homepage
+    if (activeTab === 'home') {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'Muthamizh Academy in Chennai offers media, television, digital media and IT education with practical, industry-focused training.'
+        );
+      }
+    }
+
     // Sync browser URL without full refresh
     if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
       const currentPath = window.location.pathname;
@@ -462,6 +473,46 @@ export default function App() {
       }
     }
   }, [activeTab]);
+
+  // Track scroll position on the Home page to dynamically update the active tab indicator
+  const [scrollIndicatedTab, setScrollIndicatedTab] = useState<NavTab | null>(null);
+
+  useEffect(() => {
+    if (activeTab !== 'home') {
+      setScrollIndicatedTab(null);
+      return;
+    }
+
+    const sections: { id: string; tab: NavTab }[] = [
+      { id: 'hero-section', tab: 'home' },
+      { id: 'about-section', tab: 'about' },
+      { id: 'courses-section', tab: 'courses' },
+      { id: 'campus-section', tab: 'campus' },
+      { id: 'gallery-section', tab: 'gallery' },
+      { id: 'faculty-section', tab: 'faculty' }
+    ];
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 220;
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i].id);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPosition >= top) {
+            setScrollIndicatedTab(sections[i].tab);
+            return;
+          }
+        }
+      }
+      setScrollIndicatedTab('home');
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeTab]);
+
+  const navActiveTab = (activeTab === 'home' && scrollIndicatedTab) ? scrollIndicatedTab : activeTab;
 
   // Support browser Back/Forward navigation
   useEffect(() => {
@@ -545,7 +596,7 @@ export default function App() {
 
       {/* Top Header & Navigation */}
       <HeaderNav
-        activeTab={activeTab}
+        activeTab={navActiveTab}
         setActiveTab={handleTabChange}
         portalMode={portalMode}
         setPortalMode={setPortalMode}
@@ -574,7 +625,7 @@ export default function App() {
       />
 
       {/* Main Content Area with Smooth Randomized Transitions */}
-      <main className="relative z-10 flex-1 w-full overflow-x-hidden">
+      <main className="relative z-10 flex-1 w-full overflow-x-hidden pt-[74px] sm:pt-[78px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={`${activeTab}-${portalMode}-${transitionKey}`}
@@ -626,22 +677,24 @@ export default function App() {
                 <div className="space-y-0 w-full">
                   
                   {/* Broadcast Control Room Hero */}
-                  <BroadcastHero
-                    onOpenAstra={() => {
-                      setAstraCourseContext(null);
-                      setAstraOpen(true);
-                    }}
-                    onExploreCourses={() => {
-                      handleTabChange('courses');
-                      const el = document.getElementById('courses-section');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    onOpenApplyModal={() => setApplyModalOpen(true)}
-                    onOpenDiscovery={() => {
-                      const el = document.getElementById('discovery-section');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  />
+                  <div id="hero-section">
+                    <BroadcastHero
+                      onOpenAstra={() => {
+                        setAstraCourseContext(null);
+                        setAstraOpen(true);
+                      }}
+                      onExploreCourses={() => {
+                        handleTabChange('courses');
+                        const el = document.getElementById('courses-section');
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      onOpenApplyModal={() => setApplyModalOpen(true)}
+                      onOpenDiscovery={() => {
+                        const el = document.getElementById('discovery-section');
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    />
+                  </div>
 
                   {/* Student Quick Status & Application Bar */}
                   <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-6">
@@ -682,7 +735,12 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Studio OS Curricula & Trending Courses */}
+                  {/* 1. About Institution Section (About Us) */}
+                  <div id="about-section">
+                    <AboutSection />
+                  </div>
+
+                  {/* 2. Studio OS Curricula & Trending Courses (Courses) */}
                   <div id="courses-section">
                     <TrendingCourses
                       onSelectCourse={(course) => setSelectedCourseForModal(course)}
@@ -693,14 +751,20 @@ export default function App() {
                     />
                   </div>
 
-                  {/* About Institution Section */}
-                  <AboutSection />
+                  {/* 3. Studio Floor Infrastructure Section (Campus Life) */}
+                  <div id="campus-section">
+                    <CampusLifeSection />
+                  </div>
 
-                  {/* Studio Floor Infrastructure Section */}
-                  <CampusLifeSection />
+                  {/* 4. Campus & Studio Gallery Section (Gallery) */}
+                  <div id="gallery-section">
+                    <GallerySection onOpenApplyModal={() => setApplyModalOpen(true)} />
+                  </div>
 
-                  {/* Jaya TV Showrunners & Faculty Mentors */}
-                  <FacultySection />
+                  {/* 5. Jaya TV Showrunners & Faculty Mentors (Faculty) */}
+                  <div id="faculty-section">
+                    <FacultySection />
+                  </div>
                 </div>
               )}
 
@@ -708,7 +772,6 @@ export default function App() {
               {activeTab === 'about' && (
                 <div className="pt-4 pb-16 w-full">
                   <AboutSection />
-                  <CampusLifeSection />
                 </div>
               )}
 
@@ -732,17 +795,17 @@ export default function App() {
                 </div>
               )}
 
-              {/* FACULTY VIEW */}
-              {activeTab === 'faculty' && (
-                <div className="pt-4 pb-16 w-full">
-                  <FacultySection />
-                </div>
-              )}
-
               {/* GALLERY VIEW */}
               {activeTab === 'gallery' && (
                 <div className="pt-4 pb-16 w-full">
                   <GallerySection onOpenApplyModal={() => setApplyModalOpen(true)} />
+                </div>
+              )}
+
+              {/* FACULTY VIEW */}
+              {activeTab === 'faculty' && (
+                <div className="pt-4 pb-16 w-full">
+                  <FacultySection />
                 </div>
               )}
             </>
