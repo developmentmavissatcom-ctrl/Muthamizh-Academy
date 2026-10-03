@@ -128,7 +128,7 @@ export const FACULTY_DATA: FacultyMember[] = [
   department: 'IT Department',
   experience: '3+ Years in Software Development & Technical Support',
   expertise: [
-    'Network Engineering & CCNA',
+    'Computer Networking & IT Support Engineering',
     'Cyber Security',
     'Linux Administration',
     'AI Engineering',

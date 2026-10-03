@@ -66,13 +66,13 @@ const ACADEMY_PILLARS: AcademyPillar[] = [
     id: 'tech',
     tabLabel: 'AI & Network Lab',
     badge: 'Modern Technology',
-    title: 'AI Media Engineering & Cisco Infrastructure',
+    title: 'AI Media Engineering & Network Infrastructure',
     subtitle: 'Broadcast Server Rooms & Enterprise Testing',
     image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80',
-    description: 'Learn modern generative AI newsroom automation, Cisco CCNA enterprise network engineering, and professional manual software QA testing.',
+    description: 'Learn modern generative AI newsroom automation, practical enterprise computer networking & IT support engineering, and professional manual software QA testing.',
     highlights: [
       'AI prompt engineering & broadcast workflow automation',
-      'Hands-on Cisco routing, switching & server rack labs',
+      'Hands-on real-time firewall, routing, switching & server rack labs',
       'Real-world software QA test case design & Jira management'
     ],
     stats: { value: '100%', label: 'Hands-On Labs' }

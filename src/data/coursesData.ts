@@ -98,114 +98,114 @@ export const COURSES_DATA: Course[] = [
     jayaTvHandsOn: 'Build automated AI news summarization bots, broadcast asset tagging agents, and live program indexing tools.'
   },
   {
-  id: 'ccna-networking-engineering',
-  title: 'CCNA Networking & Network Engineering',
+  id: 'practical-networking-it-support',
+  title: 'Practical Computer Networking & IT Support Engineering',
   category: 'online_learning',
   categoryName: 'Online & Virtual Labs',
   duration: '30 Days (20 Days Online + 10 Days Practical)',
   mode: '20 Days Online + 10 Days Hands-On Training at Jaya TV Office',
-  deliveryFormat: '20 Days Live Online Classes with Cisco Packet Tracer + 10 Days On-Site Hardware & Network Engineering Labs',
+  deliveryFormat: '20 Days Live Online Interactive Classes & Network Simulation + 10 Days On-Site Real-Time Hardware, Firewall & IT Support Labs',
   isOnline: false,
 
-  eligibility: 'Open to Beginners, CS/IT Students, Diploma/Degree Students, IT Support Learners & Aspiring Network Engineers',
+  eligibility: 'Open to Beginners, CS/IT Students, Diploma/Degree Students, IT Support Seekers & Aspiring Network Engineers',
 
-  description: 'Build a strong foundation in computer networking and CCNA-level networking through live online classes, Cisco Packet Tracer simulations, IP addressing, subnetting, switching, VLANs, routing, OSPF, network services, security and troubleshooting, followed by 10 days of hands-on training with real Cisco routers, switches, servers, cabling and networking equipment at the Jaya TV office.',
+  description: 'A premier practical networking course engineered to prepare you for high-growth careers in computer networking, systems administration, and IT support work. Master essential networking foundations through interactive classes and network simulation, IP addressing, subnetting, managed switching, VLANs, routing, OSPF, firewalls, network security, and troubleshooting, followed by 10 intensive days of hands-on practical training with real-time enterprise hardware — including physical firewalls, routers, managed switches, servers, patch panels, and structured network cabling at the Jaya TV office.',
 
-  badge: 'Industry-Ready Networking',
+  badge: 'Real-Time Hardware & IT Support',
 
-  highlight: 'Learn Networking Fundamentals, Cisco Switching & Routing, VLANs, OSPF, IP Addressing, Network Security & Real-World Hardware Troubleshooting',
+  highlight: 'Hands-on practical networking training for your future networking & IT support career with real-time firewalls, enterprise routers, managed switches, servers, and cabling.',
 
   image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80',
 
   tools: [
-    'Cisco Packet Tracer',
-    'Cisco IOS & CLI',
-    'Cisco Routers',
-    'Cisco Switches',
-    'Network Servers',
-    'Ethernet & RJ45 Cabling',
-    'Network Testing & Troubleshooting Tools',
-    'Wireshark',
+    'Real-Time Enterprise Routers',
+    'Managed Network Switches',
+    'Hardware & Software Firewalls',
+    'Network Simulation Tools & CLI',
+    'Network Servers & Server Racks',
+    'Ethernet & RJ45 Structured Cabling',
+    'Wireshark Network Protocol Analyzer',
+    'Network Testing & Cable Diagnostics',
     'IP Addressing & Subnetting Tools',
     'Live Jaya TV Network Infrastructure'
   ],
 
   careerRoles: [
-    'Network Engineer',
     'Network Support Engineer',
-    'NOC Engineer',
+    'IT Support Engineer / Desktop Support Specialist',
     'Network Administrator',
-    'IT Support Engineer',
-    'Network Technician',
-    'Infrastructure Support Engineer'
+    'NOC Support Associate',
+    'Hardware & Network Technician',
+    'Systems & Infrastructure Support Engineer',
+    'Field Network Engineer'
   ],
 
   keyModules: [
-    'Networking Fundamentals & Cisco Packet Tracer',
-    'IPv4, IPv6, Subnetting & Network Services',
-    'Cisco Switching, VLANs, Trunking & Routing',
-    'OSPF, DHCP, DNS, NAT & Network Security',
-    'Real Hardware Networking, Troubleshooting & Office Network Deployment'
+    'Computer Networking Fundamentals & Network Simulation Labs',
+    'IPv4, IPv6, Subnetting & Enterprise Network Services',
+    'Managed Switching, VLANs, Trunking & Dynamic Routing',
+    'Enterprise Firewall Configuration, OSPF, DHCP, DNS & NAT',
+    'Real-Time Hardware Networking, Firewall Security & Office Network Deployment'
   ],
 
   chapters: [
     {
-      title: 'Chapter 1 — Networking Fundamentals & Packet Tracer Basics',
+      title: 'Chapter 1 — Networking Fundamentals & Network Simulation Basics',
       topics: [
         '1.1 Introduction to Computer Networking (LAN, WAN, WLAN, Internet & Network Topologies)',
-        '1.2 Network Devices (PC, Switch, Router, Access Point & Server)',
-        '1.3 OSI & TCP/IP Models',
-        '1.4 Ethernet, MAC Addresses & Basic Network Communication',
-        '1.5 Introduction to Cisco Packet Tracer',
-        '1.6 Build Your First Network in Packet Tracer (PC-to-Switch & Basic Connectivity)'
+        '1.2 Network Devices (PC, Switch, Router, Firewall, Access Point & Server)',
+        '1.3 OSI & TCP/IP Reference Models and Protocol Stacks',
+        '1.4 Ethernet Standards, MAC Addresses & Frame Communication',
+        '1.5 Introduction to Network Simulation Tools & Virtual Workbenches',
+        '1.6 Building Your First Network in Simulation (PC-to-Switch, Routing & Basic Connectivity)'
       ]
     },
 
     {
       title: 'Chapter 2 — IP Addressing, Subnetting & Network Services',
       topics: [
-        '2.1 IPv4 Addressing & Network Configuration',
-        '2.2 Subnet Masks, CIDR & Basic Subnetting',
-        '2.3 Default Gateway & Private/Public IP Addresses',
-        '2.4 IPv6 Addressing Fundamentals',
-        '2.5 DHCP, DNS, ARP & ICMP',
-        '2.6 Packet Tracer IP Configuration & Connectivity Labs'
+        '2.1 IPv4 Addressing Schemes & Network Configuration',
+        '2.2 Subnet Masks, CIDR & Variable Length Subnetting (VLSM)',
+        '2.3 Default Gateway, Public vs. Private IPs & RFC 1918',
+        '2.4 IPv6 Addressing Fundamentals & Modern Standards',
+        '2.5 Core Network Services: DHCP, DNS, ARP & ICMP',
+        '2.6 Network IP Configuration & End-to-End Connectivity Labs'
       ]
     },
 
     {
-      title: 'Chapter 3 — Cisco Switching, VLANs & Routing Simulation',
+      title: 'Chapter 3 — Managed Switching, VLANs & Routing Simulation',
       topics: [
-        '3.1 Cisco IOS & Basic CLI Commands in Packet Tracer',
-        '3.2 Switch Configuration & MAC Address Tables',
-        '3.3 VLANs & Access Port Configuration',
-        '3.4 Trunking & Inter-VLAN Routing',
-        '3.5 Static Routing & Default Routes',
-        '3.6 OSPF Fundamentals & Packet Tracer Routing Labs'
+        '3.1 Device Operating System CLI & Essential Administrative Commands',
+        '3.2 Managed Switch Configuration & MAC Address Learning Tables',
+        '3.3 VLAN Segmentation & Access Port Configuration',
+        '3.4 802.1Q Trunking & Inter-VLAN Routing (Router-on-a-Stick)',
+        '3.5 Static Routing, Default Routes & Floating Routes',
+        '3.6 OSPF Dynamic Routing Protocol Fundamentals & Simulation Labs'
       ]
     },
 
     {
-      title: 'Chapter 4 — Network Services, Security & Troubleshooting',
+      title: 'Chapter 4 — Network Services, Firewall Security & Troubleshooting',
       topics: [
-        '4.1 DHCP & DNS Configuration in Packet Tracer',
-        '4.2 NAT/PAT Fundamentals & Simulation',
-        '4.3 Basic Network Security, Passwords & SSH',
-        '4.4 ACL & Firewall Fundamentals',
-        '4.5 Network Troubleshooting (ping, tracert & Cisco show commands)',
-        '4.6 Complete Packet Tracer Network Project'
+        '4.1 Enterprise DHCP & DNS Server Configuration',
+        '4.2 NAT/PAT Gateway Architecture & Internet Sharing',
+        '4.3 Network Security Foundations, Passwords, Access Levels & SSH',
+        '4.4 Real-Time Firewall Fundamentals, Access Control Lists (ACLs) & Port Security',
+        '4.5 Network Troubleshooting Methodologies (ping, traceroute, netstat & show commands)',
+        '4.6 Complete Simulated Enterprise Network Infrastructure Project'
       ]
     },
 
     {
-      title: 'Chapter 5 — Real Hardware Networking & Jaya TV Practical',
+      title: 'Chapter 5 — Real-Time Hardware Networking, Firewalls & Jaya TV Practical',
       topics: [
-        '5.1 Cisco Router & Switch Hardware Identification',
-        '5.2 Physical Connections, Ethernet Cabling & RJ45',
-        '5.3 Console Access & Real Cisco IOS Configuration',
-        '5.4 VLAN, Trunking, Routing & OSPF on Real Devices',
-        '5.5 Server Connectivity, DHCP/NAT & Network Troubleshooting',
-        '5.6 Real-World Office Network Deployment & Final Practical Project'
+        '5.1 Enterprise Router, Managed Switch & Firewall Hardware Identification',
+        '5.2 Physical Patch Panels, Ethernet Cable Crimping (T568A/B) & Cable Testing',
+        '5.3 Console Cable Direct Access, Terminal Emulation & Device Initial Setup',
+        '5.4 Real-Time Firewall Security Policies, VLANs, Trunking & OSPF Deployment',
+        '5.5 Server Rack Mounting, DHCP/NAT Integration & Real Network Troubleshooting',
+        '5.6 Real-World Office Network Deployment & Final Hands-On Capstone Project'
       ]
     }
   ],
@@ -213,85 +213,84 @@ export const COURSES_DATA: Course[] = [
   trainingPlan: {
     onlineTraining: {
       duration: '20 Days',
-      format: 'Live Online Classes + Cisco Packet Tracer Simulation',
+      format: 'Live Online Classes + Network Simulation Labs',
       focus: [
         'Networking Fundamentals',
-        'OSI & TCP/IP Models',
-        'Network Devices & Ethernet',
-        'IPv4 & IPv6',
-        'Subnetting & IP Address Planning',
-        'DHCP & DNS',
-        'Cisco IOS & CLI',
-        'Switching & MAC Address Tables',
-        'VLANs & Trunking',
-        'Inter-VLAN Routing',
-        'Static Routing',
-        'OSPF',
-        'NAT/PAT',
-        'Basic Network Security',
-        'Network Troubleshooting',
-        'Complete Packet Tracer Network Project'
+        'OSI & TCP/IP Reference Models',
+        'Network Devices & Ethernet Protocols',
+        'IPv4 & IPv6 Subnetting & Planning',
+        'DHCP & DNS Architecture',
+        'Device CLI & Configuration',
+        'Managed Switching & MAC Tables',
+        'VLANs, Access Ports & 802.1Q Trunking',
+        'Inter-VLAN Routing & Gateway Routing',
+        'Static Routing & OSPF Dynamic Routing',
+        'NAT/PAT & Port Forwarding',
+        'Firewall Security & Access Control Lists',
+        'Network Troubleshooting & Diagnostics',
+        'Complete Enterprise Network Simulation Project'
       ]
     },
 
     practicalTraining: {
       duration: '10 Days',
       location: 'Jaya TV Office',
-      format: 'Hands-On Hardware & Live Network Engineering Training',
+      format: 'Hands-On Hardware, Firewalls & Live Network Engineering Training',
       focus: [
-        'Cisco Router Hardware',
-        'Cisco Switch Hardware',
-        'Network Servers',
-        'Ethernet & RJ45 Cabling',
-        'Console Access & Physical Device Configuration',
-        'VLAN & Trunk Configuration',
-        'Inter-VLAN Routing',
-        'Static Routing & OSPF',
-        'DHCP & NAT',
-        'Live Server Connectivity',
-        'Network Troubleshooting',
-        'Real Office Network Deployment'
+        'Physical Enterprise Router Hardware',
+        'Managed Switch Hardware & Stacking',
+        'Real-Time Firewall Configuration & Rules',
+        'Enterprise Network Servers & Server Racks',
+        'Ethernet RJ45 Cabling & Patch Panels',
+        'Console Port Direct Hardware Configuration',
+        'VLAN & Trunk Configuration on Real Switches',
+        'Inter-VLAN Routing on Physical Routers',
+        'Dynamic Routing & OSPF Implementation',
+        'Firewall Security Policies & NAT',
+        'Live Broadcast Server & Client Connectivity',
+        'Hardware Network Troubleshooting & Packet Capture',
+        'Complete Real-World Office Network Deployment'
       ]
     }
   },
 
   practicalLabs: [
-    'Build and configure a basic LAN using Cisco Packet Tracer',
-    'Create IPv4 networks and perform subnetting exercises',
-    'Configure VLANs and trunk connections',
-    'Configure inter-VLAN routing',
-    'Configure static routes and default routes',
-    'Configure OSPF between multiple routers',
-    'Configure DHCP and DNS services',
-    'Configure NAT/PAT',
-    'Troubleshoot network connectivity using Cisco commands',
-    'Recreate simulated networks using real Cisco routers and switches'
+    'Build and configure an enterprise LAN using network simulation',
+    'Design IPv4 network subnets and assign IP address schemes',
+    'Configure managed switches, VLANs, and 802.1Q trunk links',
+    'Configure inter-VLAN routing and default gateways',
+    'Configure static routes, default routes, and OSPF routing protocols',
+    'Deploy real-time firewall policies, access control lists (ACLs), and port security',
+    'Deploy enterprise DHCP and DNS services',
+    'Configure NAT/PAT for secure corporate internet access',
+    'Perform network troubleshooting using CLI diagnostics and Wireshark',
+    'Recreate simulated enterprise networks using physical firewalls, routers, and switches'
   ],
 
   projects: [
-    'Project 1: Basic Office LAN using Cisco Packet Tracer',
-    'Project 2: Department-Based VLAN Network',
-    'Project 3: Inter-VLAN Routing & DHCP Network',
-    'Project 4: Multi-Router OSPF Network',
-    'Project 5: Complete Office Network using Real Cisco Hardware'
+    'Project 1: Enterprise Office LAN with Network Simulation',
+    'Project 2: Multi-Department VLAN & Segmented Security Network',
+    'Project 3: Inter-VLAN Routing, Firewall Rules & DHCP Architecture',
+    'Project 4: Multi-Router OSPF Routed Campus Network',
+    'Project 5: Complete Office Network Deployment using Real-Time Hardware (Firewalls, Routers & Switches)'
   ],
 
   assessment: [
-    'Online Networking Fundamentals Assessments',
-    'IPv4 & Subnetting Exercises',
-    'Cisco CLI Configuration Exercises',
-    'Cisco Packet Tracer Practical Labs',
-    'Online Network Troubleshooting Exercises',
-    'Real Hardware Configuration Assessment',
-    'Final Network Troubleshooting Challenge',
-    'Complete Office Network Capstone Project'
+    'Online Computer Networking Fundamentals Assessments',
+    'IPv4 & Subnetting Problem-Solving Exercises',
+    'Network CLI Configuration Practicals',
+    'Network Simulation Scenario Labs',
+    'Firewall & Network Security Policy Audits',
+    'Live Network Troubleshooting Challenge',
+    'Physical Hardware Configuration & Cabling Assessment',
+    'Final Real-Time Office Network Capstone Project'
   ],
 
-  certification: 'Course Completion Certificate in CCNA Networking & Network Engineering',
+  certification: 'Course Completion Certificate in Practical Computer Networking & IT Support Engineering',
 
   fee: '₹5,000',
 
-  jayaTvHandsOn: 'Transform simulation-based networking knowledge into real-world experience by configuring and troubleshooting live Cisco routers, switches, servers, network cabling and other networking infrastructure at the Jaya TV office. Students will recreate selected Packet Tracer networks on physical hardware and complete a real-world office network deployment project.'
+  jayaTvHandsOn: 'Transform network theory into practical job-ready confidence by configuring and troubleshooting real-time hardware — physical enterprise routers, managed switches, real-time firewalls, network servers, and structured cabling — at the Jaya TV office. Students will deploy working multi-tier networks on physical hardware and complete a full real-world office network project.'
 },
 
 {
@@ -1058,6 +1057,135 @@ export const COURSES_DATA: Course[] = [
     ],
     fee: 'From ₹15,000',
     jayaTvHandsOn: 'Full hands-on training in the Jaya TV 4K newsroom with live teleprompters, studio multi-cam pedestal rigs, and live director ear-piece (IFB) feedback across all 10 lessons.'
+  },
+
+  {
+    id: 'tally-prime-gst-crash-course',
+    title: 'Tally Prime + GST Crash Course (Practical Accounts & GST Training)',
+    category: 'short_term',
+    categoryName: 'Crash Course (Short Term)',
+    duration: '8 Days (16 Hours — 2 Hours / Day)',
+    mode: '8 Days Practical Intensive Training (Live Interactive Computer Labs & Case Studies)',
+    deliveryFormat: '16 Hours Intensive Practical Training (2 Hours/Day across 8 Days) with Live TallyPrime Software & Government GST Portal',
+    isOnline: true,
+    eligibility: 'Open to B.Com / M.Com Students, Commerce Graduates, Non-Commerce Beginners, Business Owners, Accounting Aspirants & Working Professionals',
+    description: 'A comprehensive 8-day (16-hour) practical intensive crash course engineered to provide complete real-world confidence in computerized accounting and taxation. Master the fundamentals of accounting, financial statement reading, hands-on TallyPrime voucher and inventory workflows, bank reconciliation, and practical GST compliance including portal registration, Input Tax Credit (ITC) computation, and live filing of GSTR-1 and GSTR-3B returns.',
+    badge: '8-Day Practical Crash Course',
+    highlight: 'Gain 100% practical confidence to independently manage company accounts in TallyPrime and execute all practical GST procedures, from invoice generation to live GSTR-1 & GSTR-3B return filing.',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
+    tools: [
+      'TallyPrime 4.0 / 5.0',
+      'GST Government Portal (gst.gov.in)',
+      'GSTR-1 Offline Tool & JSON Generator',
+      'GSTR-3B Return Filing Utilities',
+      'Bank Reconciliation Statements (BRS)',
+      'Trial Balance & P&L Statement Analysis',
+      'HSN / SAC Code Classification Tools',
+      'Microsoft Excel for Financial Auditing'
+    ],
+    careerRoles: [
+      'Tally & Accounts Executive',
+      'GST Practitioner & Filing Specialist',
+      'Junior / Senior Accountant',
+      'Billing & Inventory Manager',
+      'Tax & Accounts Consultant',
+      'Audit Assistant',
+      'Freelance Accounting & GST Consultant'
+    ],
+    keyModules: [
+      'Day 1: Introduction to Accounting & Golden Rules with Practical Business Examples (2 Hrs)',
+      'Day 2: Preparation & In-Depth Reading of Financial Statements, P&L & Balance Sheet (2 Hrs)',
+      'Day 3: Basics of TallyPrime, Company Creation, Ledgers & Accounting Groups (2 Hrs)',
+      'Day 4: Practical Tally Invoicing, Voucher Entries & Inventory Management (2 Hrs)',
+      'Day 5: Advanced Tally Practice, Bank Reconciliation (BRS) & Financial Reporting (2 Hrs)',
+      'Day 6: Introduction to GST Laws, CGST/SGST/IGST, ITC & Rate Structures (2 Hrs)',
+      'Day 7: Practical Approach to New GST Registration on the Official GST Portal (2 Hrs)',
+      'Day 8: Practical Filing of GST Returns (GSTR-1 & GSTR-3B) with Live Portal Workflow (2 Hrs)'
+    ],
+    chapters: [
+      {
+        title: 'Day 1 — Introduction to Accounting & Fundamentals (2 Hours)',
+        topics: [
+          'Basic fundamentals of Accounting and its importance in modern businesses',
+          'Golden Rules of Accounting: Personal, Real, and Nominal Accounts with real-world examples',
+          'Understanding Debits, Credits, Assets, Liabilities, Incomes, and Expenses',
+          'Journalizing practical commercial transactions to ensure solid conceptual clarity',
+          'Chart of accounts, ledger classification, and trial balance introduction'
+        ]
+      },
+      {
+        title: 'Day 2 — Preparation of Financial Statements & Analysis (2 Hours)',
+        topics: [
+          'Step-by-step preparation of Trading Account, Profit & Loss (P&L) Account, and Balance Sheet',
+          'Learning to read and analyze financial statements to understand company profitability and net worth',
+          'Verification of Assets vs. Liabilities and working capital analysis',
+          'Closing entries, adjustment entries for prepaid/accrued expenses, and bad debts',
+          'Cash Flow & Bank Reconciliation Statement (BRS) foundations'
+        ]
+      },
+      {
+        title: 'Day 3 — Basics of TallyPrime Architecture & Setup (2 Hours)',
+        topics: [
+          'Fundamentals of TallyPrime: Interface overview, navigation, and top keyboard shortcuts',
+          'Company Creation, alteration, setting up financial years, security controls, and multi-company setup',
+          'Primary & Secondary Accounting Groups in TallyPrime and their strategic hierarchy',
+          'Creating Ledgers with Bill-by-Bill details, credit periods, and opening balances',
+          'Configuring accounting features, voucher types, and basic system preferences'
+        ]
+      },
+      {
+        title: 'Day 4 — Tally Practical Training: Daily Vouchers & Inventory (2 Hours)',
+        topics: [
+          'Practical training and hands-on entry for Payment, Receipt, Contra, and Journal vouchers',
+          'Sales & Purchase Invoicing workflows with cash/credit transactions and trade discounts',
+          'Inventory Management: Setting up Stock Groups, Stock Categories, Units of Measure (UOM), and Stock Items',
+          'Linking inventory items to sales and purchase vouchers with real trade data',
+          'Displaying and auditing day-to-day entries in the Day Book'
+        ]
+      },
+      {
+        title: 'Day 5 — Advanced Tally Practice: Banking, BRS & Final Reports (2 Hours)',
+        topics: [
+          'Practical training on Debit Notes (Purchase Returns) and Credit Notes (Sales Returns)',
+          'Bank Reconciliation in TallyPrime: Manual and auto-reconciliation of bank statements',
+          'Cash Book, Bank Book, and Outstanding Receivables/Payables (Ageing Analysis)',
+          'Generating and interpreting real-time Trial Balance, Profit & Loss Account, and Balance Sheet',
+          'Simulated end-to-end accounting cycle for trading and service enterprises'
+        ]
+      },
+      {
+        title: 'Day 6 — Introduction to GST Framework & Applicability (2 Hours)',
+        topics: [
+          'Fundamentals of Goods & Services Tax (GST) in India: CGST, SGST, IGST, and UTGST structure',
+          'GST applicability thresholds (Goods vs. Services), Composition scheme vs. Regular scheme',
+          'HSN (Harmonized System of Nomenclature) and SAC codes identification and tax rate slabs (0%, 5%, 12%, 18%, 28%)',
+          'Input Tax Credit (ITC) mechanism: Eligibility criteria, blocked credits under Section 17(5), and tax offset rules',
+          'Configuring GST in TallyPrime: Enabling GST, GSTIN configuration, and creating tax ledgers'
+        ]
+      },
+      {
+        title: 'Day 7 — Practical Approach to Registration Under GST (2 Hours)',
+        topics: [
+          'Step-by-step practical approach for New Registration on the official GST Portal (gst.gov.in)',
+          'Pre-requisites and documentation checklist: PAN, Aadhaar, Business Address proof, Bank verification, and Authorized Signatory',
+          'Filing Form GST REG-01 (Part A generation of TRN and Part B application submission)',
+          'e-Verification methods (Aadhaar OTP / DSC) and Application Reference Number (ARN) generation',
+          'Tracking registration application status, replying to clarification notices (REG-03/04), and downloading the GSTIN Certificate (REG-06)'
+        ]
+      },
+      {
+        title: 'Day 8 — Practical Filing of GST Returns: GSTR-1 & GSTR-3B (2 Hours)',
+        topics: [
+          'Overview of the GST return filing calendar, due dates, late fees, and statutory interest rules',
+          'Filing GSTR-1: Outward supplies, B2B invoices, B2C Large/Small, Credit/Debit notes, and HSN summary',
+          'Filing GSTR-3B: Monthly summary return, auto-population from GSTR-1 & GSTR-2B, ITC claim verification, and tax payment via electronic cash/credit ledger',
+          'Generating JSON return files directly from TallyPrime and uploading to the GST offline tool/portal',
+          'End-to-end practical walkthrough of live GST portal return submission and challan generation'
+        ]
+      }
+    ],
+    fee: '₹15,000',
+    onlineHandsOn: '100% hands-on practical training with real commercial case studies in TallyPrime, bank reconciliation, GST portal registration simulation, and live filing of GSTR-1 and GSTR-3B returns. Guaranteed to give students absolute confidence to handle company accounts and GST operations independently.'
   }
   
 ];

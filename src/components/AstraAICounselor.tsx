@@ -30,7 +30,7 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
     {
       id: 'msg-1',
       sender: 'astra',
-      text: `Vanakkam & Welcome! I am Astra, official AI Concierge for Muthamizh Academy (Partnered with Mavis Satcom Ltd / Jaya TV Network). 🎬\n\nI can analyze your creative & technical profile, guide you through our 11 programs (including 100% Online & Virtual Labs), simulate industry career paths, compare syllabi, or complete your 2026 admission registration instantly.`,
+      text: `Vanakkam & Welcome! I am Astra, official AI Concierge for Muthamizh Academy (Partnered with Mavis Satcom Ltd / Jaya TV Network). 🎬\n\nI can analyze your creative & technical profile, guide you through our broadcast media, IT and accounting programs (including our 8-Day Tally Prime + GST Crash Course & Online Labs), simulate industry career paths, compare syllabi, or complete your 2026 admission registration instantly.`,
       timestamp: new Date()
     }
   ]);
@@ -150,8 +150,8 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
     let rec = 'AI-Assisted Software Development & Agentic Engineering';
     if (matcherInterests.includes('AI & Agentic Software Development')) {
       rec = 'AI-Assisted Software Development & Agentic Engineering';
-    } else if (matcherInterests.includes('Enterprise IT & Cisco Networking')) {
-      rec = 'Enterprise IT Support, Cloud Infrastructure & Network Engineering';
+    } else if (matcherInterests.includes('Computer Networking, Firewalls & IT Support')) {
+      rec = 'Practical Computer Networking & IT Support Engineering';
     } else if (matcherInterests.includes('Media Law, Ethics & Copyright')) {
       rec = 'Media Law, Journalism Ethics & Digital Media Regulations';
     } else if (matcherInterests.includes('Camera Physics & Lenses')) {
@@ -395,7 +395,7 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
             </button>
 
             <button
-              onClick={() => handleSendMessage('Tell me about the Enterprise IT Support & Cisco Networking course.')}
+              onClick={() => handleSendMessage('Tell me about the Practical Computer Networking & IT Support course.')}
               className="text-[10px] whitespace-nowrap bg-[#0b100e] hover:bg-[#121a17] text-[#00c878] px-3 py-1.5 rounded-xl border border-[#16241f] font-mono transition-all flex items-center gap-1 shrink-0"
             >
               <Laptop className="w-3 h-3 text-[#00c878]" />
@@ -467,7 +467,7 @@ export const AstraAICounselor: React.FC<AstraAICounselorProps> = ({
             <div className="grid grid-cols-2 gap-2">
               {[
                 'AI & Agentic Software Development',
-                'Enterprise IT & Cisco Networking',
+                'Computer Networking, Firewalls & IT Support',
                 'Media Law, Ethics & Copyright',
                 'Camera Physics & Lenses',
                 'Live News & Anchoring',

@@ -340,7 +340,13 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#e6ad54] flex items-center gap-1.5">
                   <BookOpen className="w-4 h-4 text-[#00c878]" />
-                  <span>TAMIL NEWS READING CURRICULUM ({course.chapters?.length || 10} Lessons)</span>
+                  <span>
+                    {course.id === 'tally-prime-gst-crash-course'
+                      ? `8-DAY PRACTICAL TALLY & GST CURRICULUM (${course.chapters?.length || 8} Modules • 16 Hours)`
+                      : course.id.includes('news')
+                      ? `TAMIL NEWS READING CURRICULUM (${course.chapters?.length || 10} Lessons)`
+                      : `COURSE CURRICULUM & MODULE BREAKDOWN (${course.chapters?.length || 0} Modules)`}
+                  </span>
                 </h3>
                 <span className="text-[11px] font-mono text-[#8a9690]">Click to expand topics</span>
               </div>

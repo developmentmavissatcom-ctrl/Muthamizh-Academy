@@ -17,6 +17,7 @@ import { AdminRegistrationsModal } from './components/AdminRegistrationsModal';
 import { AuthModal } from './components/auth/AuthModal';
 import { UserProfileModal } from './components/auth/UserProfileModal';
 import { GallerySection } from './components/GallerySection';
+import { AcademyPositioningSection } from './components/AcademyPositioningSection';
 import { Footer } from './components/Footer';
 import { COURSES_DATA } from './data/coursesData';
 import { StudentApplicationTracker } from './components/student/StudentApplicationTracker';
@@ -24,7 +25,7 @@ import { FacultyPortal } from './components/faculty/FacultyPortal';
 
 const TAB_SEO_CONFIG: Record<NavTab, { title: string; path: string }> = {
   home: {
-    title: 'Muthamizh Academy | Media, Television & Digital Media Education',
+    title: 'Muthamizh Academy | Media, Television & IT Education in Chennai',
     path: '/'
   },
   about: {
@@ -459,7 +460,7 @@ export default function App() {
       if (metaDesc) {
         metaDesc.setAttribute(
           'content',
-          'Muthamizh Academy in Chennai offers media, television, digital media and IT education with practical, industry-focused training.'
+          'Muthamizh Academy in Chennai offers media, television, digital media and IT courses with practical, industry-focused training.'
         );
       }
     }
@@ -523,18 +524,28 @@ export default function App() {
       else if (raw === 'faculty') setActiveTab('faculty');
       else if (raw === 'gallery') setActiveTab('gallery');
       else if (raw === 'tracker') setActiveTab('tracker');
+      else if (raw === 'contact') {
+        setActiveTab('home');
+        setTimeout(() => {
+          document.getElementById('contact-desk')?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
       else setActiveTab('home');
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Check if user directly arrived via admissions URL
+  // Check if user directly arrived via admissions or contact URL
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const raw = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
       if (raw === 'admissions') {
         setApplyModalOpen(true);
+      } else if (raw === 'contact') {
+        setTimeout(() => {
+          document.getElementById('contact-desk')?.scrollIntoView({ behavior: 'smooth' });
+        }, 250);
       }
     }
   }, []);
@@ -733,6 +744,12 @@ export default function App() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Media & IT Education in Chennai Positioning Section */}
+                  <AcademyPositioningSection
+                    onNavigateTab={handleTabChange}
+                    onOpenApplyModal={handleOpenApplyModal}
+                  />
 
                   {/* 1. Studio OS Curricula & Academic Programs (Courses) */}
                   <div id="courses-section">

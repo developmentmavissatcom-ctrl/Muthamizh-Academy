@@ -79,10 +79,10 @@ export const TrendingCourses: React.FC<TrendingCoursesProps> = ({
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#f5f7f6] tracking-tight font-sans">
-              Comprehensive Production Programs
+              Media, Television &amp; IT Courses in Chennai
             </h2>
             <p className="text-[#8a9690] text-sm sm:text-base mt-2 max-w-3xl leading-relaxed">
-              Engineered with Jaya TV network directors and industry leaders. Covering <strong>AI-Assisted Software Development</strong>, <strong>Enterprise IT Support</strong>, <strong>Broadcast Cinematography</strong>, <strong>MCR/PCR Operations</strong>, <strong>Media Law</strong>, and <strong>Satellite Transmission</strong> with on-campus floor and 100% online virtual learning tracks.
+              Muthamizh Academy offers practical, industry-focused programs across two distinct domains: <strong>Media, Television &amp; Digital Journalism</strong> with hands-on satellite studio training at Jaya TV, and <strong>IT, Software &amp; Networking Education</strong> featuring confirmed tracks in AI-Assisted Software Development, Practical Computer Networking &amp; IT Support, and Manual Software Testing.
             </p>
           </div>
 

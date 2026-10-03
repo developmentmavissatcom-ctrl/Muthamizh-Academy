@@ -1,6 +1,6 @@
 {
   "name": "Muthamizh Academy",
-  "description": "Muthamizh Academy in Chennai offers media, television, digital media and IT education with practical, industry-focused training.",
+  "description": "Muthamizh Academy in Chennai offers media, television, digital media and IT courses with practical, industry-focused training.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

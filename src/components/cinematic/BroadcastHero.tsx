@@ -58,11 +58,11 @@ export const BroadcastHero: React.FC<BroadcastHeroProps> = ({
               </h2>
 
               <p className="text-base sm:text-xl xl:text-2xl font-serif text-[#e6ad54] font-medium tracking-wide">
-                Muthamizh Academy • Professional Television & Cinema Academy
+                Muthamizh Academy • Media, Television &amp; IT Education in Chennai
               </p>
 
               <p className="text-[#8a9690] text-xs sm:text-base leading-relaxed">
-                Step inside 10,000+ sq.ft of active satellite television production floors. Direct hands-on training with Advanced Camera Setup, multi-cam vision mixers, newsroom teleprompters, and Jaya TV senior showrunners.
+                Step inside 10,000+ sq.ft of active satellite television production floors alongside state-of-the-art software and networking labs. Practical training in broadcasting, television journalism, cinematography, and confirmed IT tracks in AI-assisted software development, practical computer networking &amp; IT support, software testing, and TallyPrime + GST.
               </p>
             </div>
 

@@ -136,6 +136,30 @@ export const Footer: React.FC<FooterProps> = ({
                   About Muthamizh Academy
                 </a>
               </li>
+              <li>
+                <a
+                  href="/admissions"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (onOpenApplyModal) onOpenApplyModal();
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left text-[#00c878] font-bold block"
+                >
+                  Admissions 2026
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('contact-desk')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left block"
+                >
+                  Campus Contact &amp; Directions
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -152,21 +176,9 @@ export const Footer: React.FC<FooterProps> = ({
                     e.preventDefault();
                     handleNavClick('courses');
                   }}
-                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1 block"
+                  className="hover:text-[#00c878] transition-colors text-left line-clamp-1 block font-semibold"
                 >
-                  Broadcast Cinematography & Multi-Cam Rigs
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/courses"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick('courses');
-                  }}
-                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1 block"
-                >
-                  Television Direction & PCR Control
+                  Television News Reading, Anchoring &amp; Journalism
                 </a>
               </li>
               <li>
@@ -178,7 +190,7 @@ export const Footer: React.FC<FooterProps> = ({
                   }}
                   className="hover:text-sky-400 transition-colors text-left line-clamp-1 block"
                 >
-                  AI-Assisted Software Dev & Agentic Eng (Online)
+                  AI-Assisted Software Dev &amp; Full Stack
                 </a>
               </li>
               <li>
@@ -190,7 +202,7 @@ export const Footer: React.FC<FooterProps> = ({
                   }}
                   className="hover:text-sky-400 transition-colors text-left line-clamp-1 block"
                 >
-                  Enterprise IT Support & Cisco Cloud (Online)
+                  Practical Computer Networking &amp; IT Support
                 </a>
               </li>
               <li>
@@ -202,7 +214,7 @@ export const Footer: React.FC<FooterProps> = ({
                   }}
                   className="hover:text-sky-400 transition-colors text-left line-clamp-1 block"
                 >
-                  Media Law, Ethics & Copyright (Online)
+                  Manual Software Testing &amp; QA
                 </a>
               </li>
               <li>
@@ -212,16 +224,28 @@ export const Footer: React.FC<FooterProps> = ({
                     e.preventDefault();
                     handleNavClick('courses');
                   }}
-                  className="hover:text-[#e6ad54] transition-colors text-left line-clamp-1 block"
+                  className="hover:text-[#e6ad54] text-[#e6ad54] font-bold transition-colors text-left line-clamp-1 block"
                 >
-                  Sound Engineering & Multi-Track Mixing
+                  Tally Prime + GST Crash Course (8 Days • ₹15,000)
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('courses');
+                  }}
+                  className="hover:text-[#00c878] transition-colors text-left line-clamp-1 block"
+                >
+                  Satellite Studio Broadcast Operations
                 </a>
               </li>
             </ul>
           </div>
 
           {/* Col 4: Campus Contact & Admissions Desk */}
-          <div className="space-y-3">
+          <div className="space-y-3" id="contact-desk">
             <h4 className="text-xs font-mono font-bold text-[#f5f7f6] uppercase tracking-wider">
               Campus & Admissions Desk
             </h4>

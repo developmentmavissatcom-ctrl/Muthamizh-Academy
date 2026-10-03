@@ -27,9 +27,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         {/* Hero Main Headline */}
         <div className="max-w-5xl mx-auto space-y-4">
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1] drop-shadow-md">
+          <h2 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1] drop-shadow-md">
             MUTHAMIZH ACADEMY
-          </h1>
+          </h2>
           <p className="text-xl sm:text-2xl md:text-3xl font-serif text-amber-300 font-medium tracking-wide">
             Media & Broadcasting Institute
           </p>

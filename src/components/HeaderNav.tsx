@@ -191,7 +191,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
               {/* Dropdown Menu */}
               <div className="absolute top-full left-0 mt-2 w-72 bg-[#070b09] border border-[#16241f] rounded-2xl shadow-2xl p-2 hidden group-hover:block animate-in fade-in zoom-in-95 duration-150 z-50">
                 <div className="px-3 py-2 text-[10px] font-mono text-[#8a9690] uppercase tracking-wider border-b border-[#16241f] flex items-center justify-between">
-                  <span>11 Specializations</span>
+                  <span>Industry Programs</span>
                   <span className="text-[#00c878]">2026 Batch</span>
                 </div>
                 
@@ -584,7 +584,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                     : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#0b100e]'
                 }`}
               >
-                <span>Courses (11 Programs)</span>
+                <span>Academic &amp; IT Programs</span>
                 {activeTab === 'courses' && <span className="w-1.5 h-1.5 rounded-full bg-[#00c878]" />}
               </a>
               <a
