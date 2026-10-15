@@ -402,6 +402,10 @@ Your purpose is to welcome site visitors, assist with 11 specialized academic pr
     - 5 Chapters: Field ENG, call sheets, newsroom assignment desk & rundowns, producer management, and studio floor cueing.
 11. **Satellite Transmission, RF Engineering & OTT Broadcast Systems (Evening/Weekend, 3 Mos, ₹50,000)**
     - 5 Chapters: Broadcast signal physics, codecs (HEVC/AV1), playout signal chains, satellite dish uplinks, fiber IP backbones, and OTT streaming.
+12. **1-Day Enterprise Networking & Hardware Hands-On Workshop (1-Day Intensive Masterclass at Jaya TV Campus, ₹999)**
+    - Action-oriented 1-day live hardware masterclass with ZERO theoretical syllabus exams. Focuses 100% on practical hands-on networking work: RJ45 Cat6 cable crimping & testing, physical enterprise Cisco router & managed switch CLI configuration, VLAN segmentation, hardware firewalls & security rules, live Wireshark packet sniffing, and an exclusive behind-the-scenes walkthrough of Jaya TV's 24/7 broadcast server infrastructure. Participants take home their custom tested cable and an official Muthamizh Academy & Jaya TV completion certificate!
+13. **Tally Prime + GST Crash Course (Short Term Crash Course, 8 Days / 16 Hours, ₹15,000)**
+    - 8-day practical accounting & GST crash course with live TallyPrime voucher entry, inventory, bank reconciliation (BRS), and official GST portal registration & live return filing (GSTR-1, GSTR-3B).
 
 ### ADMISSION REGISTRATION FLOW:
 Guide the user through answering basic admission questions, gathering details smoothly:
@@ -459,14 +463,24 @@ const ALLOWED_MEDIA_IDS = new Set<string>([
   "1Cj7O5Uv2CcH1Y4xUxVJAwew5McQGrkGE"
 ]);
 
-// Zod Validation Schema for Registration
+// Zod Validation Schema for Registration (matches official Muthamizh Academy Google Form)
 const RegisterSchema = z.object({
   full_name: z.string().min(2, "Full name must be at least 2 characters").max(100),
+  gender: z.string().min(1, "Please select your gender").max(30).optional().default("Not specified"),
+  marital_status: z.string().min(1, "Please select your marital status").max(30).optional().default("Not specified"),
+  dob: z.string().min(1, "Please provide your date of birth").max(30).optional().default("Not specified"),
+  address: z.string().min(2, "Please enter your address").max(500).optional().default("Not specified"),
+  district: z.string().min(2, "Please enter your district").max(100).optional().default("Not specified"),
+  state: z.string().min(2, "Please enter your state").max(100).optional().default("Tamil Nadu"),
+  pincode: z.string().min(3, "Please enter your PIN code").max(20).optional().default("Not specified"),
   email: z.string().email("Invalid email address format").max(120),
-  phone: z.string().max(30).optional().default("Not provided"),
-  program_interest: z.string().max(150).optional().default("AI-Assisted Software Development & Agentic Engineering"),
-  qualification: z.string().max(100).optional().default("Graduate"),
-  statement_of_purpose: z.string().max(2000).optional()
+  phone: z.string().min(7, "Phone number is required").max(30),
+  alternate_phone: z.string().max(30).optional().default(""),
+  qualification: z.string().min(1, "Please provide your educational qualification").max(150),
+  experience: z.string().max(2000).optional().default(""),
+  program_interest: z.string().max(150).optional().default("News Reader / News Presenter Certification"),
+  consent_agreed: z.boolean().optional().default(true),
+  signature_name: z.string().min(2, "Please type your full name to confirm consent").max(100).optional().default("")
 });
 
 // API Routes
@@ -937,6 +951,97 @@ app.post("/api/auth/login", authLimiter, (req, res) => {
     });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to log in." });
+  }
+});
+
+// Google Authentication & Auto-Registration Endpoint
+app.post("/api/auth/google", authLimiter, async (req, res) => {
+  try {
+    const { email, fullName, targetRole, programInterest, phone } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: "Google account email is required." });
+    }
+
+    const emailNorm = email.trim().toLowerCase();
+    let user = storage.findUserByEmail(emailNorm);
+    let isNewUser = false;
+
+    if (!user) {
+      isNewUser = true;
+      const allUsers = storage.getUsers();
+      // Default to student for Google sign-in
+      user = {
+        id: `USR-2026-${String(allUsers.length + 1).padStart(3, "0")}`,
+        email: emailNorm,
+        fullName: fullName?.trim() || emailNorm.split('@')[0] || "Verified Student",
+        phone: phone || "",
+        passwordHash: "",
+        salt: "",
+        role: targetRole === 'faculty' ? 'student' : 'student',
+        isEmailVerified: true,
+        registeredAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        admissionStatus: "New Candidate",
+        programInterest: programInterest || "AI-Assisted Software Development & Agentic Engineering",
+        updatesSubscribed: true
+      };
+
+      const existingReg = storage.findRegistrationByEmail(emailNorm);
+      if (existingReg) {
+        user.applicationId = existingReg.id;
+        user.admissionStatus = existingReg.status || "Application Submitted";
+        user.programInterest = existingReg.program_interest;
+        if (!user.phone && existingReg.phone) {
+          user.phone = existingReg.phone;
+        }
+      }
+
+      storage.saveUser(user);
+    } else {
+      user.isEmailVerified = true;
+      user.lastLoginAt = new Date().toISOString();
+      if ((!user.fullName || user.fullName === "Verified Student") && fullName) {
+        user.fullName = fullName.trim();
+      }
+
+      if (!user.applicationId && user.role === 'student') {
+        const existingReg = storage.findRegistrationByEmail(emailNorm);
+        if (existingReg) {
+          user.applicationId = existingReg.id;
+          user.admissionStatus = existingReg.status || "Application Submitted";
+          if (existingReg.program_interest) user.programInterest = existingReg.program_interest;
+          if (!user.phone && existingReg.phone) user.phone = existingReg.phone;
+        }
+      }
+
+      storage.saveUser(user);
+    }
+
+    const token = issueSession(res, user, user.role === 'faculty' ? "fac_tok_" : "tok_");
+
+    storage.addAuditLog({
+      id: `AUD-${Date.now()}-${crypto.randomBytes(3).toString("hex")}`,
+      action: isNewUser ? "USER_SIGNUP_GOOGLE" : "USER_LOGIN_GOOGLE",
+      userId: user.id,
+      performedBy: user.email,
+      timestamp: new Date().toISOString(),
+      details: `User ${isNewUser ? "registered" : "logged in"} via Google Sign-In (${user.role})`,
+      ipAddress: getClientIp(req)
+    });
+
+    res.json({
+      success: true,
+      message: isNewUser 
+        ? "Google account linked and registered successfully!" 
+        : "Welcome back! Authenticated with Google.",
+      user: sanitizeUser(user),
+      token,
+      isNewUser,
+      portal: user.role === 'faculty' ? 'faculty' : 'student'
+    });
+  } catch (err: any) {
+    console.error("Error in /api/auth/google:", err);
+    res.status(500).json({ error: err.message || "Google authentication failed." });
   }
 });
 
@@ -1767,9 +1872,20 @@ app.post("/api/register", async (req, res) => {
       corporate_partner: "Mavis Satcom Limited (Jaya TV)",
       full_name: escapeHtml(data.full_name.trim()),
       email: data.email.trim().toLowerCase(),
-      phone: escapeHtml(data.phone),
+      phone: escapeHtml(data.phone.trim()),
+      alternate_phone: data.alternate_phone ? escapeHtml(data.alternate_phone.trim()) : undefined,
+      gender: escapeHtml(data.gender),
+      marital_status: escapeHtml(data.marital_status),
+      dob: escapeHtml(data.dob),
+      address: escapeHtml(data.address.trim()),
+      district: escapeHtml(data.district.trim()),
+      state: escapeHtml(data.state.trim()),
+      pincode: escapeHtml(data.pincode.trim()),
       program_interest: escapeHtml(data.program_interest),
       qualification: escapeHtml(data.qualification),
+      experience: data.experience ? escapeHtml(data.experience.trim()) : undefined,
+      consent_agreed: Boolean(data.consent_agreed),
+      signature_name: escapeHtml(data.signature_name.trim() || data.full_name.trim()),
       timestamp: new Date().toISOString(),
       status: "Application Submitted",
       facultyRemarks: "Application received by Admissions Desk. Scheduled for document and qualification screening.",
