@@ -17,9 +17,7 @@ import {
   BookOpen,
   Filter,
   Search,
-  GraduationCap,
-  Sparkles,
-  ArrowRight
+  GraduationCap
 } from 'lucide-react';
 
 interface TrendingCoursesProps {
@@ -168,7 +166,7 @@ export const TrendingCourses: React.FC<TrendingCoursesProps> = ({
                   : 'text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#121a17]'
               }`}
             >
-              SHORT TERM & WORKSHOPS ({COURSES_DATA.filter(c => c.category === 'short_term').length})
+              SHORT TERM (6 MO)
             </button>
 
             
@@ -186,85 +184,6 @@ export const TrendingCourses: React.FC<TrendingCoursesProps> = ({
             <Laptop className="w-3.5 h-3.5 text-sky-400" />
             <span>Show Online-Capable Only ({onlineCoursesCount})</span>
           </button>
-        </div>
-
-        {/* Featured 1-Day Networking Workshop Spotlight Banner */}
-        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#0b100e] via-[#121a17] to-[#0b100e] border border-[#00c878]/40 shadow-[0_15px_40px_rgba(0,0,0,0.8),0_0_25px_rgba(0,200,120,0.15)] flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden">
-          <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#00c878]/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left z-10">
-            <div 
-              onClick={() => {
-                const workshop = COURSES_DATA.find(c => c.id === 'one-day-enterprise-networking-workshop');
-                if (workshop) onSelectCourse(workshop);
-              }}
-              className="relative w-28 sm:w-32 h-36 sm:h-40 rounded-2xl overflow-hidden border-2 border-[#00c878]/60 shrink-0 bg-[#050706] group cursor-pointer shadow-xl hover:scale-105 transition-transform"
-            >
-              <img
-                src="/networking-workshop-hero.jpg"
-                alt="1-Day Enterprise Networking & Hardware Lab"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-center p-2">
-                <span className="text-[10px] font-mono font-bold text-[#00c878] flex items-center gap-1">
-                  <Eye className="w-3 h-3" /> Live Lab Details
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-2 max-w-2xl">
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-[#00c878] text-[#050706] text-[10px] font-mono font-black uppercase tracking-wider">
-                  NEW UPCOMING WORKSHOP
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-[#e6ad54]/20 text-[#e6ad54] text-[10px] font-mono font-bold border border-[#e6ad54]/40">
-                  1 Day (8 Hours) • Live Hardware Lab
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/40">
-                  Fee: ₹999
-                </span>
-              </div>
-
-              <h3 className="text-xl sm:text-2xl font-extrabold text-[#f5f7f6] leading-tight">
-                1-Day Enterprise Networking &amp; Hardware Hands-On Workshop
-              </h3>
-
-              <p className="text-xs sm:text-sm text-[#8a9690] leading-relaxed">
-                Step onto the Jaya TV broadcast technical floor. Zero theory overload — 100% hands-on work configuring physical enterprise Cisco routers, managed Gigabit switches, hardware firewalls, RJ45 Cat6 cable crimping, and live Wireshark packet analysis. Crimp and take home your own tested cable and earn an official verified certificate!
-              </p>
-
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-[11px] font-mono text-[#00c878]">
-                <span>✓ Physical Cisco Routers &amp; Switches</span>
-                <span className="text-[#8a9690]">•</span>
-                <span>✓ RJ45 Crimping Drill</span>
-                <span className="text-[#8a9690]">•</span>
-                <span>✓ Hardware Firewalls</span>
-                <span className="text-[#8a9690]">•</span>
-                <span>✓ Jaya TV Studio Tour</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 w-full sm:w-auto shrink-0 z-10">
-            <button
-              onClick={() => {
-                const workshop = COURSES_DATA.find(c => c.id === 'one-day-enterprise-networking-workshop');
-                if (workshop) onSelectCourse(workshop);
-              }}
-              className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#1f332a] text-[#00c878] border border-[#00c878]/40 font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 hover:border-[#00c878]"
-            >
-              <Eye className="w-4 h-4" />
-              <span>Workshop Details &amp; Stations</span>
-            </button>
-
-            <button
-              onClick={() => onOpenApplyModal('1-Day Enterprise Networking & Hardware Hands-On Workshop')}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-mono text-xs font-black shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
-            >
-              <GraduationCap className="w-4 h-4 text-[#050706]" />
-              <span>Register for Workshop (₹999)</span>
-            </button>
-          </div>
         </div>
 
         {/* Courses Grid */}
@@ -354,22 +273,14 @@ export const TrendingCourses: React.FC<TrendingCoursesProps> = ({
                       </p>
                     </div>
 
-                    {/* Syllabus Chapters Count or Workshop Tag */}
+                    {/* Syllabus Chapters Count */}
                     <div className="p-2.5 rounded-xl bg-[#121a17] border border-[#16241f] flex items-center justify-between text-xs font-mono">
                       <div className="flex items-center gap-1.5 text-[#e6ad54]">
                         <BookOpen className="w-3.5 h-3.5 text-[#e6ad54]" />
-                        <span>
-                          {course.chapters && course.chapters.length > 0
-                            ? `${course.chapters.length} Curriculum Lessons`
-                            : '1-Day Intensive Practical Workshop'}
-                        </span>
+                        <span>{course.chapters?.length || course.keyModules.length} Curriculum Lessons</span>
                       </div>
                       <span className="text-[10px] text-[#00c878] font-bold">
-                        {course.durationTracks 
-                          ? '3 Duration Tracks' 
-                          : course.chapters && course.chapters.length > 0
-                          ? `${course.chapters.length}-Lesson Syllabus`
-                          : '100% Hands-On Hardware'}
+                        {course.durationTracks ? '3 Duration Tracks' : `${course.chapters?.length || 5}-Lesson Syllabus`}
                       </span>
                     </div>
 
@@ -424,7 +335,7 @@ export const TrendingCourses: React.FC<TrendingCoursesProps> = ({
                         className="w-full py-2 px-3 rounded-xl bg-[#050706] hover:bg-[#121a17] text-[#f5f7f6] font-mono font-bold text-xs border border-[#16241f] hover:border-[#00c878]/40 transition-colors flex items-center justify-center gap-1.5"
                       >
                         <Eye className="w-3.5 h-3.5 text-[#00c878]" />
-                        <span>{course.chapters && course.chapters.length > 0 ? 'Syllabus' : 'Workshop Info'}</span>
+                        <span>Syllabus</span>
                       </button>
 
                       <button
