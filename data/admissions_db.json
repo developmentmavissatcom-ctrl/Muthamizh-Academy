@@ -50,9 +50,45 @@
       "updatesSubscribed": true
     }
   ],
-  "registrations": [],
+  "registrations": [
+    {
+      "id": "REG-2026-001",
+      "academy": "Muthamizh Academy",
+      "corporate_partner": "Mavis Satcom Limited (Jaya TV)",
+      "full_name": "Karthikeyan Ramaswamy",
+      "email": "karthik.ramaswamy@example.com",
+      "phone": "9840183192",
+      "alternate_phone": "9444102938",
+      "gender": "Male",
+      "marital_status": "Unmarried",
+      "dob": "1998-05-14",
+      "address": "No. 42, Anna Salai, Guindy",
+      "district": "Chennai",
+      "state": "Tamil Nadu",
+      "pincode": "600032",
+      "program_interest": "1-Day Enterprise Networking &amp; Hardware Hands-On Workshop",
+      "qualification": "Undergraduate / Bachelor&#039;s Degree",
+      "experience": "Network Support Trainee at local ISP for 6 months",
+      "consent_agreed": true,
+      "signature_name": "Karthikeyan Ramaswamy",
+      "timestamp": "2026-10-13T16:22:37.236Z",
+      "status": "Application Submitted",
+      "facultyRemarks": "Application received by Admissions Desk. Scheduled for document and qualification screening.",
+      "updatedAt": "2026-10-13T16:22:37.236Z"
+    }
+  ],
   "sessions": [],
   "auditLogs": [
+    {
+      "id": "AUD-1791908557236-203b38",
+      "action": "REGISTRATION_SUBMITTED",
+      "performedBy": "karthik.ramaswamy@example.com",
+      "resource": "registrations",
+      "resourceId": "REG-2026-001",
+      "timestamp": "2026-10-13T16:22:37.236Z",
+      "details": "New registration submitted for program: 1-Day Enterprise Networking &amp; Hardware Hands-On Workshop",
+      "ipAddress": "127.0.0.1"
+    },
     {
       "id": "aud-1790130136093",
       "action": "FACULTY_MEMBER_UPLOADED",

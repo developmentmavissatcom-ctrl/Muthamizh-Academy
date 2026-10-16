@@ -44,6 +44,18 @@ export interface RegistrationRecord {
   qualification: string;
   timestamp: string;
   status: AdmissionStatus;
+  // Google Form Fields:
+  gender?: string;
+  marital_status?: string;
+  dob?: string;
+  address?: string;
+  district?: string;
+  state?: string;
+  pincode?: string;
+  alternate_phone?: string;
+  experience?: string;
+  consent_agreed?: boolean;
+  signature_name?: string;
   facultyRemarks?: string;
   interviewDate?: string;
   interviewVenue?: string;
