@@ -463,24 +463,14 @@ const ALLOWED_MEDIA_IDS = new Set<string>([
   "1Cj7O5Uv2CcH1Y4xUxVJAwew5McQGrkGE"
 ]);
 
-// Zod Validation Schema for Registration (matches official Muthamizh Academy Google Form)
+// Zod Validation Schema for Registration
 const RegisterSchema = z.object({
   full_name: z.string().min(2, "Full name must be at least 2 characters").max(100),
-  gender: z.string().min(1, "Please select your gender").max(30).optional().default("Not specified"),
-  marital_status: z.string().min(1, "Please select your marital status").max(30).optional().default("Not specified"),
-  dob: z.string().min(1, "Please provide your date of birth").max(30).optional().default("Not specified"),
-  address: z.string().min(2, "Please enter your address").max(500).optional().default("Not specified"),
-  district: z.string().min(2, "Please enter your district").max(100).optional().default("Not specified"),
-  state: z.string().min(2, "Please enter your state").max(100).optional().default("Tamil Nadu"),
-  pincode: z.string().min(3, "Please enter your PIN code").max(20).optional().default("Not specified"),
   email: z.string().email("Invalid email address format").max(120),
-  phone: z.string().min(7, "Phone number is required").max(30),
-  alternate_phone: z.string().max(30).optional().default(""),
-  qualification: z.string().min(1, "Please provide your educational qualification").max(150),
-  experience: z.string().max(2000).optional().default(""),
-  program_interest: z.string().max(150).optional().default("News Reader / News Presenter Certification"),
-  consent_agreed: z.boolean().optional().default(true),
-  signature_name: z.string().min(2, "Please type your full name to confirm consent").max(100).optional().default("")
+  phone: z.string().max(30).optional().default("Not provided"),
+  program_interest: z.string().max(150).optional().default("AI-Assisted Software Development & Agentic Engineering"),
+  qualification: z.string().max(100).optional().default("Graduate"),
+  statement_of_purpose: z.string().max(2000).optional()
 });
 
 // API Routes
@@ -1872,20 +1862,9 @@ app.post("/api/register", async (req, res) => {
       corporate_partner: "Mavis Satcom Limited (Jaya TV)",
       full_name: escapeHtml(data.full_name.trim()),
       email: data.email.trim().toLowerCase(),
-      phone: escapeHtml(data.phone.trim()),
-      alternate_phone: data.alternate_phone ? escapeHtml(data.alternate_phone.trim()) : undefined,
-      gender: escapeHtml(data.gender),
-      marital_status: escapeHtml(data.marital_status),
-      dob: escapeHtml(data.dob),
-      address: escapeHtml(data.address.trim()),
-      district: escapeHtml(data.district.trim()),
-      state: escapeHtml(data.state.trim()),
-      pincode: escapeHtml(data.pincode.trim()),
+      phone: escapeHtml(data.phone),
       program_interest: escapeHtml(data.program_interest),
       qualification: escapeHtml(data.qualification),
-      experience: data.experience ? escapeHtml(data.experience.trim()) : undefined,
-      consent_agreed: Boolean(data.consent_agreed),
-      signature_name: escapeHtml(data.signature_name.trim() || data.full_name.trim()),
       timestamp: new Date().toISOString(),
       status: "Application Submitted",
       facultyRemarks: "Application received by Admissions Desk. Scheduled for document and qualification screening.",

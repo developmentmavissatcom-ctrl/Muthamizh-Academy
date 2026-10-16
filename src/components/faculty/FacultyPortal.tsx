@@ -444,47 +444,13 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
 
   // Export CSV
   const handleExportCSV = () => {
-    const headers = [
-      "Application ID", 
-      "Name", 
-      "Gender",
-      "Marital Status",
-      "Date of Birth",
-      "Email", 
-      "Phone", 
-      "Alternate Phone",
-      "Address",
-      "District",
-      "State",
-      "PIN Code",
-      "Program", 
-      "Qualification", 
-      "Professional Experience",
-      "Consent Signature",
-      "Status", 
-      "Faculty Remarks", 
-      "Interview Date", 
-      "Venue", 
-      "Studio Floor", 
-      "Scholarship"
-    ];
+    const headers = ["Application ID", "Name", "Email", "Phone", "Program", "Status", "Faculty Remarks", "Interview Date", "Venue", "Studio Floor", "Scholarship"];
     const rows = applications.map(a => [
       `"${a.id}"`,
       `"${a.full_name}"`,
-      `"${a.gender || ''}"`,
-      `"${a.marital_status || ''}"`,
-      `"${a.dob || ''}"`,
       `"${a.email}"`,
       `"${a.phone}"`,
-      `"${a.alternate_phone || ''}"`,
-      `"${(a.address || '').replace(/"/g, '""')}"`,
-      `"${a.district || ''}"`,
-      `"${a.state || ''}"`,
-      `"${a.pincode || ''}"`,
       `"${a.program_interest}"`,
-      `"${a.qualification}"`,
-      `"${(a.experience || '').replace(/"/g, '""')}"`,
-      `"${a.signature_name || a.full_name}"`,
       `"${a.status || 'Application Submitted'}"`,
       `"${(a.facultyRemarks || '').replace(/"/g, '""')}"`,
       `"${a.interviewDate || ''}"`,
@@ -1048,82 +1014,17 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
               </div>
             )}
 
-            {/* Candidate Dossier (Google Form Submitted Details) */}
-            <div className="bg-[#070b09] p-4 rounded-2xl border border-[#16241f] space-y-3 text-xs font-mono">
-              <div className="flex items-center justify-between border-b border-[#16241f] pb-2">
-                <span className="text-[10px] text-[#e6ad54] font-bold uppercase tracking-wider">
-                  Official Application Dossier • Google Form Reference
-                </span>
-                <span className="text-[10px] text-[#00c878]">
-                  ID: {selectedApp.id}
-                </span>
+            {/* Candidate Metadata Summary */}
+            <div className="grid grid-cols-2 gap-3 bg-[#070b09] p-4 rounded-2xl border border-[#16241f] text-xs font-mono">
+              <div>
+                <span className="text-[#8a9690] block text-[10px]">Contact Info:</span>
+                <span className="text-[#f5f7f6] font-bold">{selectedApp.email}</span>
+                <div className="text-[#8a9690]">{selectedApp.phone}</div>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                {/* Personal */}
-                <div className="space-y-1">
-                  <span className="text-[#8a9690] block text-[10px]">CANDIDATE & DEMOGRAPHICS</span>
-                  <div className="text-[#f5f7f6] font-bold text-sm">{selectedApp.full_name}</div>
-                  <div className="text-[#8a9690] text-[11px]">
-                    Gender: <span className="text-[#f5f7f6]">{selectedApp.gender || 'Not specified'}</span> • Marital Status: <span className="text-[#f5f7f6]">{selectedApp.marital_status || 'Not specified'}</span>
-                  </div>
-                  {selectedApp.dob && (
-                    <div className="text-[#8a9690] text-[11px]">
-                      Date of Birth: <span className="text-[#f5f7f6]">{selectedApp.dob}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Track & Qualification */}
-                <div className="space-y-1">
-                  <span className="text-[#8a9690] block text-[10px]">PROGRAM & QUALIFICATION</span>
-                  <div className="text-[#00c878] font-bold text-xs">{selectedApp.program_interest}</div>
-                  <div className="text-[#f5f7f6] text-[11px]">
-                    Degree: <span className="text-[#e6ad54]">{selectedApp.qualification}</span>
-                  </div>
-                  {selectedApp.experience && (
-                    <div className="text-[#8a9690] text-[10px] italic">
-                      Exp: "{selectedApp.experience}"
-                    </div>
-                  )}
-                </div>
-
-                {/* Contact */}
-                <div className="space-y-1">
-                  <span className="text-[#8a9690] block text-[10px]">CONTACT INFORMATION</span>
-                  <div className="text-[#f5f7f6]">{selectedApp.email}</div>
-                  <div className="text-[#8a9690]">
-                    Primary: <span className="text-[#f5f7f6]">{selectedApp.phone}</span>
-                    {selectedApp.alternate_phone && (
-                      <span> • Alt: <span className="text-[#f5f7f6]">{selectedApp.alternate_phone}</span></span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Residential Address & Location */}
-                <div className="space-y-1">
-                  <span className="text-[#8a9690] block text-[10px]">RESIDENCE & DISTRICT</span>
-                  <div className="text-[#f5f7f6] text-[11px]">
-                    {selectedApp.district ? `${selectedApp.district}, ${selectedApp.state || 'Tamil Nadu'}` : 'Tamil Nadu'}
-                    {selectedApp.pincode ? ` - ${selectedApp.pincode}` : ''}
-                  </div>
-                  {selectedApp.address && (
-                    <div className="text-[#8a9690] text-[10px] leading-tight">
-                      {selectedApp.address}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Legal Consent Verification */}
-              <div className="pt-2 border-t border-[#16241f] flex flex-wrap items-center justify-between text-[10px] text-[#8a9690]">
-                <div className="flex items-center gap-1.5 text-[#00c878]">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Consent & Declaration Legally Accepted</span>
-                </div>
-                <div>
-                  Digital Signature: <strong className="text-[#f5f7f6]">{selectedApp.signature_name || selectedApp.full_name}</strong>
-                </div>
+              <div>
+                <span className="text-[#8a9690] block text-[10px]">Track & Qualification:</span>
+                <span className="text-[#00c878] font-bold block truncate">{selectedApp.program_interest}</span>
+                <span className="text-[#8a9690]">{selectedApp.qualification}</span>
               </div>
             </div>
 
