@@ -98,6 +98,49 @@ export const COURSES_DATA: Course[] = [
     jayaTvHandsOn: 'Build automated AI news summarization bots, broadcast asset tagging agents, and live program indexing tools.'
   },
   {
+    id: 'one-day-enterprise-networking-workshop',
+    title: '1-Day Enterprise Networking & Hardware Hands-On Workshop',
+    category: 'short_term',
+    categoryName: '1-Day Live Workshop',
+    duration: '1 Day (8 Hours — Intensive Practical Masterclass)',
+    mode: '100% On-Site Practical Hardware Lab at Jaya TV Studio Campus',
+    deliveryFormat: '8 Hours Intensive Live Hardware Drills — Enterprise Cisco Routers, Managed Switches, Firewalls & Cabling Stations',
+    isOnline: false,
+    eligibility: 'Open to Engineering & Arts/Science Students (B.E/B.Tech, B.Sc, BCA, Diploma), Tech Enthusiasts, IT Support Seekers & Beginners. Zero prior networking background needed!',
+    description: 'An action-packed, 1-day practical masterclass engineered to get your hands directly on real enterprise networking hardware. Skip the boring theory and dive straight into configuring physical enterprise Cisco routers, managed Gigabit switches, hardware firewalls, RJ45 Cat6 cable crimping, and live Wireshark packet capture. Experience firsthand how carrier-grade redundant broadcast networks operate behind the scenes inside Jaya TV\'s active production complex, solve live network connectivity challenges, and graduate with an official Muthamizh Academy & Jaya TV Workshop Certificate.',
+    badge: '1-Day Live Workshop',
+    highlight: 'Build, wire, and configure real enterprise networking infrastructure in a single power-packed day — physical routers, managed switches, firewalls, RJ45 crimping, and an exclusive Jaya TV broadcast network tour.',
+    image: '/networking-workshop-hero.jpg',
+    tools: [
+      'Enterprise Cisco Routers',
+      'Managed Gigabit Switches',
+      'Hardware Firewalls & Security Appliances',
+      'RJ45 Cat6 Crimping Tools & Connectors',
+      'Digital Cable Integrity Testers',
+      'Wireshark Protocol Packet Analyzer',
+      'Patch Panels & Server Rack Enclosures',
+      'Live Jaya TV Broadcast Network Infrastructure'
+    ],
+    careerRoles: [
+      'Network Support Engineer',
+      'Desktop & IT Support Specialist',
+      'Junior Network Administrator',
+      'NOC Support Associate',
+      'Hardware & Infrastructure Field Technician'
+    ],
+    keyModules: [
+      'Physical Hardware & Server Rack Architecture: Enterprise Routers, Switches, Firewalls & Patch Panels',
+      'Live RJ45 Cat6 Cabling Drill: Color-Coding, Crimping, Punch-Down & Digital Cable Testing',
+      'Router & Switch Console Access: CLI Command-Line Configuration, Subnetting & VLAN Segmentation',
+      'Hardware Firewall Deployment: Port Security, Access Control Lists (ACLs) & Gateway NAT Rules',
+      'Live Packet Sniffing with Wireshark: Protocol Decoding (TCP/IP, DHCP, DNS) & Network Troubleshooting',
+      'Exclusive Jaya TV Broadcast Network Infrastructure Tour & Career Roadmap Guidance'
+    ],
+    fee: '₹999 (Workshop Pass)',
+    certification: 'Official Muthamizh Academy & Jaya TV Network Workshop Certificate of Completion',
+    jayaTvHandsOn: 'Step onto the actual Jaya TV broadcast technical floor. Crimp and take home your own verified Cat6 patch cable, configure real Cisco switches & firewalls in physical hardware racks, and analyze live broadcast network stream packets.'
+  },
+  {
   id: 'practical-networking-it-support',
   title: 'Practical Computer Networking & IT Support Engineering',
   category: 'online_learning',
@@ -1074,7 +1117,7 @@ export const COURSES_DATA: Course[] = [
     highlight: 'Gain 100% practical confidence to independently manage company accounts in TallyPrime and execute all practical GST procedures, from invoice generation to live GSTR-1 & GSTR-3B return filing.',
     image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
     tools: [
-      'TallyPrime 4.0 / 5.0',
+      'TallyPrime/ERP 9.0',
       'GST Government Portal (gst.gov.in)',
       'GSTR-1 Offline Tool & JSON Generator',
       'GSTR-3B Return Filing Utilities',

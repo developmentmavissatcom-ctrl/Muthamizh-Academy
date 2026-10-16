@@ -402,6 +402,10 @@ Your purpose is to welcome site visitors, assist with 11 specialized academic pr
     - 5 Chapters: Field ENG, call sheets, newsroom assignment desk & rundowns, producer management, and studio floor cueing.
 11. **Satellite Transmission, RF Engineering & OTT Broadcast Systems (Evening/Weekend, 3 Mos, ₹50,000)**
     - 5 Chapters: Broadcast signal physics, codecs (HEVC/AV1), playout signal chains, satellite dish uplinks, fiber IP backbones, and OTT streaming.
+12. **1-Day Enterprise Networking & Hardware Hands-On Workshop (1-Day Intensive Masterclass at Jaya TV Campus, ₹999)**
+    - Action-oriented 1-day live hardware masterclass with ZERO theoretical syllabus exams. Focuses 100% on practical hands-on networking work: RJ45 Cat6 cable crimping & testing, physical enterprise Cisco router & managed switch CLI configuration, VLAN segmentation, hardware firewalls & security rules, live Wireshark packet sniffing, and an exclusive behind-the-scenes walkthrough of Jaya TV's 24/7 broadcast server infrastructure. Participants take home their custom tested cable and an official Muthamizh Academy & Jaya TV completion certificate!
+13. **Tally Prime + GST Crash Course (Short Term Crash Course, 8 Days / 16 Hours, ₹15,000)**
+    - 8-day practical accounting & GST crash course with live TallyPrime voucher entry, inventory, bank reconciliation (BRS), and official GST portal registration & live return filing (GSTR-1, GSTR-3B).
 
 ### ADMISSION REGISTRATION FLOW:
 Guide the user through answering basic admission questions, gathering details smoothly:
@@ -459,14 +463,24 @@ const ALLOWED_MEDIA_IDS = new Set<string>([
   "1Cj7O5Uv2CcH1Y4xUxVJAwew5McQGrkGE"
 ]);
 
-// Zod Validation Schema for Registration
+// Zod Validation Schema for Registration (matches official Muthamizh Academy Google Form)
 const RegisterSchema = z.object({
   full_name: z.string().min(2, "Full name must be at least 2 characters").max(100),
+  gender: z.string().min(1, "Please select your gender").max(30).optional().default("Not specified"),
+  marital_status: z.string().min(1, "Please select your marital status").max(30).optional().default("Not specified"),
+  dob: z.string().min(1, "Please provide your date of birth").max(30).optional().default("Not specified"),
+  address: z.string().min(2, "Please enter your address").max(500).optional().default("Not specified"),
+  district: z.string().min(2, "Please enter your district").max(100).optional().default("Not specified"),
+  state: z.string().min(2, "Please enter your state").max(100).optional().default("Tamil Nadu"),
+  pincode: z.string().min(3, "Please enter your PIN code").max(20).optional().default("Not specified"),
   email: z.string().email("Invalid email address format").max(120),
-  phone: z.string().max(30).optional().default("Not provided"),
-  program_interest: z.string().max(150).optional().default("AI-Assisted Software Development & Agentic Engineering"),
-  qualification: z.string().max(100).optional().default("Graduate"),
-  statement_of_purpose: z.string().max(2000).optional()
+  phone: z.string().min(7, "Phone number is required").max(30),
+  alternate_phone: z.string().max(30).optional().default(""),
+  qualification: z.string().min(1, "Please provide your educational qualification").max(150),
+  experience: z.string().max(2000).optional().default(""),
+  program_interest: z.string().max(150).optional().default("News Reader / News Presenter Certification"),
+  consent_agreed: z.boolean().optional().default(true),
+  signature_name: z.string().min(2, "Please type your full name to confirm consent").max(100).optional().default("")
 });
 
 // API Routes
@@ -1858,9 +1872,20 @@ app.post("/api/register", async (req, res) => {
       corporate_partner: "Mavis Satcom Limited (Jaya TV)",
       full_name: escapeHtml(data.full_name.trim()),
       email: data.email.trim().toLowerCase(),
-      phone: escapeHtml(data.phone),
+      phone: escapeHtml(data.phone.trim()),
+      alternate_phone: data.alternate_phone ? escapeHtml(data.alternate_phone.trim()) : undefined,
+      gender: escapeHtml(data.gender),
+      marital_status: escapeHtml(data.marital_status),
+      dob: escapeHtml(data.dob),
+      address: escapeHtml(data.address.trim()),
+      district: escapeHtml(data.district.trim()),
+      state: escapeHtml(data.state.trim()),
+      pincode: escapeHtml(data.pincode.trim()),
       program_interest: escapeHtml(data.program_interest),
       qualification: escapeHtml(data.qualification),
+      experience: data.experience ? escapeHtml(data.experience.trim()) : undefined,
+      consent_agreed: Boolean(data.consent_agreed),
+      signature_name: escapeHtml(data.signature_name.trim() || data.full_name.trim()),
       timestamp: new Date().toISOString(),
       status: "Application Submitted",
       facultyRemarks: "Application received by Admissions Desk. Scheduled for document and qualification screening.",

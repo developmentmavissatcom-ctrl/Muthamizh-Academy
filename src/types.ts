@@ -123,6 +123,18 @@ export interface RegistrationRecord {
   program_interest: string;
   qualification: string;
   timestamp: string;
+  // Google Form Fields:
+  gender?: 'Male' | 'Female' | 'Other' | string;
+  marital_status?: 'Married' | 'Unmarried' | string;
+  dob?: string;
+  address?: string;
+  district?: string;
+  state?: string;
+  pincode?: string;
+  alternate_phone?: string;
+  experience?: string;
+  consent_agreed?: boolean;
+  signature_name?: string;
   // Faculty Processing Fields:
   status?: AdmissionStatus;
   facultyRemarks?: string;
