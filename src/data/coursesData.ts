@@ -1117,7 +1117,7 @@ export const COURSES_DATA: Course[] = [
     highlight: 'Gain 100% practical confidence to independently manage company accounts in TallyPrime and execute all practical GST procedures, from invoice generation to live GSTR-1 & GSTR-3B return filing.',
     image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
     tools: [
-      'TallyPrime 9.0',
+      'TallyPrime/ERP 9.0',
       'GST Government Portal (gst.gov.in)',
       'GSTR-1 Offline Tool & JSON Generator',
       'GSTR-3B Return Filing Utilities',
