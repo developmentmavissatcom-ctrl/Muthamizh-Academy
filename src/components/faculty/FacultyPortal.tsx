@@ -37,7 +37,10 @@ import {
   Trash2,
   UserPlus,
   Copy,
-  KeyRound
+  KeyRound,
+  Globe,
+  Eye,
+  BarChart3
 } from 'lucide-react';
 
 interface FacultyPortalProps {
@@ -125,6 +128,39 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
   const [inviteFeedback, setInviteFeedback] = useState('');
   const [generatedInviteToken, setGeneratedInviteToken] = useState<string | null>(null);
   const [copiedToken, setCopiedToken] = useState(false);
+
+  // Website Visitor Analytics State
+  const [visitorStats, setVisitorStats] = useState<{
+    totalVisits: number;
+    uniqueVisitors: number;
+    todayVisits: number;
+    weekVisits: number;
+    leadsCount: number;
+    conversionRate: number;
+    popularPages: { path: string; count: number }[];
+    recentVisits: { timestamp: string; path: string; referrer?: string }[];
+  } | null>(null);
+  const [analyticsModalOpen, setAnalyticsModalOpen] = useState(false);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
+  const fetchVisitorAnalytics = async () => {
+    const token = localStorage.getItem('muthamizh_auth_token');
+    if (!token) return;
+    setLoadingAnalytics(true);
+    try {
+      const res = await fetch('/api/analytics/overview', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setVisitorStats(data);
+      }
+    } catch (err) {
+      console.error('Failed to load visitor analytics:', err);
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  };
 
   const fetchInvitations = async () => {
     const token = localStorage.getItem('muthamizh_auth_token');
@@ -217,6 +253,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
   useEffect(() => {
     if (isFaculty) {
       fetchApplications();
+      fetchVisitorAnalytics();
     }
   }, [isFaculty]);
 
@@ -678,6 +715,22 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
             </button>
 
             <button
+              onClick={() => {
+                fetchVisitorAnalytics();
+                setAnalyticsModalOpen(true);
+              }}
+              className="px-4 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-emerald-400 border border-emerald-500/40 hover:border-emerald-400 text-xs font-mono font-bold transition-all flex items-center gap-2 cursor-pointer shadow-sm"
+              title="Inspect Real-Time Website Visitor Traffic & Lead Conversion"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <Globe className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Visitor Analytics & Leads</span>
+            </button>
+
+            <button
               onClick={handleExportCSV}
               className="px-4 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#00c878]/40 hover:border-[#00c878] text-xs font-mono font-bold transition-all flex items-center gap-2"
               title="Download Applications CSV"
@@ -750,6 +803,63 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                 style={{ width: `${metrics.studioCapacityPct}%` }}
               />
             </div>
+          </div>
+        </div>
+
+        {/* Website Traffic & Visitor Conversion Bar */}
+        <div className="mt-4 p-4 rounded-2xl bg-[#070b09] border border-emerald-950/80 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-950/70 border border-emerald-700/50 flex items-center justify-center text-emerald-400 shrink-0">
+              <Globe className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs font-mono font-bold text-[#f5f7f6] flex items-center gap-2">
+                <span>Website Visitor Traffic & Lead Conversion</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-mono border border-emerald-700/40">
+                  Live Counter
+                </span>
+              </div>
+              <div className="text-[11px] text-[#8a9690] mt-0.5">
+                Real-time tracking of prospective students visiting Muthamizh Academy online and submitting registration leads.
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 w-full lg:w-auto justify-between lg:justify-end">
+            <div>
+              <div className="text-[10px] font-mono text-[#8a9690] uppercase">Site Visits</div>
+              <div className="text-lg font-black text-[#f5f7f6] font-mono">{visitorStats?.totalVisits ?? '0'}</div>
+            </div>
+            <div>
+              <div className="text-[10px] font-mono text-[#8a9690] uppercase">Unique Visitors</div>
+              <div className="text-lg font-black text-sky-400 font-mono">{visitorStats?.uniqueVisitors ?? '0'}</div>
+            </div>
+            <div>
+              <div className="text-[10px] font-mono text-[#8a9690] uppercase">Today's Visits</div>
+              <div className="text-lg font-black text-[#e6ad54] font-mono">{visitorStats?.todayVisits ?? '0'}</div>
+            </div>
+            <div>
+              <div className="text-[10px] font-mono text-[#8a9690] uppercase">Admissions Leads</div>
+              <div className="text-lg font-black text-[#00c878] font-mono">{applications.length}</div>
+            </div>
+            <div>
+              <div className="text-[10px] font-mono text-[#8a9690] uppercase">Conversion Rate</div>
+              <div className="text-lg font-black text-emerald-400 font-mono">
+                {visitorStats?.totalVisits && visitorStats.totalVisits > 0 
+                  ? `${((applications.length / visitorStats.totalVisits) * 100).toFixed(1)}%` 
+                  : (applications.length > 0 ? '100%' : '0%')}
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                fetchVisitorAnalytics();
+                setAnalyticsModalOpen(true);
+              }}
+              className="px-3.5 py-2 rounded-xl bg-emerald-950/70 hover:bg-emerald-900/70 text-emerald-400 border border-emerald-600/50 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm hover:scale-[1.02]"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>View Traffic Details</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1574,6 +1684,210 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                 className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-mono text-xs transition-colors"
               >
                 Close Window
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: WEBSITE TRAFFIC & VISITOR ANALYTICS ================= */}
+      {analyticsModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#050706]/90 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in">
+          <div className="relative w-full max-w-4xl bg-[#0b100e] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.8)] space-y-6 max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-[#16241f]">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-emerald-950/60 border border-emerald-700/50 flex items-center justify-center text-emerald-400">
+                  <Globe className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-[#f5f7f6] font-mono flex items-center gap-2">
+                    <span>Website Visitor Traffic & Leads Analytics</span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-mono border border-emerald-800/40">
+                      Real-Time
+                    </span>
+                  </h3>
+                  <p className="text-xs text-[#8a9690] mt-0.5">
+                    Live telemetry tracking prospective candidate visits, popular course tracks, and conversion into official admissions leads.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setAnalyticsModalOpen(false)}
+                className="p-2 text-[#8a9690] hover:text-[#f5f7f6] rounded-xl hover:bg-[#121a17] transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Top KPI Metrics Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Total Site Visits</div>
+                <div className="text-2xl font-black text-[#f5f7f6] font-mono mt-1">
+                  {visitorStats?.totalVisits ?? '0'}
+                </div>
+                <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Page Loads</div>
+              </div>
+
+              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Unique Visitors</div>
+                <div className="text-2xl font-black text-sky-400 font-mono mt-1">
+                  {visitorStats?.uniqueVisitors ?? '0'}
+                </div>
+                <div className="text-[10px] text-sky-400 font-mono mt-0.5">Distinct Devices</div>
+              </div>
+
+              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Today's Visits</div>
+                <div className="text-2xl font-black text-[#e6ad54] font-mono mt-1">
+                  {visitorStats?.todayVisits ?? '0'}
+                </div>
+                <div className="text-[10px] text-[#e6ad54] font-mono mt-0.5">Last 24 Hours</div>
+              </div>
+
+              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Past 7 Days</div>
+                <div className="text-2xl font-black text-purple-400 font-mono mt-1">
+                  {visitorStats?.weekVisits ?? '0'}
+                </div>
+                <div className="text-[10px] text-purple-400 font-mono mt-0.5">Weekly Active</div>
+              </div>
+
+              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Admissions Leads</div>
+                <div className="text-2xl font-black text-[#00c878] font-mono mt-1">
+                  {applications.length}
+                </div>
+                <div className="text-[10px] text-[#00c878] font-mono mt-0.5">Applications</div>
+              </div>
+
+              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Lead Conversion</div>
+                <div className="text-2xl font-black text-emerald-400 font-mono mt-1">
+                  {visitorStats?.totalVisits && visitorStats.totalVisits > 0 
+                    ? `${((applications.length / visitorStats.totalVisits) * 100).toFixed(1)}%` 
+                    : (applications.length > 0 ? '100%' : '0%')}
+                </div>
+                <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Visitor-to-Lead</div>
+              </div>
+            </div>
+
+            {/* Popular Academic Tracks & Course Views */}
+            <div className="p-4 rounded-2xl bg-[#070b09] border border-[#16241f] space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-mono font-bold text-[#f5f7f6] uppercase tracking-wider flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-emerald-400" />
+                  <span>Most Visited Program Curricula & Pages</span>
+                </div>
+              </div>
+
+              {visitorStats?.popularPages && visitorStats.popularPages.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+                  {visitorStats.popularPages.map((item, idx) => (
+                    <div key={idx} className="p-2.5 rounded-xl bg-[#0b120f] border border-[#16241f] flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-[#f5f7f6] truncate">
+                        <span className="w-5 h-5 rounded-md bg-[#121a17] text-[#8a9690] text-[10px] flex items-center justify-center font-bold">
+                          {idx + 1}
+                        </span>
+                        <span className="truncate">{item.path === '/' ? 'Home (muthamizhacademy.com)' : item.path}</span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 font-bold text-[11px] border border-emerald-800/40">
+                        {item.count} views
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-4 text-center text-xs font-mono text-[#8a9690]">
+                  Browsing telemetry is active. As prospective students navigate courses, their page view counts will appear here.
+                </div>
+              )}
+            </div>
+
+            {/* Recent Live Visitor Activity Log */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-mono font-bold text-[#f5f7f6] uppercase tracking-wider flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-sky-400" />
+                  <span>Recent Visitor Stream (Latest 20 Site Hits)</span>
+                </div>
+                <button
+                  onClick={fetchVisitorAnalytics}
+                  disabled={loadingAnalytics}
+                  className="text-xs text-[#00c878] hover:underline font-mono flex items-center gap-1 cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loadingAnalytics ? 'animate-spin' : ''}`} />
+                  <span>Refresh</span>
+                </button>
+              </div>
+
+              <div className="rounded-2xl border border-[#16241f] bg-[#070b09] overflow-hidden max-h-60 overflow-y-auto">
+                {visitorStats?.recentVisits && visitorStats.recentVisits.length > 0 ? (
+                  <table className="w-full text-left text-xs font-mono">
+                    <thead className="bg-[#0b100e] text-[#8a9690] uppercase text-[10px] border-b border-[#16241f] sticky top-0">
+                      <tr>
+                        <th className="p-3">Timestamp (IST)</th>
+                        <th className="p-3">Page Visited</th>
+                        <th className="p-3">Traffic Source</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#16241f] text-[#d4ded9]">
+                      {visitorStats.recentVisits.map((hit, idx) => (
+                        <tr key={idx} className="hover:bg-[#0b120f]/60 transition-colors">
+                          <td className="p-3 text-[#8a9690] text-[11px] whitespace-nowrap">
+                            {new Date(hit.timestamp).toLocaleString()}
+                          </td>
+                          <td className="p-3 font-semibold text-[#f5f7f6]">
+                            {hit.path === '/' ? 'Home Landing' : hit.path}
+                          </td>
+                          <td className="p-3 text-[#8a9690] text-[11px] truncate max-w-xs">
+                            {hit.referrer ? hit.referrer : 'Direct / Bookmark'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="p-6 text-center text-xs font-mono text-[#8a9690]">
+                    No visits recorded yet in this session.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* How to Track and Work with Leads Guide */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-[#070b09] border border-emerald-800/40 text-xs space-y-2">
+              <div className="font-mono font-bold text-emerald-300 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>How Leads are Created & Stored:</span>
+              </div>
+              <ul className="list-disc list-inside text-[#c4d4cc] space-y-1 text-[11px] leading-relaxed">
+                <li><strong className="text-white">Online Application Forms:</strong> When visitors click "Apply for 2026 Batch", their full dossier (Name, Email, 10-digit Phone, Academic Background, Course of Interest) is saved directly into your secure database (<code className="text-emerald-300 font-mono">data/admissions_db.json</code>).</li>
+                <li><strong className="text-white">Real-Time Alerts:</strong> Leads appear instantly in the Candidate Applications Directory on this page, with faculty evaluation bays and email notifications.</li>
+                <li><strong className="text-white">Spreadsheet Export:</strong> You can click the "Export Roster (CSV)" button at any time to download all candidate contact numbers and emails into Excel or Google Sheets.</li>
+              </ul>
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#16241f]">
+              <button
+                type="button"
+                onClick={handleExportCSV}
+                className="px-4 py-2.5 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] text-xs font-mono font-bold shadow-md transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <Download className="w-4 h-4" />
+                <span>Export All Leads to CSV</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAnalyticsModalOpen(false)}
+                className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-mono text-xs transition-colors cursor-pointer"
+              >
+                Close Analytics
               </button>
             </div>
           </div>

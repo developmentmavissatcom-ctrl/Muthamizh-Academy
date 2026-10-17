@@ -25,7 +25,9 @@ import {
   CircularItem,
   FacultyInvitation,
   OtpChallenge,
-  AdmissionStatus
+  AdmissionStatus,
+  VisitorAnalytics,
+  VisitorHit
 } from "./serverStorage";
 
 import { 
@@ -1831,6 +1833,39 @@ app.get("/api/faculty/invitations", (req, res) => {
 // ==================== DEPARTMENT FACULTY DIRECTORY ====================
 // Faculty directory is managed statically and securely in src/data/facultyData.ts
 
+
+// ==================== VISITOR TELEMETRY & TRAFFIC ANALYTICS ====================
+
+app.post("/api/analytics/record-visit", (req, res) => {
+  try {
+    const { path = "/", referrer = "" } = req.body || {};
+    const ip = getClientIp(req);
+    const userAgent = (req.headers["user-agent"] as string) || "";
+    const result = storage.recordVisit(String(path), ip, String(referrer), userAgent);
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    res.status(500).json({ error: "Failed to record visit telemetry" });
+  }
+});
+
+app.get("/api/analytics/overview", (req, res) => {
+  try {
+    const user = getUserFromAuthHeader(req);
+    const analytics = storage.getVisitorAnalytics();
+    if (user && (user.role === 'faculty' || user.role === 'admin')) {
+      return res.json({ success: true, ...analytics });
+    }
+    // Public aggregate view
+    res.json({
+      success: true,
+      totalVisits: analytics.totalVisits,
+      uniqueVisitors: analytics.uniqueVisitors,
+      leadsCount: analytics.leadsCount
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: "Failed to fetch analytics" });
+  }
+});
 
 // ==================== ADMISSIONS REGISTRATIONS ====================
 

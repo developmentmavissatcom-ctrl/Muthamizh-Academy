@@ -341,6 +341,20 @@ export default function App() {
     fetchRegistrationsCount();
   }, []);
 
+  // Record visitor analytics telemetry
+  useEffect(() => {
+    try {
+      fetch('/api/analytics/record-visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: activeTab === 'home' ? '/' : `/${activeTab}`,
+          referrer: document.referrer || ''
+        })
+      }).catch(() => {});
+    } catch (e) {}
+  }, [activeTab]);
+
   // Validate active auth token on mount
   useEffect(() => {
     const token = localStorage.getItem('muthamizh_auth_token');

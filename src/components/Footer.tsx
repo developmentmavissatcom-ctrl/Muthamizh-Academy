@@ -8,7 +8,8 @@ import {
   Clock, 
   GraduationCap, 
   ArrowRight,
-  Radio
+  Radio,
+  ShieldCheck
 } from 'lucide-react';
 
 interface FooterProps {
@@ -158,6 +159,20 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-[#00c878] transition-colors text-left block"
                 >
                   Campus Contact &amp; Directions
+                </a>
+              </li>
+              <li className="pt-1.5 border-t border-[#16241f]/70">
+                <a
+                  href="/faculty-portal"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    localStorage.setItem('muthamizh_portal_mode', 'faculty');
+                    handleNavClick('faculty_portal');
+                  }}
+                  className="hover:text-[#e6ad54] text-[#e6ad54] transition-colors text-left flex items-center gap-1.5 font-mono text-[11px] font-bold"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#e6ad54]" />
+                  <span>Faculty Desk &amp; Leads</span>
                 </a>
               </li>
             </ul>

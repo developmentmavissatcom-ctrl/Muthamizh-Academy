@@ -670,6 +670,20 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 </div>
                 {activeTab === 'tracker' && <span className="w-1.5 h-1.5 rounded-full bg-[#00c878]" />}
               </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  handleSwitchToFaculty();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full text-left px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-between bg-[#121a17] text-[#e6ad54] border border-[#e6ad54]/40 hover:bg-[#16241f]"
+              >
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#e6ad54]" />
+                  <span>Faculty Admissions Desk &amp; Leads</span>
+                </div>
+              </button>
             </div>
           ) : (
             <div className="p-3 rounded-xl bg-[#121a17] text-xs font-mono text-[#e6ad54] border border-[#e6ad54]/30 space-y-2">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { COURSES_DATA } from '../../data/coursesData';
 import { UserProfile } from '../../types';
 import { googleSignIn } from '../../lib/firebaseAuth';
+import firebaseConfig from '../../../firebase-applet-config.json';
 import { 
   X, 
   Mail, 
@@ -16,7 +17,10 @@ import {
   Eye, 
   EyeOff, 
   GraduationCap, 
-  AlertCircle 
+  AlertCircle,
+  ExternalLink,
+  Copy,
+  Check
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -71,6 +75,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [domainAuthError, setDomainAuthError] = useState<{
+    domain: string;
+    projectId: string;
+    consoleUrl: string;
+  } | null>(null);
+  const [copiedDomain, setCopiedDomain] = useState(false);
 
   const prevIsOpenRef = React.useRef(false);
 
@@ -142,6 +152,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleGoogleSignIn = async () => {
     setErrorMessage(null);
     setSuccessMessage(null);
+    setDomainAuthError(null);
     setGoogleLoading(true);
 
     try {
@@ -185,7 +196,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       } else if (err.code === 'auth/popup-blocked') {
         setErrorMessage('Popup blocked by browser. Please allow popups or use manual registration.');
       } else if (err.code === 'auth/unauthorized-domain') {
-        setErrorMessage('Domain authorization pending in Firebase. Please use manual registration below.');
+        const currentDomain = (typeof window !== 'undefined' && window.location.hostname) ? window.location.hostname : 'muthamizhacademy.com';
+        const projectId = firebaseConfig.projectId || 'gen-lang-client-0649059540';
+        setDomainAuthError({
+          domain: currentDomain,
+          projectId,
+          consoleUrl: `https://console.firebase.google.com/project/${projectId}/authentication/settings`
+        });
+        setErrorMessage(`Domain authorization pending: Firebase requires "${currentDomain}" to be added to Authorized Domains for Google Sign-In.`);
       } else {
         setErrorMessage(err.message || 'Failed to authenticate with Google. You can register manually below.');
       }
@@ -588,6 +606,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               onClick={() => {
                 setMode('login');
                 setErrorMessage(null);
+                setDomainAuthError(null);
               }}
               className={`pb-3 px-4 text-xs font-mono font-bold transition-all relative ${
                 mode === 'login' 
@@ -605,6 +624,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               onClick={() => {
                 setMode('signup');
                 setErrorMessage(null);
+                setDomainAuthError(null);
               }}
               className={`pb-3 px-4 text-xs font-mono font-bold transition-all relative ${
                 mode === 'signup' 
@@ -632,6 +652,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 onClick={() => {
                   setSelectedRole('student');
                   setErrorMessage(null);
+                  setDomainAuthError(null);
                 }}
                 className={`py-2.5 px-3 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
                   selectedRole === 'student'
@@ -648,6 +669,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 onClick={() => {
                   setSelectedRole('faculty');
                   setErrorMessage(null);
+                  setDomainAuthError(null);
                 }}
                 className={`py-2.5 px-3 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
                   selectedRole === 'faculty'
@@ -665,9 +687,85 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Status Alerts */}
         <div className="px-6 pt-3">
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-center gap-2.5 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
-              <span>{errorMessage}</span>
+            <div className="p-3 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-center justify-between gap-2.5 animate-in fade-in">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+                <span className="break-words">{errorMessage}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setErrorMessage(null);
+                  setDomainAuthError(null);
+                }}
+                className="text-red-400/70 hover:text-red-200 p-0.5 rounded cursor-pointer shrink-0"
+                aria-label="Dismiss error"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {domainAuthError && (
+            <div className="mt-2.5 p-3.5 rounded-xl bg-amber-950/40 border border-amber-600/50 text-amber-200 text-xs animate-in fade-in space-y-2.5">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 font-semibold text-amber-300">
+                  <ShieldCheck className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span>How to Enable Google Sign-In for {domainAuthError.domain}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setDomainAuthError(null)}
+                  className="text-amber-400/70 hover:text-amber-200 p-0.5 rounded cursor-pointer"
+                  aria-label="Dismiss guide"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                Firebase Authentication restricts Google Sign-In popups until your live domain is whitelisted in your Firebase project (<span className="font-mono text-amber-300 font-bold">{domainAuthError.projectId}</span>).
+              </p>
+
+              <div className="bg-black/50 p-2.5 rounded-lg border border-amber-800/40 text-[11px] space-y-1.5">
+                <div className="text-amber-400 font-semibold text-[10px] uppercase tracking-wider font-mono">
+                  30-Second Fix in Firebase Console:
+                </div>
+                <ol className="list-decimal list-inside text-[#d0ded7] text-[11px] space-y-1">
+                  <li>Click <span className="font-semibold text-amber-300">Open Firebase Settings</span> below</li>
+                  <li>In the <span className="font-semibold text-white">Authorized domains</span> section, click <span className="font-semibold text-white">Add domain</span></li>
+                  <li>Add <span className="font-mono text-amber-300 bg-black/60 px-1 py-0.5 rounded">{domainAuthError.domain}</span> (and <span className="font-mono text-amber-300 bg-black/60 px-1 py-0.5 rounded">www.{domainAuthError.domain}</span>) & save</li>
+                </ol>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <a
+                  href={domainAuthError.consoleUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-[11px] transition-colors cursor-pointer shadow-sm"
+                >
+                  <span>Open Firebase Settings</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(domainAuthError.domain);
+                    setCopiedDomain(true);
+                    setTimeout(() => setCopiedDomain(false), 2000);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[11px] transition-colors cursor-pointer"
+                >
+                  {copiedDomain ? <Check className="w-3.5 h-3.5 text-[#00c878]" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedDomain ? 'Copied!' : 'Copy Domain'}</span>
+                </button>
+
+                <span className="text-[10px] text-amber-300/80 italic ml-auto">
+                  Or use manual registration below instantly!
+                </span>
+              </div>
             </div>
           )}
 
@@ -743,7 +841,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="email"
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errorMessage) setErrorMessage(null);
+                    }}
                     placeholder={selectedRole === 'faculty' ? 'faculty.name@muthamizh.ac.in' : 'candidate@example.com'}
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0b100e] border border-[#16241f] focus:border-[#00c878] text-sm text-[#f5f7f6] outline-none transition-colors"
                   />
@@ -833,7 +934,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     required
                     minLength={6}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errorMessage) setErrorMessage(null);
+                    }}
                     placeholder="Create a strong password"
                     className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#0b100e] border border-[#16241f] focus:border-[#00c878] text-sm text-[#f5f7f6] outline-none transition-colors"
                   />
@@ -929,7 +1033,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div className="text-center pt-1">
                 <button
                   type="button"
-                  onClick={() => setMode('login')}
+                  onClick={() => {
+                    setMode('login');
+                    setErrorMessage(null);
+                    setDomainAuthError(null);
+                  }}
                   className="text-xs text-[#8a9690] hover:text-[#00c878] transition-colors font-mono"
                 >
                   Already registered? <span className="underline">Sign In here</span>
@@ -1102,7 +1210,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="email"
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errorMessage) setErrorMessage(null);
+                    }}
                     placeholder={selectedRole === 'faculty' ? 'dean.admissions@muthamizh.ac.in' : 'student@muthamizh.ac.in'}
                     className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0b100e] border border-[#16241f] text-sm text-[#f5f7f6] outline-none transition-colors ${
                       selectedRole === 'faculty' ? 'focus:border-[#e6ad54]' : 'focus:border-[#00c878]'
@@ -1124,6 +1235,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       setResetEmail(email || '');
                       setErrorMessage(null);
                       setSuccessMessage(null);
+                      setDomainAuthError(null);
                     }}
                     className="text-[11px] font-mono text-[#00c878] hover:underline"
                   >
@@ -1136,7 +1248,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type={showPassword ? 'text' : 'password'}
                     required
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errorMessage) setErrorMessage(null);
+                    }}
                     placeholder="Enter your password"
                     className={`w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#0b100e] border border-[#16241f] text-sm text-[#f5f7f6] outline-none transition-colors ${
                       selectedRole === 'faculty' ? 'focus:border-[#e6ad54]' : 'focus:border-[#00c878]'
@@ -1179,7 +1294,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div className="text-center pt-2">
                 <button
                   type="button"
-                  onClick={() => setMode('signup')}
+                  onClick={() => {
+                    setMode('signup');
+                    setErrorMessage(null);
+                    setDomainAuthError(null);
+                  }}
                   className="text-xs text-[#8a9690] hover:text-[#00c878] transition-colors font-mono"
                 >
                   New to Muthamizh Academy? <span className="underline">Register an account</span>
