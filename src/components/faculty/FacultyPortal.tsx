@@ -236,9 +236,38 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
       });
       if (res.ok) {
         const data = await res.json();
-        setApplications(data.applications || []);
+        const rawApps: RegistrationRecord[] = data.applications || [];
+        
+        // Defensive deduplication to ensure strictly one applicant per course
+        const seen = new Set<string>();
+        const uniqueApps: RegistrationRecord[] = [];
+        for (const app of rawApps) {
+          const emailNorm = (app.email || '').toLowerCase().trim();
+          const phoneNorm = (app.phone || '').replace(/\D/g, '').slice(-10);
+          const progNorm = (app.program_interest || '')
+            .replace(/&amp;/gi, '&')
+            .replace(/&#38;/g, '&')
+            .toLowerCase()
+            .replace(/\s*\(.*?\)\s*/g, ' ')
+            .replace(/[^a-z0-9]/g, '');
+          const idKey = emailNorm || phoneNorm;
+          const key = `${idKey}::${progNorm}`;
+
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueApps.push({
+              ...app,
+              program_interest: (app.program_interest || '').replace(/&amp;/gi, '&')
+            });
+          }
+        }
+
+        setApplications(uniqueApps);
         if (data.metrics) {
-          setMetrics(data.metrics);
+          setMetrics({
+            ...data.metrics,
+            total: uniqueApps.length
+          });
         }
       } else {
         console.error('Failed to load faculty applications');

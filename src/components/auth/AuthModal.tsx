@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { COURSES_DATA } from '../../data/coursesData';
 import { UserProfile } from '../../types';
 import { googleSignIn } from '../../lib/firebaseAuth';
 import firebaseConfig from '../../../firebase-applet-config.json';
@@ -47,7 +46,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [programInterest, setProgramInterest] = useState(COURSES_DATA[0]?.title || 'AI-Assisted Software Development & Agentic Engineering');
   const [updatesSubscribed, setUpdatesSubscribed] = useState(true);
 
   // Forgot Password / Reset Password states
@@ -166,7 +164,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           fullName: googleResult.fullName,
           photoURL: googleResult.photoURL,
           targetRole: selectedRole,
-          programInterest,
           phone
         })
       });
@@ -263,7 +260,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           facultyAccessKey: selectedRole === 'faculty' ? facultyAccessKey.trim() : undefined,
           facultyDepartment: selectedRole === 'faculty' ? facultyDepartment : undefined,
           facultyDesignation: selectedRole === 'faculty' ? facultyDesignation : undefined,
-          programInterest: selectedRole === 'student' ? programInterest : undefined,
           updatesSubscribed
         })
       });
@@ -972,25 +968,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </p>
               </div>
 
-              {/* Program of Interest (for student only) */}
-              {selectedRole === 'student' && (
-                <div>
-                  <label className="block text-[11px] font-mono uppercase text-[#8a9690] mb-1.5">
-                    Primary Program of Interest
-                  </label>
-                  <select
-                    value={programInterest}
-                    onChange={(e) => setProgramInterest(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0b100e] border border-[#16241f] focus:border-[#00c878] text-xs text-[#f5f7f6] outline-none transition-colors font-sans"
-                  >
-                    {COURSES_DATA.map((course) => (
-                      <option key={course.id} value={course.title} className="bg-[#070b09] text-white">
-                        {course.title} ({course.duration})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
 
               {/* Regular Updates Subscription */}
               <div className="flex items-start gap-3 p-3 rounded-xl bg-[#0b100e] border border-[#16241f]">

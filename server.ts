@@ -823,33 +823,13 @@ app.post("/api/auth/verify-signup-otp", authLimiter, (req, res) => {
       updatesSubscribed: challenge.signupData?.updatesSubscribed ?? true
     };
 
-    // Link with existing registration or initialize applicant dossier
+    // Link with existing registration if one was already submitted by this email
     if (userRole === 'student') {
       const existingReg = storage.findRegistrationByEmail(emailNorm);
       if (existingReg) {
         newUser.applicationId = existingReg.id;
         newUser.admissionStatus = existingReg.status;
         newUser.programInterest = existingReg.program_interest;
-      } else if (challenge.signupData?.programInterest) {
-        const nextId = `REG-2026-${String(storage.getRegistrations().length + 1).padStart(3, "0")}`;
-        const newRecord: RegistrationRecord = {
-          id: nextId,
-          academy: "Muthamizh Academy",
-          corporate_partner: "Mavis Satcom Limited (Jaya TV)",
-          full_name: newUser.fullName,
-          email: emailNorm,
-          phone: newUser.phone || "+91 (On file)",
-          program_interest: challenge.signupData.programInterest,
-          qualification: "Online Applicant",
-          timestamp: new Date().toISOString(),
-          status: "Application Submitted",
-          facultyRemarks: "New student candidate registered via Admissions Portal. Ready for faculty review.",
-          updatedAt: new Date().toISOString()
-        };
-        storage.addRegistration(newRecord);
-        newUser.applicationId = nextId;
-        newUser.admissionStatus = "Application Submitted";
-        newUser.programInterest = challenge.signupData.programInterest;
       }
     }
 
@@ -1303,15 +1283,17 @@ app.get("/api/student/my-application", (req, res) => {
     return res.status(401).json({ error: "Please log in to track your application." });
   }
 
-  const reg = storage.findRegistrationByEmail(user.email);
+  const applications = storage.findRegistrationsByCandidate(user.email, user.phone);
+  const primaryReg = applications[0] || storage.findRegistrationByEmail(user.email);
 
-  if (!reg) {
-    return res.json({ hasApplication: false, message: "No application submitted yet." });
+  if (!primaryReg && applications.length === 0) {
+    return res.json({ hasApplication: false, applications: [], message: "No application submitted yet." });
   }
 
   res.json({
     hasApplication: true,
-    application: reg,
+    application: primaryReg,
+    applications,
     candidate: sanitizeUser(user)
   });
 });
@@ -1879,8 +1861,12 @@ app.get("/api/registrations", (req, res) => {
   res.json({ count: activeRegistrations.length });
 });
 
+// Concurrency Mutex to strictly prevent rapid multi-click duplicate registrations
+const inFlightRegistrations = new Set<string>();
+
 // Input Validation for /api/register using Zod
 app.post("/api/register", async (req, res) => {
+  let lockKey = "";
   try {
     const parseResult = RegisterSchema.safeParse(req.body);
     if (!parseResult.success) {
@@ -1889,17 +1875,51 @@ app.post("/api/register", async (req, res) => {
     }
 
     const data = parseResult.data;
+    const cleanEmail = data.email.trim().toLowerCase();
+    const cleanPhone = (data.phone || '').trim();
+    const progNorm = storage.normalizeProgramName(data.program_interest);
+
+    // Rapid double-click / multi-submit concurrency guard
+    lockKey = `${cleanEmail}::${progNorm}`;
+    if (inFlightRegistrations.has(lockKey)) {
+      return res.status(429).json({
+        error: "Your registration for this course is already being processed. Please wait a moment.",
+        isAlreadyRegistered: true
+      });
+    }
+    inFlightRegistrations.add(lockKey);
+
+    // STRICT VALIDATION: Ensure one person can only register for a specific course ONCE
+    const existingForCourse = storage.findExistingRegistration(
+      cleanEmail,
+      cleanPhone,
+      data.program_interest
+    );
+
+    if (existingForCourse) {
+      return res.status(409).json({
+        error: `You have already registered for "${existingForCourse.program_interest}" (Application ID: ${existingForCourse.id}). Each candidate can register for a specific course only once. You are welcome to register for any of our other courses!`,
+        isAlreadyRegistered: true,
+        record: existingForCourse
+      });
+    }
+
     const activeRegistrations = storage.getRegistrations();
+    const cleanProgramTitle = (data.program_interest || '')
+      .replace(/&amp;/gi, '&')
+      .replace(/&#38;/g, '&')
+      .trim();
+
     const newRecord: RegistrationRecord = {
       id: `REG-2026-${String(activeRegistrations.length + 1).padStart(3, "0")}`,
       // Fixed institutional fields controlled strictly by server
       academy: "Muthamizh Academy",
       corporate_partner: "Mavis Satcom Limited (Jaya TV)",
-      full_name: escapeHtml(data.full_name.trim()),
-      email: data.email.trim().toLowerCase(),
-      phone: escapeHtml(data.phone),
-      program_interest: escapeHtml(data.program_interest),
-      qualification: escapeHtml(data.qualification),
+      full_name: data.full_name.trim(),
+      email: cleanEmail,
+      phone: cleanPhone,
+      program_interest: cleanProgramTitle,
+      qualification: data.qualification.trim(),
       timestamp: new Date().toISOString(),
       status: "Application Submitted",
       facultyRemarks: "Application received by Admissions Desk. Scheduled for document and qualification screening.",
@@ -1945,6 +1965,10 @@ app.post("/api/register", async (req, res) => {
     });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to register" });
+  } finally {
+    if (lockKey) {
+      inFlightRegistrations.delete(lockKey);
+    }
   }
 });
 

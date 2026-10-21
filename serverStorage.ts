@@ -233,6 +233,9 @@ class StorageEngine {
           this.db.circulars = initialCirculars;
         }
 
+        // Automatic deduplication: ensure one person can only register for each course once
+        this.deduplicateRegistrations();
+
         console.log(`[STORAGE] Loaded persistent database: ${this.db.users.length} users, ${this.db.registrations.length} registrations, ${this.db.auditLogs.length} audit logs`);
       } else {
         // Seed initial records
@@ -310,6 +313,8 @@ class StorageEngine {
 
   // --- Registrations ---
   public getRegistrations(): RegistrationRecord[] {
+    // Run automated deduplication to guarantee one registration per candidate per course
+    this.deduplicateRegistrations();
     return this.db.registrations.filter(r => !r.deleted_at);
   }
 
@@ -326,7 +331,160 @@ class StorageEngine {
     return this.db.registrations.find(r => (r.id === id) && !r.deleted_at);
   }
 
+  /**
+   * Normalizes program title so comparisons match regardless of HTML escaping, track duration suffixes, spacing, or case.
+   */
+  public normalizeProgramName(name: string): string {
+    if (!name) return '';
+    let cleaned = name
+      .replace(/&amp;/gi, '&')
+      .replace(/&#38;/g, '&')
+      .replace(/&quot;/gi, '"')
+      .replace(/&apos;/gi, "'")
+      .toLowerCase();
+
+    // Repeatedly strip parenthetical expressions (handles nested parentheses like (1 Months (Intensive & Hands-on)))
+    while (/\([^()]*\)/.test(cleaned)) {
+      cleaned = cleaned.replace(/\([^()]*\)/g, ' ');
+    }
+    // Remove any stray leftover parentheses
+    cleaned = cleaned.replace(/[()]/g, ' ');
+
+    // Keep only alphanumeric characters for canonical course key
+    return cleaned.replace(/[^a-z0-9]/g, '').trim();
+  }
+
+  /**
+   * Checks if a candidate (by email or 10-digit phone) has already registered for a specific program.
+   */
+  public findExistingRegistration(email: string, phone: string, program: string): RegistrationRecord | undefined {
+    const normEmail = (email || '').toLowerCase().trim();
+    const cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
+    const targetProg = this.normalizeProgramName(program);
+
+    if (!targetProg) return undefined;
+
+    return this.db.registrations.find(r => {
+      if (r.deleted_at) return false;
+      const rProg = this.normalizeProgramName(r.program_interest);
+      if (rProg !== targetProg) return false;
+
+      const rEmail = (r.email || '').toLowerCase().trim();
+      const rPhone = (r.phone || '').replace(/\D/g, '').slice(-10);
+
+      const emailMatches = Boolean(normEmail && rEmail && normEmail === rEmail);
+      const phoneMatches = Boolean(cleanPhone && cleanPhone.length === 10 && rPhone && rPhone === cleanPhone);
+
+      return emailMatches || phoneMatches;
+    });
+  }
+
+  /**
+   * Retrieves all active registrations for a given candidate across different courses.
+   */
+  public findRegistrationsByCandidate(email: string, phone?: string): RegistrationRecord[] {
+    const normEmail = (email || '').toLowerCase().trim();
+    const cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
+
+    return this.db.registrations.filter(r => {
+      if (r.deleted_at) return false;
+      const rEmail = (r.email || '').toLowerCase().trim();
+      const rPhone = (r.phone || '').replace(/\D/g, '').slice(-10);
+
+      const emailMatches = Boolean(normEmail && rEmail && normEmail === rEmail);
+      const phoneMatches = Boolean(cleanPhone && cleanPhone.length === 10 && rPhone && rPhone === cleanPhone);
+
+      return emailMatches || phoneMatches;
+    });
+  }
+
+  /**
+   * Automatically deduplicates duplicate registrations so each candidate has at most ONE registration per course.
+   * If duplicates exist, merges any detailed qualification/phone into the primary registration and discards the rest.
+   */
+  public deduplicateRegistrations() {
+    const seenEmails = new Set<string>();
+    const seenPhones = new Set<string>();
+    const uniqueList: RegistrationRecord[] = [];
+    let changed = false;
+
+    // Process all registrations
+    for (const r of this.db.registrations) {
+      if (r.deleted_at) {
+        uniqueList.push(r);
+        continue;
+      }
+      const emailNorm = (r.email || '').toLowerCase().trim();
+      const phoneClean = (r.phone || '').replace(/\D/g, '').slice(-10);
+      const progNorm = this.normalizeProgramName(r.program_interest);
+
+      if (!progNorm || (!emailNorm && !phoneClean)) {
+        uniqueList.push(r);
+        continue;
+      }
+
+      const emailKey = emailNorm ? `${emailNorm}::${progNorm}` : '';
+      const phoneKey = (phoneClean && phoneClean.length === 10) ? `${phoneClean}::${progNorm}` : '';
+
+      const isDuplicate = Boolean(
+        (emailKey && seenEmails.has(emailKey)) ||
+        (phoneKey && seenPhones.has(phoneKey))
+      );
+
+      if (!isDuplicate) {
+        if (emailKey) seenEmails.add(emailKey);
+        if (phoneKey) seenPhones.add(phoneKey);
+        // Clean up program interest display name if it had HTML entities like &amp;
+        if (r.program_interest && r.program_interest.includes('&amp;')) {
+          r.program_interest = r.program_interest.replace(/&amp;/gi, '&');
+          changed = true;
+        }
+        uniqueList.push(r);
+      } else {
+        changed = true;
+        // Enrich the kept unique record with the highest quality qualification if duplicate had one
+        const existingIdx = uniqueList.findIndex(existing => {
+          const exEmail = (existing.email || '').toLowerCase().trim();
+          const exPhone = (existing.phone || '').replace(/\D/g, '').slice(-10);
+          const exProg = this.normalizeProgramName(existing.program_interest);
+          return exProg === progNorm && (
+            (emailNorm && exEmail === emailNorm) ||
+            (phoneClean && phoneClean.length === 10 && exPhone === phoneClean)
+          );
+        });
+
+        if (existingIdx >= 0) {
+          const existing = uniqueList[existingIdx];
+          const isGeneric = !existing.qualification || existing.qualification === 'Online Applicant' || existing.qualification === 'Graduate';
+          const isBetter = r.qualification && r.qualification !== 'Online Applicant' && r.qualification !== 'Graduate';
+          if (isGeneric && isBetter) {
+            existing.qualification = r.qualification;
+          }
+          if (!existing.phone && r.phone) {
+            existing.phone = r.phone;
+          }
+        }
+      }
+    }
+
+    if (changed) {
+      this.db.registrations = uniqueList;
+      this.persist();
+      console.log(`[STORAGE] Cleaned up duplicate registrations. Unique active count: ${this.db.registrations.length}`);
+    }
+  }
+
   public addRegistration(reg: RegistrationRecord) {
+    // Defense-in-depth: Never add if already registered for this exact course
+    const existing = this.findExistingRegistration(reg.email, reg.phone, reg.program_interest);
+    if (existing) {
+      console.warn(`[STORAGE WARNING] Attempted duplicate registration for ${reg.email} on ${reg.program_interest}. Ignored.`);
+      return;
+    }
+    // Clean up HTML entities in stored program_interest
+    if (reg.program_interest && reg.program_interest.includes('&amp;')) {
+      reg.program_interest = reg.program_interest.replace(/&amp;/gi, '&');
+    }
     this.db.registrations.unshift(reg);
     this.persist();
   }

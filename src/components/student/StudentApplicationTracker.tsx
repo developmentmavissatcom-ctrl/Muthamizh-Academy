@@ -175,7 +175,7 @@ export const StudentApplicationTracker: React.FC<StudentApplicationTrackerProps>
         <div className="bg-[#070b09] p-4 rounded-2xl border border-[#16241f]">
           <div className="text-[11px] font-mono text-[#8a9690] mb-1">Enrolled Track / Interest</div>
           <div className="font-bold text-[#00c878] text-sm leading-snug">
-            {application?.program_interest || currentUser.programInterest || 'AI-Assisted Software Development'}
+            {(application?.program_interest || currentUser.programInterest || 'AI-Assisted Software Development').replace(/&amp;/gi, '&')}
           </div>
           <div className="text-[11px] text-[#8a9690] mt-1 font-mono">
             Partner: Mavis Satcom Limited (Jaya TV)

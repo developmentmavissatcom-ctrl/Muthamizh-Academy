@@ -4,7 +4,7 @@ import { COURSES_DATA } from '../data/coursesData';
 import { 
   X, Send, CheckCircle2, GraduationCap, Phone, Mail, User, 
   BookOpen, Radio, ShieldCheck, ArrowRight, Activity,
-  Globe, Laptop
+  Globe, Laptop, AlertCircle
 } from 'lucide-react';
 
 interface ApplicationFormModalProps {
@@ -80,8 +80,44 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
 
   const [customQualification, setCustomQualification] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [existingRegistrations, setExistingRegistrations] = useState<RegistrationRecord[]>([]);
   const [successRecord, setSuccessRecord] = useState<RegistrationRecord | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const isSubmittingRef = React.useRef(false);
+
+  // Normalization helper matching server-side canonical representation
+  const normalizeCourseName = (name: string): string => {
+    if (!name) return '';
+    let cleaned = name
+      .replace(/&amp;/gi, '&')
+      .replace(/&#38;/g, '&')
+      .toLowerCase();
+    while (/\([^()]*\)/.test(cleaned)) {
+      cleaned = cleaned.replace(/\([^()]*\)/g, ' ');
+    }
+    cleaned = cleaned.replace(/[()]/g, ' ');
+    return cleaned.replace(/[^a-z0-9]/g, '').trim();
+  };
+
+  const fetchUserRegistrations = async () => {
+    try {
+      const token = localStorage.getItem('muthamizh_auth_token');
+      const res = await fetch('/api/student/my-application', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.applications)) {
+          setExistingRegistrations(data.applications);
+        } else if (data.application) {
+          setExistingRegistrations([data.application]);
+        }
+      }
+    } catch (e) {
+      // Non-blocking
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -94,8 +130,14 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
         phone: currentUser?.phone || prev.phone || '',
         program_interest: initialProgramInterest || prev.program_interest
       }));
+      fetchUserRegistrations();
     }
   }, [isOpen, initialProgramInterest, currentUser]);
+
+  const targetProgNorm = normalizeCourseName(formData.program_interest);
+  const alreadyRegisteredRecord = existingRegistrations.find(
+    r => normalizeCourseName(r.program_interest) === targetProgNorm
+  );
 
   if (!isOpen) return null;
 
@@ -116,6 +158,13 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+
+    if (isSubmittingRef.current || isSubmitting) return;
+
+    if (alreadyRegisteredRecord) {
+      setErrorMessage(`You have already registered for "${alreadyRegisteredRecord.program_interest}" (Application ID: ${alreadyRegisteredRecord.id}). Muthamizh Academy allows one registration per course per candidate. You can select another course to apply!`);
+      return;
+    }
 
     const trimmedName = formData.full_name.trim();
     if (!trimmedName || trimmedName.length < 2) {
@@ -143,6 +192,7 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
         ? `Other: ${customQualification.trim()}`
         : formData.qualification;
 
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
     try {
       const res = await fetch('/api/register', {
@@ -162,8 +212,15 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
       const data = await res.json();
       if (data.success && data.record) {
         setSuccessRecord(data.record);
+        setExistingRegistrations(prev => [...prev, data.record]);
         onRegistrationSuccess(data.record);
       } else {
+        if (data.isAlreadyRegistered && data.record) {
+          setExistingRegistrations(prev => {
+            const exists = prev.some(r => r.id === data.record.id);
+            return exists ? prev : [...prev, data.record];
+          });
+        }
         setErrorMessage(data.error || "Failed to submit admission application.");
       }
     } catch (err: any) {
@@ -171,6 +228,7 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
       setErrorMessage(err.message || "Failed to connect to admissions server.");
     } finally {
       setIsSubmitting(false);
+      isSubmittingRef.current = false;
     }
   };
 
@@ -322,15 +380,20 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
                 className="w-full bg-[#050706] text-[#f5f7f6] px-3 py-2.5 rounded-xl border border-[#16241f] focus:outline-none focus:border-[#00c878] text-xs font-mono"
               >
                 {COURSES_DATA.map(course => {
+                  const isEnrolled = existingRegistrations.some(
+                    r => normalizeCourseName(r.program_interest) === normalizeCourseName(course.title)
+                  );
+                  const enrolledTag = isEnrolled ? '✓ [Registered] ' : '';
+
                   if (course.durationTracks && course.durationTracks.length > 0) {
                     return (
-                      <optgroup key={course.id} label={`${course.title} (3 Duration Tracks)`}>
+                      <optgroup key={course.id} label={`${enrolledTag}${course.title} (3 Tracks)`}>
                         <option value={course.title}>
-                          {course.title} (General)
+                          {enrolledTag}{course.title} (General)
                         </option>
                         {course.durationTracks.map(track => (
                           <option key={track.id} value={`${course.title} (${track.durationLabel})`}>
-                            ↳ {track.durationLabel} Track ({track.schedule} • {track.fee})
+                            ↳ {enrolledTag}{track.durationLabel} Track ({track.schedule} • {track.fee})
                           </option>
                         ))}
                       </optgroup>
@@ -338,7 +401,7 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
                   }
                   return (
                     <option key={course.id} value={course.title}>
-                      {course.title} ({course.duration} {course.isOnline ? '• Online Labs' : ''})
+                      {enrolledTag}{course.title} ({course.duration} {course.isOnline ? '• Online Labs' : ''})
                     </option>
                   );
                 })}
@@ -399,13 +462,39 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
               )}
             </div>
 
+            {/* Already Registered Info Card */}
+            {alreadyRegisteredRecord && (
+              <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-800/60 text-amber-200 text-xs flex items-start gap-2.5 animate-in fade-in">
+                <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <div className="font-bold text-amber-300">Course Already Registered</div>
+                  <div className="text-[11px] leading-relaxed text-amber-200/90 font-sans">
+                    You have already submitted an application for <strong className="text-[#f5f7f6]">{alreadyRegisteredRecord.program_interest}</strong> (Application ID: <span className="font-mono text-[#00c878] font-bold">{alreadyRegisteredRecord.id}</span>).
+                  </div>
+                  <p className="text-[10px] text-amber-300/80 font-mono">
+                    Each candidate can register for a course once. You are welcome to choose any other course above to enroll in multiple programs!
+                  </p>
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] text-[#050706] font-mono font-extrabold text-xs shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              disabled={isSubmitting || Boolean(alreadyRegisteredRecord)}
+              className={`w-full py-3.5 rounded-xl font-mono font-extrabold text-xs shadow-xl transition-all flex items-center justify-center gap-2 ${
+                alreadyRegisteredRecord
+                  ? 'bg-[#121a17] text-[#8a9690] border border-[#16241f] cursor-not-allowed opacity-80'
+                  : 'bg-gradient-to-r from-[#00c878] to-[#006b45] text-[#050706] hover:scale-[1.02] active:scale-[0.98]'
+              }`}
             >
               <Send className="w-4 h-4" />
-              <span>{isSubmitting ? 'Recording Application...' : 'Submit Admission Registration'}</span>
+              <span>
+                {isSubmitting 
+                  ? 'Recording Application...' 
+                  : alreadyRegisteredRecord
+                  ? 'Course Already Registered'
+                  : 'Submit Admission Registration'}
+              </span>
             </button>
           </form>
         )}

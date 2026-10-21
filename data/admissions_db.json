@@ -54,6 +54,26 @@
   "sessions": [],
   "auditLogs": [
     {
+      "id": "AUD-1792497609257-558cff",
+      "action": "REGISTRATION_SUBMITTED",
+      "performedBy": "testvalidation@example.com",
+      "resource": "registrations",
+      "resourceId": "REG-2026-002",
+      "timestamp": "2026-10-20T12:00:09.257Z",
+      "details": "New registration submitted for program: Manual Software Testing",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "AUD-1792497605855-145c20",
+      "action": "REGISTRATION_SUBMITTED",
+      "performedBy": "testvalidation@example.com",
+      "resource": "registrations",
+      "resourceId": "REG-2026-001",
+      "timestamp": "2026-10-20T12:00:05.855Z",
+      "details": "New registration submitted for program: NEWS Reader Training Program",
+      "ipAddress": "127.0.0.1"
+    },
+    {
       "id": "aud-1790130136093",
       "action": "FACULTY_MEMBER_UPLOADED",
       "performedBy": "System / Faculty Desk",
@@ -227,5 +247,7 @@
         "updatesSubscribed": true
       }
     }
-  }
+  },
+  "visitorHits": [],
+  "totalVisitCount": 0
 }

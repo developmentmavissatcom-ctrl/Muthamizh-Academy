@@ -29,7 +29,10 @@ export const AdminRegistrationsModal: React.FC<AdminRegistrationsModalProps> = (
       });
       const data = await res.json();
       if (data.registrations) {
-        setRegistrations(data.registrations);
+        setRegistrations(data.registrations.map((r: RegistrationRecord) => ({
+          ...r,
+          program_interest: (r.program_interest || '').replace(/&amp;/gi, '&')
+        })));
       }
     } catch (err) {
       console.error(err);
