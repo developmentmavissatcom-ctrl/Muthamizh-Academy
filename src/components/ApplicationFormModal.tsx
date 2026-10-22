@@ -258,24 +258,48 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
           </button>
         </div>
 
-        {/* Success View */}
+        {/* Noticeable Course Registration Success View */}
         {successRecord ? (
-          <div className="py-6 text-center space-y-4 animate-in fade-in font-sans">
-            <div className="w-16 h-16 rounded-2xl bg-[#00c878]/20 text-[#00c878] border border-[#00c878]/40 flex items-center justify-center mx-auto shadow-[0_0_25px_rgba(0,200,120,0.2)]">
-              <CheckCircle2 className="w-9 h-9" />
+          <div className="py-4 text-center space-y-4 animate-in zoom-in-95 duration-200 font-sans">
+            <div className="relative w-20 h-20 mx-auto">
+              <div className="absolute inset-0 rounded-full bg-[#00c878]/30 blur-xl animate-pulse" />
+              <div className="relative w-20 h-20 rounded-2xl bg-[#00c878]/20 text-[#00c878] border-2 border-[#00c878] flex items-center justify-center shadow-[0_0_35px_rgba(0,200,120,0.35)]">
+                <CheckCircle2 className="w-11 h-11" />
+              </div>
             </div>
+
             <div>
-              <h3 className="text-lg font-bold text-[#f5f7f6]">Application Verified & Registered!</h3>
-              <p className="text-xs text-[#8a9690] mt-1">
-                Your admission file number is <strong className="text-[#e6ad54] font-mono">{successRecord.id}</strong>. Our counselors will reach out via Phone/WhatsApp for studio tour and batch onboarding.
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00c878]/15 border border-[#00c878]/40 text-[#00c878] text-[11px] font-mono font-bold tracking-wide uppercase mb-2">
+                <span className="w-2 h-2 rounded-full bg-[#00c878] animate-ping" />
+                Successfully Registered to Course
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-[#f5f7f6]">
+                Registration Completed!
+              </h3>
+              <p className="text-xs text-[#8a9690] mt-1.5 max-w-sm mx-auto leading-relaxed">
+                Your admission dossier is officially registered and confirmed at the Muthamizh Academic Council.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#050706] border border-[#16241f] text-left text-xs space-y-1.5 text-[#8a9690] font-sans">
-              <div><strong className="text-[#f5f7f6]">Candidate:</strong> {successRecord.full_name}</div>
-              <div><strong className="text-[#e6ad54]">Selected Program:</strong> {successRecord.program_interest}</div>
-              <div><strong className="text-[#00c878]">Qualification:</strong> {successRecord.qualification}</div>
-              <div><strong className="text-[#f5f7f6]">Contact Number:</strong> {successRecord.phone} • {successRecord.email}</div>
+            {/* Clear Banner preventing duplicate submissions */}
+            <div className="p-3.5 rounded-2xl bg-[#00c878]/10 border border-[#00c878]/30 text-left text-xs space-y-1">
+              <div className="flex items-center gap-2 text-[#00c878] font-bold font-mono text-[11px] uppercase tracking-wider">
+                <ShieldCheck className="w-4 h-4 text-[#00c878] shrink-0" />
+                <span>Registration Status: Confirmed & Saved</span>
+              </div>
+              <p className="text-[11px] text-[#f5f7f6] leading-snug">
+                Your file is recorded in our system. <strong>You do not need to register again for this course</strong>. Our admissions counselors will reach out to you directly!
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-[#050706] border border-[#16241f] text-left text-xs space-y-2 text-[#8a9690] font-sans">
+              <div className="flex justify-between items-center pb-2 border-b border-[#16241f]">
+                <span className="text-[11px] font-mono text-[#8a9690]">Application File ID</span>
+                <span className="text-[#e6ad54] font-mono font-bold text-sm">{successRecord.id}</span>
+              </div>
+              <div><strong className="text-[#f5f7f6]">Registered Course:</strong> <span className="text-[#00c878] font-semibold">{successRecord.program_interest}</span></div>
+              <div><strong className="text-[#f5f7f6]">Candidate Name:</strong> {successRecord.full_name}</div>
+              <div><strong className="text-[#f5f7f6]">Contact:</strong> {successRecord.phone} • {successRecord.email}</div>
             </div>
 
             <button
@@ -283,9 +307,9 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
                 setSuccessRecord(null);
                 onClose();
               }}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] text-[#050706] font-mono font-bold text-xs shadow hover:scale-[1.02] transition-all"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-mono font-extrabold text-xs shadow-[0_4px_20px_rgba(0,200,120,0.3)] hover:scale-[1.01] active:scale-[0.98] transition-all"
             >
-              Done & Return to Studios
+              Done — Return to Campus
             </button>
           </div>
         ) : (

@@ -178,8 +178,11 @@ interface DatabaseSchema {
   totalVisitCount: number;
 }
 
-const DB_DIR = path.join(process.cwd(), 'data');
-const DB_FILE = path.join(DB_DIR, 'admissions_db.json');
+const DB_FILE = process.env.ADMISSIONS_DB_PATH
+  ? path.resolve(process.env.ADMISSIONS_DB_PATH)
+  : path.join(process.cwd(), 'data', 'admissions_db.json');
+
+const DB_DIR = path.dirname(DB_FILE);
 
 class StorageEngine {
   private db: DatabaseSchema = {

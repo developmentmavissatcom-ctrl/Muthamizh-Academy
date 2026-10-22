@@ -6,3 +6,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Admissions persistent database & temp storage
+data/admissions_db.json
+*.tmp.*
+data/*.tmp.*

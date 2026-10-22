@@ -22,6 +22,7 @@ import { Footer } from './components/Footer';
 import { COURSES_DATA } from './data/coursesData';
 import { StudentApplicationTracker } from './components/student/StudentApplicationTracker';
 import { FacultyPortal } from './components/faculty/FacultyPortal';
+import { CheckCircle2, ShieldCheck, ArrowRight, X } from 'lucide-react';
 
 const TAB_SEO_CONFIG: Record<NavTab, { title: string; path: string }> = {
   home: {
@@ -316,6 +317,7 @@ export default function App() {
   const [applyModalOpen, setApplyModalOpen] = useState(false);
   const [selectedProgramForApply, setSelectedProgramForApply] = useState<string | undefined>(undefined);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [registeredSuccessPopup, setRegisteredSuccessPopup] = useState<RegistrationRecord | null>(null);
 
   const handleOpenApplyModal = (programTitle?: string) => {
     setSelectedProgramForApply(programTitle);
@@ -590,6 +592,7 @@ export default function App() {
 
   const handleRegistrationSuccess = (record: RegistrationRecord) => {
     setRegistrationsCount(prev => prev + 1);
+    setRegisteredSuccessPopup(record);
     if (currentUser) {
       const updatedUser: UserProfile = {
         ...currentUser,
@@ -926,6 +929,94 @@ export default function App() {
           }
         }}
       />
+
+      {/* Noticeable Course Registration Success Popup */}
+      {registeredSuccessPopup && (
+        <div className="fixed inset-0 z-[70] bg-[#050706]/85 backdrop-blur-xl flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-[#0b100e] border-2 border-[#00c878]/60 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_50px_rgba(0,200,120,0.25)] p-6 sm:p-8 space-y-5 text-center font-sans animate-in zoom-in-95 duration-200">
+            
+            {/* Close X */}
+            <button
+              onClick={() => setRegisteredSuccessPopup(null)}
+              className="absolute top-4 right-4 p-2 rounded-xl text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#121a17] transition-colors"
+              title="Close notification"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Glowing Icon */}
+            <div className="relative w-20 h-20 mx-auto">
+              <div className="absolute inset-0 rounded-full bg-[#00c878]/30 blur-xl animate-pulse" />
+              <div className="relative w-20 h-20 rounded-2xl bg-[#00c878]/20 text-[#00c878] border-2 border-[#00c878] flex items-center justify-center shadow-[0_0_35px_rgba(0,200,120,0.35)]">
+                <CheckCircle2 className="w-11 h-11" />
+              </div>
+            </div>
+
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00c878]/15 border border-[#00c878]/40 text-[#00c878] text-[11px] font-mono font-bold tracking-wide uppercase mb-2">
+                <span className="w-2 h-2 rounded-full bg-[#00c878] animate-ping" />
+                Successfully Registered to Course
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black text-[#f5f7f6]">
+                Registration Completed!
+              </h2>
+              <p className="text-xs text-[#8a9690] mt-1.5 max-w-xs mx-auto leading-relaxed">
+                You have successfully registered for your selected program at Muthamizh Academy.
+              </p>
+            </div>
+
+            {/* Explicit Notice preventing repeated registrations */}
+            <div className="p-3.5 rounded-2xl bg-[#00c878]/10 border border-[#00c878]/30 text-left text-xs space-y-1">
+              <div className="flex items-center gap-2 text-[#00c878] font-bold font-mono text-[11px] uppercase tracking-wider">
+                <ShieldCheck className="w-4 h-4 text-[#00c878] shrink-0" />
+                <span>Recorded in Admissions Desk</span>
+              </div>
+              <p className="text-[11px] text-[#f5f7f6] leading-snug">
+                Your dossier is active. <strong>Please do not register again for this course</strong> — our faculty already has your registration!
+              </p>
+            </div>
+
+            {/* Course Summary Box */}
+            <div className="p-4 rounded-2xl bg-[#050706] border border-[#16241f] text-left text-xs space-y-2 text-[#8a9690]">
+              <div className="flex justify-between items-center pb-2 border-b border-[#16241f]">
+                <span className="text-[11px] font-mono text-[#8a9690]">Application File ID</span>
+                <span className="text-[#e6ad54] font-mono font-bold text-sm">{registeredSuccessPopup.id}</span>
+              </div>
+              <div>
+                <strong className="text-[#f5f7f6] block text-[11px] font-mono mb-0.5">Enrolled Course:</strong>
+                <span className="text-[#00c878] font-bold text-sm block leading-snug">
+                  {(registeredSuccessPopup.program_interest || '').replace(/&amp;/gi, '&')}
+                </span>
+              </div>
+              <div className="pt-1 text-[11px]">
+                <strong className="text-[#f5f7f6]">Candidate Name:</strong> {registeredSuccessPopup.full_name}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="space-y-2 pt-1">
+              <button
+                onClick={() => {
+                  setRegisteredSuccessPopup(null);
+                  handleTabChange('tracker');
+                }}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00c878] to-[#006b45] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-mono font-extrabold text-xs shadow-[0_4px_20px_rgba(0,200,120,0.3)] hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              >
+                <span>Track Application Progress</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => setRegisteredSuccessPopup(null)}
+                className="w-full py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-mono text-xs transition-colors"
+              >
+                Got It — Close
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );
