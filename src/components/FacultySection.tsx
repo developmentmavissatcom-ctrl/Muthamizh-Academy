@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FACULTY_DATA, DEPARTMENTS } from '../data/facultyData';
 import { FacultyMember } from '../types';
 import { 
@@ -13,10 +14,14 @@ import {
   Layers,
   Mail
 } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 export const FacultySection: React.FC = () => {
   const [selectedDept, setSelectedDept] = useState<string>('all');
   const [selectedFaculty, setSelectedFaculty] = useState<FacultyMember | null>(null);
+
+  // Lock body scrolling when full profile modal is open
+  useBodyScrollLock(Boolean(selectedFaculty));
 
   // Directly sourced from codebase data
   const allFaculty: FacultyMember[] = FACULTY_DATA;
@@ -297,28 +302,35 @@ export const FacultySection: React.FC = () => {
       </div>
 
       {/* Comprehensive Faculty Profile Modal */}
-      {selectedFaculty && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
-          <div className="relative w-full max-w-2xl bg-[#070b09] text-[#f5f7f6] border border-[#16241f] rounded-3xl p-5 sm:p-8 shadow-2xl space-y-5 sm:space-y-6 max-h-[90vh] overflow-y-auto">
-            
-            {/* Header & Close Button */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 sm:pt-0">
-              <div className="flex items-center gap-3.5 sm:gap-4">
-                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-[#050706] shrink-0 border border-[#16241f] shadow">
+      {selectedFaculty && typeof document !== 'undefined' && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedFaculty(null);
+          }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-150"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-2xl bg-[#070b09] text-[#f5f7f6] border border-[#16241f] rounded-3xl shadow-2xl flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+          >
+            {/* Pinned Header */}
+            <div className="flex items-center justify-between p-5 sm:p-6 pb-4 border-b border-[#16241f] bg-[#070b09] shrink-0">
+              <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-[#050706] shrink-0 border border-[#16241f] shadow">
                   <img
                     src={selectedFaculty.image}
                     alt={selectedFaculty.name}
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      if (!target.src.includes('/f1.jpg')) {
-                        target.src = '/f1.jpg';
+                      if (!target.src.includes('/f1.png') && !target.src.includes('/f1.jpg')) {
+                        target.src = '/f1.png';
                       }
                     }}
                     className="w-full h-full object-cover object-[center_15%]"
                   />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
                     <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-[#121a17] text-[#00c878] border border-[#00c878]/30 text-[9px] sm:text-[10px] font-mono font-bold">
                       {selectedFaculty.department || 'News Department'}
@@ -327,13 +339,13 @@ export const FacultySection: React.FC = () => {
                       {selectedFaculty.networkCredit}
                     </span>
                   </div>
-                  <h3 className="text-lg sm:text-2xl font-bold text-[#f5f7f6] tracking-tight">
+                  <h3 className="text-lg sm:text-xl font-bold text-[#f5f7f6] tracking-tight truncate">
                     {selectedFaculty.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#00c878] font-medium mt-0.5">
+                  <p className="text-xs text-[#00c878] font-medium mt-0.5 truncate">
                     {selectedFaculty.role}
                   </p>
-                  <p className="text-[11px] sm:text-xs text-[#8a9690] font-mono font-semibold mt-0.5 sm:mt-1">
+                  <p className="text-[11px] text-[#8a9690] font-mono font-semibold mt-0.5">
                     {selectedFaculty.experience}
                   </p>
                 </div>
@@ -342,54 +354,58 @@ export const FacultySection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedFaculty(null)}
-                className="absolute top-4 right-4 sm:static p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] transition-colors cursor-pointer shrink-0 ml-3"
                 title="Close Window"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* In-depth Biography */}
-            <div className="space-y-2 pt-4 border-t border-[#16241f]">
-              <h4 className="text-xs font-mono font-bold text-[#8a9690] uppercase tracking-wider flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[#00c878]" />
-                <span>Professional Biography & Career Overview</span>
-              </h4>
-              <p className="text-sm text-[#8a9690] leading-relaxed">
-                {selectedFaculty.bio}
-              </p>
-            </div>
+            {/* Scrollable Body - ONLY this content scrolls */}
+            <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-5 flex-1 pr-3 sm:pr-4">
+              {/* In-depth Biography */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-mono font-bold text-[#8a9690] uppercase tracking-wider flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-[#00c878]" />
+                  <span>Professional Biography & Career Overview</span>
+                </h4>
+                <p className="text-xs sm:text-sm text-[#8a9690] leading-relaxed">
+                  {selectedFaculty.bio}
+                </p>
+              </div>
 
-            {/* Core Competencies & Expertise */}
-            <div className="space-y-2 pt-4 border-t border-[#16241f]">
-              <h4 className="text-xs font-mono font-bold text-[#8a9690] uppercase tracking-wider">
-                Specialized Domains & Training Areas
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedFaculty.expertise.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="text-xs bg-[#121a17] text-[#00c878] font-mono px-3 py-1 rounded-xl border border-[#00c878]/30"
-                  >
-                    {skill}
-                  </span>
-                ))}
+              {/* Core Competencies & Expertise */}
+              <div className="space-y-2 pt-4 border-t border-[#16241f]">
+                <h4 className="text-xs font-mono font-bold text-[#8a9690] uppercase tracking-wider">
+                  Specialized Domains & Training Areas
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedFaculty.expertise.map((skill, i) => (
+                    <span
+                      key={i}
+                      className="text-xs bg-[#121a17] text-[#00c878] font-mono px-3 py-1 rounded-xl border border-[#00c878]/30"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="flex justify-end pt-4 border-t border-[#16241f]">
+            {/* Pinned Footer */}
+            <div className="flex justify-end p-4 sm:p-5 border-t border-[#16241f] bg-[#070b09] shrink-0">
               <button
                 type="button"
                 onClick={() => setSelectedFaculty(null)}
-                className="px-6 py-2.5 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] font-mono text-xs font-bold transition-colors cursor-pointer"
+                className="px-6 py-2.5 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] font-mono text-xs font-bold transition-colors cursor-pointer shadow-lg hover:scale-[1.02] active:scale-[0.98]"
               >
                 Close Profile
               </button>
             </div>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </section>

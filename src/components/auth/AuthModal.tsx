@@ -21,6 +21,7 @@ import {
   Copy,
   Check
 } from 'lucide-react';
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -37,6 +38,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   initialMode = 'login',
   initialRole = 'student'
 }) => {
+  useBodyScrollLock(isOpen);
   const [mode, setMode] = useState<'signup' | 'login' | 'otp_verify' | 'forgot_password' | 'reset_password'>('login');
   const [selectedRole, setSelectedRole] = useState<'student' | 'faculty'>('student');
   const [showPassword, setShowPassword] = useState(false);
@@ -535,14 +537,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl rounded-3xl bg-[#070b09] border border-[#16241f] shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_30px_rgba(0,200,120,0.1)] overflow-hidden my-6">
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-200"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-xl rounded-3xl bg-[#070b09] border border-[#16241f] shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_30px_rgba(0,200,120,0.1)] flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+      >
         
         {/* Top Header Glow Strip */}
-        <div className={`h-1.5 w-full transition-colors ${selectedRole === 'faculty' ? 'bg-gradient-to-r from-[#e6ad54] via-[#e6ad54] to-amber-600' : 'bg-gradient-to-r from-[#00c878] via-[#00c878] to-[#e6ad54]'}`} />
+        <div className={`h-1.5 w-full shrink-0 transition-colors ${selectedRole === 'faculty' ? 'bg-gradient-to-r from-[#e6ad54] via-[#e6ad54] to-amber-600' : 'bg-gradient-to-r from-[#00c878] via-[#00c878] to-[#e6ad54]'}`} />
 
         {/* Modal Header */}
-        <div className="p-4 sm:p-7 pb-4 flex items-start justify-between border-b border-[#16241f]">
+        <div className="p-4 sm:p-7 pb-4 flex items-start justify-between border-b border-[#16241f] shrink-0">
           <div className="space-y-1">
             <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider border ${
               selectedRole === 'faculty' 
@@ -774,7 +784,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* MODES BODY */}
-        <div className="p-6 sm:p-7 pt-4">
+        <div className="p-6 sm:p-7 pt-4 overflow-y-auto overscroll-contain flex-1">
           
           {/* ================= MODE 1: SIGN UP ================= */}
           {mode === 'signup' && (

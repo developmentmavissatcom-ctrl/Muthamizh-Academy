@@ -23,6 +23,7 @@ import { COURSES_DATA } from './data/coursesData';
 import { StudentApplicationTracker } from './components/student/StudentApplicationTracker';
 import { FacultyPortal } from './components/faculty/FacultyPortal';
 import { CheckCircle2, ShieldCheck, ArrowRight, X } from 'lucide-react';
+import { useBodyScrollLock } from './hooks/useBodyScrollLock';
 
 const TAB_SEO_CONFIG: Record<NavTab, { title: string; path: string }> = {
   home: {
@@ -318,6 +319,8 @@ export default function App() {
   const [selectedProgramForApply, setSelectedProgramForApply] = useState<string | undefined>(undefined);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [registeredSuccessPopup, setRegisteredSuccessPopup] = useState<RegistrationRecord | null>(null);
+
+  useBodyScrollLock(Boolean(registeredSuccessPopup));
 
   const handleOpenApplyModal = (programTitle?: string) => {
     setSelectedProgramForApply(programTitle);
@@ -932,13 +935,22 @@ export default function App() {
 
       {/* Noticeable Course Registration Success Popup */}
       {registeredSuccessPopup && (
-        <div className="fixed inset-0 z-[70] bg-[#050706]/85 backdrop-blur-xl flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md bg-[#0b100e] border-2 border-[#00c878]/60 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_50px_rgba(0,200,120,0.25)] p-6 sm:p-8 space-y-5 text-center font-sans animate-in zoom-in-95 duration-200">
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setRegisteredSuccessPopup(null);
+          }}
+          className="fixed inset-0 z-[70] bg-[#050706]/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-200"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md bg-[#0b100e] border-2 border-[#00c878]/60 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_50px_rgba(0,200,120,0.25)] p-6 sm:p-8 space-y-5 text-center font-sans max-h-[85vh] overflow-y-auto overscroll-contain my-auto animate-in zoom-in-95 duration-200"
+          >
             
             {/* Close X */}
             <button
+              type="button"
               onClick={() => setRegisteredSuccessPopup(null)}
-              className="absolute top-4 right-4 p-2 rounded-xl text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#121a17] transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-xl text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#121a17] transition-colors cursor-pointer"
               title="Close notification"
             >
               <X className="w-5 h-5" />

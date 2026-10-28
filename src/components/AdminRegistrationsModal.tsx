@@ -5,6 +5,7 @@ import {
   Calendar, Phone, Mail, GraduationCap, TrendingUp, Users, 
   CheckCircle2, Filter, PieChart, Activity
 } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface AdminRegistrationsModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export const AdminRegistrationsModal: React.FC<AdminRegistrationsModalProps> = (
   isOpen,
   onClose
 }) => {
+  useBodyScrollLock(isOpen);
   const [registrations, setRegistrations] = useState<RegistrationRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -84,11 +86,19 @@ export const AdminRegistrationsModal: React.FC<AdminRegistrationsModalProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#050706]/90 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-6xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(0,200,120,0.15)] overflow-hidden max-h-[92vh] flex flex-col font-sans">
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 bg-[#050706]/90 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-200"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-6xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(0,200,120,0.15)] flex flex-col max-h-[85vh] my-auto overflow-hidden font-sans animate-in zoom-in-95 duration-150"
+      >
         
         {/* Header */}
-        <div className="p-4 sm:p-6 bg-[#050706] border-b border-[#16241f] flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="p-4 sm:p-6 bg-[#050706] border-b border-[#16241f] flex flex-wrap items-center justify-between gap-3 sm:gap-4 shrink-0">
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-2xl bg-[#00c878]/15 border border-[#00c878]/30 flex items-center justify-center text-[#00c878] font-bold shadow-[0_0_20px_rgba(0,200,120,0.15)]">
               <ShieldCheck className="w-6 h-6" />
@@ -136,7 +146,7 @@ export const AdminRegistrationsModal: React.FC<AdminRegistrationsModalProps> = (
         </div>
 
         {/* Studio Funnel Metrics Dashboard Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-[#0b100e] border-b border-[#16241f] text-xs font-mono">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-[#0b100e] border-b border-[#16241f] text-xs font-mono shrink-0">
           <div className="p-3 rounded-2xl bg-[#050706] border border-[#16241f]">
             <span className="text-[#8a9690] text-[10px] block">TOTAL APPLICANTS</span>
             <span className="text-xl font-bold text-[#f5f7f6] mt-0.5 block">{registrations.length}</span>
@@ -165,7 +175,7 @@ export const AdminRegistrationsModal: React.FC<AdminRegistrationsModalProps> = (
         </div>
 
         {/* Search & Filter Strip */}
-        <div className="p-4 bg-[#050706] border-b border-[#16241f] flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="p-4 bg-[#050706] border-b border-[#16241f] flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-[#8a9690] absolute left-3.5 top-3" />
             <input
@@ -183,7 +193,7 @@ export const AdminRegistrationsModal: React.FC<AdminRegistrationsModalProps> = (
         </div>
 
         {/* Candidate List Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-3">
           {filtered.length === 0 ? (
             <div className="py-20 text-center text-[#8a9690] text-xs font-mono">
               No candidate leads match the specified query.

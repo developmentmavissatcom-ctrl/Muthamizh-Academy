@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { UserProfile, RegistrationRecord, AdmissionStatus, CircularUpdate } from '../../types';
 import { 
   ShieldCheck, 
@@ -42,6 +43,7 @@ import {
   Eye,
   BarChart3
 } from 'lucide-react';
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 
 interface FacultyPortalProps {
   currentUser: UserProfile | null;
@@ -142,6 +144,16 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
   } | null>(null);
   const [analyticsModalOpen, setAnalyticsModalOpen] = useState(false);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
+  // Prevent background website page scrolling when any modal in FacultyPortal is open
+  const isAnyFacultyModalOpen = Boolean(
+    selectedApp ||
+    emailLogsModalOpen ||
+    circularModalOpen ||
+    invitationsModalOpen ||
+    analyticsModalOpen
+  );
+  useBodyScrollLock(isAnyFacultyModalOpen);
 
   const fetchVisitorAnalytics = async () => {
     const token = localStorage.getItem('muthamizh_auth_token');
@@ -1107,12 +1119,19 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
       {/* ==========================================
           MODAL: PROCESS ADMISSION & EVALUATE CANDIDATE
           ========================================== */}
-      {selectedApp && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl bg-[#0b100e] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto space-y-6">
-            
-            {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#16241f]">
+      {selectedApp && typeof document !== 'undefined' && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedApp(null);
+          }}
+          className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-150"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-2xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-2xl flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+          >
+            {/* Pinned Header */}
+            <div className="flex items-center justify-between p-5 sm:p-6 pb-4 border-b border-[#16241f] bg-[#0b100e] shrink-0">
               <div>
                 <span className="text-[10px] font-mono text-[#e6ad54] uppercase tracking-wider font-bold">
                   Academic Admission Processing Desk
@@ -1122,150 +1141,154 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={() => setSelectedApp(null)}
-                className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6]"
+                className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] transition-colors cursor-pointer"
+                title="Close Evaluation"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {editFeedbackMessage && (
-              <div className="p-3.5 rounded-xl bg-[#00c878]/15 border border-[#00c878]/40 text-[#00c878] text-xs font-mono">
-                {editFeedbackMessage}
-              </div>
-            )}
-
-            {lastDeliveredEmailUrl && (
-              <div className="p-3.5 rounded-2xl bg-[#121a17] border border-[#00c878]/40 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#00c878]">
-                  <CheckCircle2 className="w-4 h-4 text-[#00c878]" />
-                  <span>Email delivered via SMTP to candidate's mailbox</span>
+            {/* Scrollable Body - ONLY this content scrolls */}
+            <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-5 flex-1 pr-3 sm:pr-4">
+              {editFeedbackMessage && (
+                <div className="p-3.5 rounded-xl bg-[#00c878]/15 border border-[#00c878]/40 text-[#00c878] text-xs font-mono">
+                  {editFeedbackMessage}
                 </div>
-                <a
-                  href={lastDeliveredEmailUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-xl bg-[#00c878] text-[#050706] font-mono font-bold text-xs hover:scale-105 transition-transform flex items-center gap-1 shrink-0"
-                >
-                  <span>Open Delivered Email Preview</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            )}
+              )}
 
-            {/* Candidate Metadata Summary */}
-            <div className="grid grid-cols-2 gap-3 bg-[#070b09] p-4 rounded-2xl border border-[#16241f] text-xs font-mono">
-              <div>
-                <span className="text-[#8a9690] block text-[10px]">Contact Info:</span>
-                <span className="text-[#f5f7f6] font-bold">{selectedApp.email}</span>
-                <div className="text-[#8a9690]">{selectedApp.phone}</div>
+              {lastDeliveredEmailUrl && (
+                <div className="p-3.5 rounded-2xl bg-[#121a17] border border-[#00c878]/40 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#00c878]">
+                    <CheckCircle2 className="w-4 h-4 text-[#00c878]" />
+                    <span>Email delivered via SMTP to candidate's mailbox</span>
+                  </div>
+                  <a
+                    href={lastDeliveredEmailUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-xl bg-[#00c878] text-[#050706] font-mono font-bold text-xs hover:scale-105 transition-transform flex items-center gap-1 shrink-0"
+                  >
+                    <span>Open Delivered Email Preview</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              )}
+
+              {/* Candidate Metadata Summary */}
+              <div className="grid grid-cols-2 gap-3 bg-[#070b09] p-4 rounded-2xl border border-[#16241f] text-xs font-mono">
+                <div>
+                  <span className="text-[#8a9690] block text-[10px]">Contact Info:</span>
+                  <span className="text-[#f5f7f6] font-bold">{selectedApp.email}</span>
+                  <div className="text-[#8a9690]">{selectedApp.phone}</div>
+                </div>
+                <div>
+                  <span className="text-[#8a9690] block text-[10px]">Track & Qualification:</span>
+                  <span className="text-[#00c878] font-bold block truncate">{selectedApp.program_interest}</span>
+                  <span className="text-[#8a9690]">{selectedApp.qualification}</span>
+                </div>
               </div>
-              <div>
-                <span className="text-[#8a9690] block text-[10px]">Track & Qualification:</span>
-                <span className="text-[#00c878] font-bold block truncate">{selectedApp.program_interest}</span>
-                <span className="text-[#8a9690]">{selectedApp.qualification}</span>
+
+              {/* Form Fields */}
+              <div className="space-y-4 text-xs font-mono">
+                {/* Status Selector */}
+                <div>
+                  <label className="block text-[#8a9690] mb-1.5 font-bold">
+                    Update Candidate Admission Lifecycle Status
+                  </label>
+                  <select
+                    value={editStatus}
+                    onChange={(e) => setEditStatus(e.target.value as AdmissionStatus)}
+                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-4 py-3 text-sm text-[#f5f7f6] outline-none"
+                  >
+                    {ADMISSION_STATUSES.map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Faculty Remarks (Visible to Student) */}
+                <div>
+                  <label className="block text-[#8a9690] mb-1.5 font-bold">
+                    Official Faculty Evaluation Remarks & Guidance (Visible in Student Tracker)
+                  </label>
+                  <textarea
+                    value={editRemarks}
+                    onChange={(e) => setEditRemarks(e.target.value)}
+                    rows={3}
+                    placeholder="e.g., Portfolio evaluated with distinction. Recommended for Studio Floor A PCR rotation and entrance interview."
+                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl p-3 text-xs text-[#f5f7f6] placeholder-[#8a9690]/40 outline-none"
+                  />
+                </div>
+
+                {/* Interview Scheduling Date & Venue */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[#8a9690] mb-1 font-bold">
+                      Interview / Assessment Date & Time
+                    </label>
+                    <input
+                      type="text"
+                      value={editInterviewDate}
+                      onChange={(e) => setEditInterviewDate(e.target.value)}
+                      placeholder="e.g., March 18, 2026 - 10:30 AM"
+                      className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[#8a9690] mb-1 font-bold">
+                      Interview Venue / Floor
+                    </label>
+                    <input
+                      type="text"
+                      value={editInterviewVenue}
+                      onChange={(e) => setEditInterviewVenue(e.target.value)}
+                      placeholder="e.g., Jaya TV Studio Floor A / Virtual Lab 1"
+                      className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Assigned Floor & Scholarship */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[#8a9690] mb-1 font-bold">
+                      Assigned Studio Floor / Rig Pass
+                    </label>
+                    <input
+                      type="text"
+                      value={editStudioFloor}
+                      onChange={(e) => setEditStudioFloor(e.target.value)}
+                      placeholder="e.g., Floor A PCR & Chroma Lab"
+                      className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[#8a9690] mb-1 font-bold">
+                      Mavis Satcom Media Fellowship / Scholarship
+                    </label>
+                    <input
+                      type="text"
+                      value={editScholarship}
+                      onChange={(e) => setEditScholarship(e.target.value)}
+                      placeholder="e.g., 25% Academic Fellowship Granted"
+                      className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Form Fields */}
-            <div className="space-y-4 text-xs font-mono">
-              
-              {/* Status Selector */}
-              <div>
-                <label className="block text-[#8a9690] mb-1.5 font-bold">
-                  Update Candidate Admission Lifecycle Status
-                </label>
-                <select
-                  value={editStatus}
-                  onChange={(e) => setEditStatus(e.target.value as AdmissionStatus)}
-                  className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-4 py-3 text-sm text-[#f5f7f6] outline-none"
-                >
-                  {ADMISSION_STATUSES.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Faculty Remarks (Visible to Student) */}
-              <div>
-                <label className="block text-[#8a9690] mb-1.5 font-bold">
-                  Official Faculty Evaluation Remarks & Guidance (Visible in Student Tracker)
-                </label>
-                <textarea
-                  value={editRemarks}
-                  onChange={(e) => setEditRemarks(e.target.value)}
-                  rows={3}
-                  placeholder="e.g., Portfolio evaluated with distinction. Recommended for Studio Floor A PCR rotation and entrance interview."
-                  className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl p-3 text-xs text-[#f5f7f6] placeholder-[#8a9690]/40 outline-none"
-                />
-              </div>
-
-              {/* Interview Scheduling Date & Venue */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[#8a9690] mb-1 font-bold">
-                    Interview / Assessment Date & Time
-                  </label>
-                  <input
-                    type="text"
-                    value={editInterviewDate}
-                    onChange={(e) => setEditInterviewDate(e.target.value)}
-                    placeholder="e.g., March 18, 2026 - 10:30 AM"
-                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[#8a9690] mb-1 font-bold">
-                    Interview Venue / Floor
-                  </label>
-                  <input
-                    type="text"
-                    value={editInterviewVenue}
-                    onChange={(e) => setEditInterviewVenue(e.target.value)}
-                    placeholder="e.g., Jaya TV Studio Floor A / Virtual Lab 1"
-                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Assigned Floor & Scholarship */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[#8a9690] mb-1 font-bold">
-                    Assigned Studio Floor / Rig Pass
-                  </label>
-                  <input
-                    type="text"
-                    value={editStudioFloor}
-                    onChange={(e) => setEditStudioFloor(e.target.value)}
-                    placeholder="e.g., Floor A PCR & Chroma Lab"
-                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[#8a9690] mb-1 font-bold">
-                    Mavis Satcom Media Fellowship / Scholarship
-                  </label>
-                  <input
-                    type="text"
-                    value={editScholarship}
-                    onChange={(e) => setEditScholarship(e.target.value)}
-                    placeholder="e.g., 25% Academic Fellowship Granted"
-                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex items-center justify-between gap-3 pt-4 border-t border-[#16241f]">
+            {/* Pinned Actions Footer */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 border-t border-[#16241f] bg-[#0b100e] shrink-0">
               <button
                 type="button"
                 onClick={() => handleResendStatusEmail(selectedApp.id, selectedApp.email)}
                 disabled={sendingEmailId === selectedApp.id}
-                className="px-4 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#e6ad54] border border-[#e6ad54]/40 hover:border-[#e6ad54] text-xs font-mono transition-colors flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#e6ad54] border border-[#e6ad54]/40 hover:border-[#e6ad54] text-xs font-mono transition-colors flex items-center gap-1.5 cursor-pointer"
                 title="Send current status notification email to candidate"
               >
                 <Mail className={`w-3.5 h-3.5 ${sendingEmailId === selectedApp.id ? 'animate-spin' : ''}`} />
@@ -1276,7 +1299,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                 <button
                   type="button"
                   onClick={() => handleDeleteApplication(selectedApp.id)}
-                  className="px-3.5 py-2.5 rounded-xl bg-rose-950/30 hover:bg-rose-900/50 text-rose-400 border border-rose-900/50 text-xs font-mono transition-colors flex items-center gap-1.5"
+                  className="px-3.5 py-2.5 rounded-xl bg-rose-950/30 hover:bg-rose-900/50 text-rose-400 border border-rose-900/50 text-xs font-mono transition-colors flex items-center gap-1.5 cursor-pointer"
                   title="Remove this applicant dossier"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -1285,7 +1308,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedApp(null)}
-                  className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] text-xs font-mono transition-colors"
+                  className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] text-xs font-mono transition-colors cursor-pointer"
                 >
                   Close
                 </button>
@@ -1293,7 +1316,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                   type="button"
                   disabled={savingEdit}
                   onClick={handleSaveAppEdit}
-                  className="px-6 py-2.5 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] font-bold text-xs font-mono shadow-lg transition-all flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] font-bold text-xs font-mono shadow-lg transition-all flex items-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <Check className="w-4 h-4" />
                   <span>{savingEdit ? 'Dispatching Decision...' : 'Commit & Notify Student'}</span>
@@ -1301,122 +1324,144 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ==========================================
           MODAL: BROADCAST CIRCULAR PUBLISHER
           ========================================== */}
-      {circularModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-[#0b100e] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
-            
-            <div className="flex items-center justify-between pb-3 border-b border-[#16241f]">
+      {circularModalOpen && typeof document !== 'undefined' && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setCircularModalOpen(false);
+          }}
+          className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-150"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-2xl flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+          >
+            {/* Pinned Header */}
+            <div className="flex items-center justify-between p-5 sm:p-6 pb-4 border-b border-[#16241f] bg-[#0b100e] shrink-0">
               <div>
                 <span className="text-[10px] font-mono text-[#00c878] uppercase tracking-wider font-bold">
                   Broadcast Circular Desk
                 </span>
-                <h3 className="text-xl font-black text-[#f5f7f6] font-mono">
+                <h3 className="text-xl font-black text-[#f5f7f6] font-mono mt-0.5">
                   Publish Notice to Students
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={() => setCircularModalOpen(false)}
-                className="p-2 rounded-xl bg-[#121a17] text-[#8a9690] hover:text-[#f5f7f6]"
+                className="p-2 rounded-xl bg-[#121a17] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {circularFeedback && (
-              <div className="p-3 rounded-xl bg-[#00c878]/20 text-[#00c878] text-xs font-mono">
-                {circularFeedback}
-              </div>
-            )}
+            {/* Scrollable Form Body */}
+            <form onSubmit={handlePublishCircular} className="flex flex-col flex-1 overflow-hidden">
+              <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-4 text-xs font-mono flex-1 pr-3 sm:pr-4">
+                {circularFeedback && (
+                  <div className="p-3 rounded-xl bg-[#00c878]/20 text-[#00c878] text-xs font-mono">
+                    {circularFeedback}
+                  </div>
+                )}
 
-            <form onSubmit={handlePublishCircular} className="space-y-4 text-xs font-mono">
-              <div>
-                <label className="block text-[#8a9690] mb-1">Circular Title</label>
-                <input
-                  type="text"
-                  value={circularTitle}
-                  onChange={(e) => setCircularTitle(e.target.value)}
-                  placeholder="e.g., Studio Assessment Floor A Schedule Released"
-                  className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#8a9690] mb-1">Category</label>
-                  <select
-                    value={circularCategory}
-                    onChange={(e) => setCircularCategory(e.target.value as any)}
-                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3 py-2.5 text-xs text-[#f5f7f6] outline-none"
-                  >
-                    <option value="Admissions">Admissions</option>
-                    <option value="Studio Broadcast">Studio Broadcast</option>
-                    <option value="Curriculum & Labs">Curriculum & Labs</option>
-                    <option value="Placement & Network">Placement & Network</option>
-                  </select>
+                  <label className="block text-[#8a9690] mb-1">Circular Title</label>
+                  <input
+                    type="text"
+                    value={circularTitle}
+                    onChange={(e) => setCircularTitle(e.target.value)}
+                    placeholder="e.g., Studio Assessment Floor A Schedule Released"
+                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3.5 py-2.5 text-xs text-[#f5f7f6] outline-none"
+                    required
+                  />
                 </div>
 
-                <div className="flex items-center pt-5">
-                  <label className="flex items-center gap-2 cursor-pointer text-[#f5f7f6]">
-                    <input
-                      type="checkbox"
-                      checked={circularUrgent}
-                      onChange={(e) => setCircularUrgent(e.target.checked)}
-                      className="rounded bg-[#070b09] border-[#16241f] text-[#e6ad54] focus:ring-0 w-4 h-4"
-                    />
-                    <span className="text-xs">Mark as High Priority / Urgent</span>
-                  </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[#8a9690] mb-1">Category</label>
+                    <select
+                      value={circularCategory}
+                      onChange={(e) => setCircularCategory(e.target.value as any)}
+                      className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl px-3 py-2.5 text-xs text-[#f5f7f6] outline-none"
+                    >
+                      <option value="Admissions">Admissions</option>
+                      <option value="Studio Broadcast">Studio Broadcast</option>
+                      <option value="Curriculum & Labs">Curriculum & Labs</option>
+                      <option value="Placement & Network">Placement & Network</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center pt-5">
+                    <label className="flex items-center gap-2 cursor-pointer text-[#f5f7f6]">
+                      <input
+                        type="checkbox"
+                        checked={circularUrgent}
+                        onChange={(e) => setCircularUrgent(e.target.checked)}
+                        className="rounded bg-[#070b09] border-[#16241f] text-[#e6ad54] focus:ring-0 w-4 h-4"
+                      />
+                      <span className="text-xs">Mark as Urgent</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[#8a9690] mb-1">Summary / Directive Details</label>
+                  <textarea
+                    value={circularSummary}
+                    onChange={(e) => setCircularSummary(e.target.value)}
+                    rows={4}
+                    placeholder="Detailed circular notice body..."
+                    className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl p-3 text-xs text-[#f5f7f6] outline-none"
+                    required
+                  />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[#8a9690] mb-1">Summary / Directive Details</label>
-                <textarea
-                  value={circularSummary}
-                  onChange={(e) => setCircularSummary(e.target.value)}
-                  rows={4}
-                  placeholder="Detailed circular notice body..."
-                  className="w-full bg-[#070b09] border border-[#16241f] focus:border-[#00c878] rounded-xl p-3 text-xs text-[#f5f7f6] outline-none"
-                  required
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#16241f]">
+              {/* Pinned Form Footer */}
+              <div className="flex items-center justify-end gap-3 p-4 sm:p-5 border-t border-[#16241f] bg-[#0b100e] shrink-0">
                 <button
                   type="button"
                   onClick={() => setCircularModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-[#121a17] text-[#8a9690]"
+                  className="px-4 py-2 rounded-xl bg-[#121a17] text-[#8a9690] hover:text-[#f5f7f6] cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={publishingCircular}
-                  className="px-5 py-2 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] font-bold text-xs shadow-lg transition-all"
+                  className="px-5 py-2 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] font-bold text-xs shadow-lg transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {publishingCircular ? 'Publishing...' : 'Dispatch Broadcast'}
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ==========================================
           MODAL: EMAIL AUDIT & TRANSMISSION LOGS
           ========================================== */}
-      {emailLogsModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-3xl bg-[#0b100e] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto space-y-6">
-            
-            {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#16241f]">
+      {emailLogsModalOpen && typeof document !== 'undefined' && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEmailLogsModalOpen(false);
+          }}
+          className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-150"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-3xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-2xl flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+          >
+            {/* Pinned Header */}
+            <div className="flex items-center justify-between p-5 sm:p-6 pb-4 border-b border-[#16241f] bg-[#0b100e] shrink-0">
               <div>
                 <span className="text-[10px] font-mono text-[#00c878] uppercase tracking-wider font-bold flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#00c878] animate-ping" />
@@ -1428,110 +1473,125 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={fetchEmailLogs}
                   disabled={loadingEmailLogs}
-                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#16241f]"
+                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#16241f] cursor-pointer"
                   title="Refresh Logs"
                 >
                   <RefreshCw className={`w-4 h-4 ${loadingEmailLogs ? 'animate-spin' : ''}`} />
                 </button>
                 <button
+                  type="button"
                   onClick={() => setEmailLogsModalOpen(false)}
-                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6]"
+                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            {/* Sub-banner */}
-            <div className="p-3.5 rounded-2xl bg-[#121a17] border border-[#16241f] text-xs font-mono text-[#8a9690] flex items-center justify-between">
-              <div>
-                Real-time delivery records for OTP verification codes, application submissions, and faculty admission status updates.
+            {/* Scrollable Logs Body */}
+            <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-4 flex-1 pr-3 sm:pr-4">
+              {/* Sub-banner */}
+              <div className="p-3.5 rounded-2xl bg-[#121a17] border border-[#16241f] text-xs font-mono text-[#8a9690] flex items-center justify-between">
+                <div>
+                  Real-time delivery records for OTP verification codes, application submissions, and faculty admission status updates.
+                </div>
+                <div className="text-[#00c878] font-bold text-[11px] shrink-0 ml-4">
+                  Total Dispatches: {emailLogs.length}
+                </div>
               </div>
-              <div className="text-[#00c878] font-bold text-[11px] shrink-0 ml-4">
-                Total Dispatches: {emailLogs.length}
-              </div>
+
+              {/* Logs Table / List */}
+              {loadingEmailLogs ? (
+                <div className="py-12 text-center text-[#8a9690] font-mono text-xs flex items-center justify-center gap-2">
+                  <RefreshCw className="w-4 h-4 animate-spin text-[#00c878]" />
+                  <span>Loading delivery logs...</span>
+                </div>
+              ) : emailLogs.length === 0 ? (
+                <div className="py-12 text-center text-[#8a9690] font-mono text-xs">
+                  No emails dispatched yet in this runtime session.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {emailLogs.map((log: any, idx: number) => (
+                    <div
+                      key={log.id || idx}
+                      className="p-4 rounded-2xl bg-[#070b09] border border-[#16241f] hover:border-[#00c878]/30 transition-all font-mono text-xs space-y-2"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
+                            log.type === 'OTP_VERIFICATION' ? 'bg-[#e6ad54]/15 text-[#e6ad54] border border-[#e6ad54]/30' :
+                            log.type === 'APPLICATION_SUBMITTED' ? 'bg-blue-900/30 text-blue-300 border border-blue-700/40' :
+                            'bg-[#00c878]/15 text-[#00c878] border border-[#00c878]/30'
+                          }`}>
+                            {log.type.replace('_', ' ')}
+                          </span>
+                          <span className="text-[#f5f7f6] font-bold">{log.to}</span>
+                        </div>
+                        <div className="text-[10px] text-[#8a9690]">
+                          {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })} • {new Date(log.timestamp).toLocaleDateString()}
+                        </div>
+                      </div>
+
+                      <div className="text-[#8a9690] text-[11px] truncate">
+                        Subject: <span className="text-[#f5f7f6] font-semibold">{log.subject}</span>
+                      </div>
+
+                      <div className="pt-2 border-t border-[#16241f] flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 text-[10px] text-[#00c878]">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Transmitted via SMTP Transport</span>
+                        </div>
+                        {log.previewUrl && (
+                          <a
+                            href={log.previewUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2.5 py-1 rounded-lg bg-[#121a17] hover:bg-[#00c878] text-[#00c878] hover:text-[#050706] border border-[#00c878]/40 hover:border-[#00c878] text-[11px] font-bold transition-all flex items-center gap-1"
+                          >
+                            <span>View Delivered Mail HTML</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Logs Table / List */}
-            {loadingEmailLogs ? (
-              <div className="py-12 text-center text-[#8a9690] font-mono text-xs flex items-center justify-center gap-2">
-                <RefreshCw className="w-4 h-4 animate-spin text-[#00c878]" />
-                <span>Loading delivery logs...</span>
-              </div>
-            ) : emailLogs.length === 0 ? (
-              <div className="py-12 text-center text-[#8a9690] font-mono text-xs">
-                No emails dispatched yet in this runtime session.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {emailLogs.map((log: any, idx: number) => (
-                  <div
-                    key={log.id || idx}
-                    className="p-4 rounded-2xl bg-[#070b09] border border-[#16241f] hover:border-[#00c878]/30 transition-all font-mono text-xs space-y-2"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
-                          log.type === 'OTP_VERIFICATION' ? 'bg-[#e6ad54]/15 text-[#e6ad54] border border-[#e6ad54]/30' :
-                          log.type === 'APPLICATION_SUBMITTED' ? 'bg-blue-900/30 text-blue-300 border border-blue-700/40' :
-                          'bg-[#00c878]/15 text-[#00c878] border border-[#00c878]/30'
-                        }`}>
-                          {log.type.replace('_', ' ')}
-                        </span>
-                        <span className="text-[#f5f7f6] font-bold">{log.to}</span>
-                      </div>
-                      <div className="text-[10px] text-[#8a9690]">
-                        {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })} • {new Date(log.timestamp).toLocaleDateString()}
-                      </div>
-                    </div>
-
-                    <div className="text-[#8a9690] text-[11px] truncate">
-                      Subject: <span className="text-[#f5f7f6] font-semibold">{log.subject}</span>
-                    </div>
-
-                    <div className="pt-2 border-t border-[#16241f] flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-[10px] text-[#00c878]">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Transmitted via SMTP Transport</span>
-                      </div>
-                      {log.previewUrl && (
-                        <a
-                          href={log.previewUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-2.5 py-1 rounded-lg bg-[#121a17] hover:bg-[#00c878] text-[#00c878] hover:text-[#050706] border border-[#00c878]/40 hover:border-[#00c878] text-[11px] font-bold transition-all flex items-center gap-1"
-                        >
-                          <span>View Delivered Mail HTML</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="flex justify-end pt-3 border-t border-[#16241f]">
+            {/* Pinned Footer */}
+            <div className="flex justify-end p-4 sm:p-5 border-t border-[#16241f] bg-[#0b100e] shrink-0">
               <button
                 type="button"
                 onClick={() => setEmailLogsModalOpen(false)}
-                className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-mono text-xs transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-mono text-xs transition-colors cursor-pointer"
               >
                 Close Audit Logs
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Faculty Invitations & Onboarding Modal */}
-      {invitationsModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-3xl bg-[#070b09] border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#16241f]">
+      {invitationsModalOpen && typeof document !== 'undefined' && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setInvitationsModalOpen(false);
+          }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-150"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-3xl bg-[#070b09] border border-cyan-500/30 rounded-3xl shadow-2xl flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+          >
+            {/* Pinned Header */}
+            <div className="flex items-center justify-between p-5 sm:p-6 pb-4 border-b border-[#16241f] bg-[#070b09] shrink-0">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-2xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-400">
                   <UserPlus className="w-5 h-5" />
@@ -1545,24 +1605,26 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={fetchInvitations}
                   disabled={loadingInvitations}
-                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-cyan-400 border border-[#16241f]"
+                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-cyan-400 border border-[#16241f] cursor-pointer"
                   title="Refresh Invitations"
                 >
                   <RefreshCw className={`w-4 h-4 ${loadingInvitations ? 'animate-spin' : ''}`} />
                 </button>
                 <button
+                  type="button"
                   onClick={() => setInvitationsModalOpen(false)}
-                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6]"
+                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            {/* Content area: Invite Form + Invitations Roster */}
-            <div className="space-y-6 overflow-y-auto pr-1">
+            {/* Scrollable Content area: Invite Form + Invitations Roster */}
+            <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-6 flex-1 pr-3 sm:pr-4">
               {/* Form: Dispatch New Invitation */}
               <form onSubmit={handleCreateInvitation} className="p-5 rounded-2xl bg-[#0b120f] border border-[#16241f] space-y-4">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider">
@@ -1613,7 +1675,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                   <button
                     type="submit"
                     disabled={invitingFaculty}
-                    className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 text-black text-xs font-mono font-bold transition-all flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 text-black text-xs font-mono font-bold transition-all flex items-center gap-2 cursor-pointer"
                   >
                     {invitingFaculty ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                     <span>Dispatch Invitation</span>
@@ -1642,7 +1704,7 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
                           setCopiedToken(true);
                           setTimeout(() => setCopiedToken(false), 2000);
                         }}
-                        className="px-3 py-1.5 rounded-md bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold font-mono shrink-0 flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded-md bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold font-mono shrink-0 flex items-center gap-1.5 cursor-pointer"
                       >
                         {copiedToken ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedToken ? 'Copied' : 'Copy'}</span>
@@ -1705,26 +1767,35 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="flex justify-end pt-3 border-t border-[#16241f]">
+            {/* Pinned Footer */}
+            <div className="flex justify-end p-4 sm:p-5 border-t border-[#16241f] bg-[#070b09] shrink-0">
               <button
                 type="button"
                 onClick={() => setInvitationsModalOpen(false)}
-                className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-mono text-xs transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] font-mono text-xs transition-colors cursor-pointer"
               >
                 Close Window
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ================= MODAL: WEBSITE TRAFFIC & VISITOR ANALYTICS ================= */}
-      {analyticsModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#050706]/90 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in">
-          <div className="relative w-full max-w-4xl bg-[#0b100e] border border-[#16241f] rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.8)] space-y-6 max-h-[90vh] overflow-y-auto">
-            {/* Header */}
-            <div className="flex items-start justify-between pb-4 border-b border-[#16241f]">
+      {analyticsModalOpen && typeof document !== 'undefined' && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setAnalyticsModalOpen(false);
+          }}
+          className="fixed inset-0 z-[9999] bg-[#050706]/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-150"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-4xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+          >
+            {/* Pinned Header */}
+            <div className="flex items-start justify-between p-5 sm:p-6 pb-4 border-b border-[#16241f] bg-[#0b100e] shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-emerald-950/60 border border-emerald-700/50 flex items-center justify-center text-emerald-400">
                   <Globe className="w-6 h-6" />
@@ -1745,163 +1816,167 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
               <button
                 type="button"
                 onClick={() => setAnalyticsModalOpen(false)}
-                className="p-2 text-[#8a9690] hover:text-[#f5f7f6] rounded-xl hover:bg-[#121a17] transition-colors"
+                className="p-2 text-[#8a9690] hover:text-[#f5f7f6] rounded-xl hover:bg-[#121a17] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Top KPI Metrics Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
-                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Total Site Visits</div>
-                <div className="text-2xl font-black text-[#f5f7f6] font-mono mt-1">
-                  {visitorStats?.totalVisits ?? '0'}
+            {/* Scrollable Analytics Body */}
+            <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-6 flex-1 pr-3 sm:pr-4">
+              {/* Top KPI Metrics Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                  <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Total Site Visits</div>
+                  <div className="text-2xl font-black text-[#f5f7f6] font-mono mt-1">
+                    {visitorStats?.totalVisits ?? '0'}
+                  </div>
+                  <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Page Loads</div>
                 </div>
-                <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Page Loads</div>
-              </div>
 
-              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
-                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Unique Visitors</div>
-                <div className="text-2xl font-black text-sky-400 font-mono mt-1">
-                  {visitorStats?.uniqueVisitors ?? '0'}
+                <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                  <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Unique Visitors</div>
+                  <div className="text-2xl font-black text-sky-400 font-mono mt-1">
+                    {visitorStats?.uniqueVisitors ?? '0'}
+                  </div>
+                  <div className="text-[10px] text-sky-400 font-mono mt-0.5">Distinct Devices</div>
                 </div>
-                <div className="text-[10px] text-sky-400 font-mono mt-0.5">Distinct Devices</div>
-              </div>
 
-              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
-                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Today's Visits</div>
-                <div className="text-2xl font-black text-[#e6ad54] font-mono mt-1">
-                  {visitorStats?.todayVisits ?? '0'}
+                <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                  <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Today's Visits</div>
+                  <div className="text-2xl font-black text-[#e6ad54] font-mono mt-1">
+                    {visitorStats?.todayVisits ?? '0'}
+                  </div>
+                  <div className="text-[10px] text-[#e6ad54] font-mono mt-0.5">Last 24 Hours</div>
                 </div>
-                <div className="text-[10px] text-[#e6ad54] font-mono mt-0.5">Last 24 Hours</div>
-              </div>
 
-              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
-                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Past 7 Days</div>
-                <div className="text-2xl font-black text-purple-400 font-mono mt-1">
-                  {visitorStats?.weekVisits ?? '0'}
+                <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                  <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Past 7 Days</div>
+                  <div className="text-2xl font-black text-purple-400 font-mono mt-1">
+                    {visitorStats?.weekVisits ?? '0'}
+                  </div>
+                  <div className="text-[10px] text-purple-400 font-mono mt-0.5">Weekly Active</div>
                 </div>
-                <div className="text-[10px] text-purple-400 font-mono mt-0.5">Weekly Active</div>
-              </div>
 
-              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
-                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Admissions Leads</div>
-                <div className="text-2xl font-black text-[#00c878] font-mono mt-1">
-                  {applications.length}
+                <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                  <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Admissions Leads</div>
+                  <div className="text-2xl font-black text-[#00c878] font-mono mt-1">
+                    {applications.length}
+                  </div>
+                  <div className="text-[10px] text-[#00c878] font-mono mt-0.5">Applications</div>
                 </div>
-                <div className="text-[10px] text-[#00c878] font-mono mt-0.5">Applications</div>
-              </div>
 
-              <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
-                <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Lead Conversion</div>
-                <div className="text-2xl font-black text-emerald-400 font-mono mt-1">
-                  {visitorStats?.totalVisits && visitorStats.totalVisits > 0 
-                    ? `${((applications.length / visitorStats.totalVisits) * 100).toFixed(1)}%` 
-                    : (applications.length > 0 ? '100%' : '0%')}
-                </div>
-                <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Visitor-to-Lead</div>
-              </div>
-            </div>
-
-            {/* Popular Academic Tracks & Course Views */}
-            <div className="p-4 rounded-2xl bg-[#070b09] border border-[#16241f] space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-mono font-bold text-[#f5f7f6] uppercase tracking-wider flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-emerald-400" />
-                  <span>Most Visited Program Curricula & Pages</span>
+                <div className="bg-[#070b09] p-3.5 rounded-2xl border border-[#16241f]">
+                  <div className="text-[10px] font-mono text-[#8a9690] uppercase tracking-wider">Lead Conversion</div>
+                  <div className="text-2xl font-black text-emerald-400 font-mono mt-1">
+                    {visitorStats?.totalVisits && visitorStats.totalVisits > 0 
+                      ? `${((applications.length / visitorStats.totalVisits) * 100).toFixed(1)}%` 
+                      : (applications.length > 0 ? '100%' : '0%')}
+                  </div>
+                  <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Visitor-to-Lead</div>
                 </div>
               </div>
 
-              {visitorStats?.popularPages && visitorStats.popularPages.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
-                  {visitorStats.popularPages.map((item, idx) => (
-                    <div key={idx} className="p-2.5 rounded-xl bg-[#0b120f] border border-[#16241f] flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-[#f5f7f6] truncate">
-                        <span className="w-5 h-5 rounded-md bg-[#121a17] text-[#8a9690] text-[10px] flex items-center justify-center font-bold">
-                          {idx + 1}
+              {/* Popular Academic Tracks & Course Views */}
+              <div className="p-4 rounded-2xl bg-[#070b09] border border-[#16241f] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono font-bold text-[#f5f7f6] uppercase tracking-wider flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4 text-emerald-400" />
+                    <span>Most Visited Program Curricula & Pages</span>
+                  </div>
+                </div>
+
+                {visitorStats?.popularPages && visitorStats.popularPages.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+                    {visitorStats.popularPages.map((item, idx) => (
+                      <div key={idx} className="p-2.5 rounded-xl bg-[#0b120f] border border-[#16241f] flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-[#f5f7f6] truncate">
+                          <span className="w-5 h-5 rounded-md bg-[#121a17] text-[#8a9690] text-[10px] flex items-center justify-center font-bold">
+                            {idx + 1}
+                          </span>
+                          <span className="truncate">{item.path === '/' ? 'Home (muthamizhacademy.com)' : item.path}</span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 font-bold text-[11px] border border-emerald-800/40">
+                          {item.count} views
                         </span>
-                        <span className="truncate">{item.path === '/' ? 'Home (muthamizhacademy.com)' : item.path}</span>
                       </div>
-                      <span className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 font-bold text-[11px] border border-emerald-800/40">
-                        {item.count} views
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="p-4 text-center text-xs font-mono text-[#8a9690]">
-                  Browsing telemetry is active. As prospective students navigate courses, their page view counts will appear here.
-                </div>
-              )}
-            </div>
-
-            {/* Recent Live Visitor Activity Log */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-mono font-bold text-[#f5f7f6] uppercase tracking-wider flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-sky-400" />
-                  <span>Recent Visitor Stream (Latest 20 Site Hits)</span>
-                </div>
-                <button
-                  onClick={fetchVisitorAnalytics}
-                  disabled={loadingAnalytics}
-                  className="text-xs text-[#00c878] hover:underline font-mono flex items-center gap-1 cursor-pointer"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${loadingAnalytics ? 'animate-spin' : ''}`} />
-                  <span>Refresh</span>
-                </button>
-              </div>
-
-              <div className="rounded-2xl border border-[#16241f] bg-[#070b09] overflow-hidden max-h-60 overflow-y-auto">
-                {visitorStats?.recentVisits && visitorStats.recentVisits.length > 0 ? (
-                  <table className="w-full text-left text-xs font-mono">
-                    <thead className="bg-[#0b100e] text-[#8a9690] uppercase text-[10px] border-b border-[#16241f] sticky top-0">
-                      <tr>
-                        <th className="p-3">Timestamp (IST)</th>
-                        <th className="p-3">Page Visited</th>
-                        <th className="p-3">Traffic Source</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#16241f] text-[#d4ded9]">
-                      {visitorStats.recentVisits.map((hit, idx) => (
-                        <tr key={idx} className="hover:bg-[#0b120f]/60 transition-colors">
-                          <td className="p-3 text-[#8a9690] text-[11px] whitespace-nowrap">
-                            {new Date(hit.timestamp).toLocaleString()}
-                          </td>
-                          <td className="p-3 font-semibold text-[#f5f7f6]">
-                            {hit.path === '/' ? 'Home Landing' : hit.path}
-                          </td>
-                          <td className="p-3 text-[#8a9690] text-[11px] truncate max-w-xs">
-                            {hit.referrer ? hit.referrer : 'Direct / Bookmark'}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                    ))}
+                  </div>
                 ) : (
-                  <div className="p-6 text-center text-xs font-mono text-[#8a9690]">
-                    No visits recorded yet in this session.
+                  <div className="p-4 text-center text-xs font-mono text-[#8a9690]">
+                    Browsing telemetry is active. As prospective students navigate courses, their page view counts will appear here.
                   </div>
                 )}
               </div>
-            </div>
 
-            {/* How to Track and Work with Leads Guide */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-[#070b09] border border-emerald-800/40 text-xs space-y-2">
-              <div className="font-mono font-bold text-emerald-300 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>How Leads are Created & Stored:</span>
+              {/* Recent Live Visitor Activity Log */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono font-bold text-[#f5f7f6] uppercase tracking-wider flex items-center gap-2">
+                    <Eye className="w-4 h-4 text-sky-400" />
+                    <span>Recent Visitor Stream (Latest 20 Site Hits)</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={fetchVisitorAnalytics}
+                    disabled={loadingAnalytics}
+                    className="text-xs text-[#00c878] hover:underline font-mono flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${loadingAnalytics ? 'animate-spin' : ''}`} />
+                    <span>Refresh</span>
+                  </button>
+                </div>
+
+                <div className="rounded-2xl border border-[#16241f] bg-[#070b09] overflow-hidden max-h-60 overflow-y-auto overscroll-contain">
+                  {visitorStats?.recentVisits && visitorStats.recentVisits.length > 0 ? (
+                    <table className="w-full text-left text-xs font-mono">
+                      <thead className="bg-[#0b100e] text-[#8a9690] uppercase text-[10px] border-b border-[#16241f] sticky top-0">
+                        <tr>
+                          <th className="p-3">Timestamp (IST)</th>
+                          <th className="p-3">Page Visited</th>
+                          <th className="p-3">Traffic Source</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#16241f] text-[#d4ded9]">
+                        {visitorStats.recentVisits.map((hit, idx) => (
+                          <tr key={idx} className="hover:bg-[#0b120f]/60 transition-colors">
+                            <td className="p-3 text-[#8a9690] text-[11px] whitespace-nowrap">
+                              {new Date(hit.timestamp).toLocaleString()}
+                            </td>
+                            <td className="p-3 font-semibold text-[#f5f7f6]">
+                              {hit.path === '/' ? 'Home Landing' : hit.path}
+                            </td>
+                            <td className="p-3 text-[#8a9690] text-[11px] truncate max-w-xs">
+                              {hit.referrer ? hit.referrer : 'Direct / Bookmark'}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="p-6 text-center text-xs font-mono text-[#8a9690]">
+                      No visits recorded yet in this session.
+                    </div>
+                  )}
+                </div>
               </div>
-              <ul className="list-disc list-inside text-[#c4d4cc] space-y-1 text-[11px] leading-relaxed">
-                <li><strong className="text-white">Online Application Forms:</strong> When visitors click "Apply for 2026 Batch", their full dossier (Name, Email, 10-digit Phone, Academic Background, Course of Interest) is saved directly into your secure database (<code className="text-emerald-300 font-mono">data/admissions_db.json</code>).</li>
-                <li><strong className="text-white">Real-Time Alerts:</strong> Leads appear instantly in the Candidate Applications Directory on this page, with faculty evaluation bays and email notifications.</li>
-                <li><strong className="text-white">Spreadsheet Export:</strong> You can click the "Export Roster (CSV)" button at any time to download all candidate contact numbers and emails into Excel or Google Sheets.</li>
-              </ul>
+
+              {/* How to Track and Work with Leads Guide */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-[#070b09] border border-emerald-800/40 text-xs space-y-2">
+                <div className="font-mono font-bold text-emerald-300 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>How Leads are Created & Stored:</span>
+                </div>
+                <ul className="list-disc list-inside text-[#c4d4cc] space-y-1 text-[11px] leading-relaxed">
+                  <li><strong className="text-white">Online Application Forms:</strong> When visitors click "Apply for 2026 Batch", their full dossier (Name, Email, 10-digit Phone, Academic Background, Course of Interest) is saved directly into your secure database (<code className="text-emerald-300 font-mono">data/admissions_db.json</code>).</li>
+                  <li><strong className="text-white">Real-Time Alerts:</strong> Leads appear instantly in the Candidate Applications Directory on this page, with faculty evaluation bays and email notifications.</li>
+                  <li><strong className="text-white">Spreadsheet Export:</strong> You can click the "Export Roster (CSV)" button at any time to download all candidate contact numbers and emails into Excel or Google Sheets.</li>
+                </ul>
+              </div>
             </div>
 
-            {/* Footer Buttons */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#16241f]">
+            {/* Pinned Footer */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 border-t border-[#16241f] bg-[#0b100e] shrink-0">
               <button
                 type="button"
                 onClick={handleExportCSV}
@@ -1920,7 +1995,8 @@ export const FacultyPortal: React.FC<FacultyPortalProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

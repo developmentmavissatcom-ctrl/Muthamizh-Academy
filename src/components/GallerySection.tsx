@@ -27,6 +27,7 @@ import {
   Calendar,
   ArrowRight
 } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface GallerySectionProps {
   onOpenApplyModal?: () => void;
@@ -35,6 +36,7 @@ interface GallerySectionProps {
 export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal }) => {
   const [selectedCategory, setSelectedCategory] = useState<GalleryCategory>('all');
   const [activeModalItem, setActiveModalItem] = useState<GalleryItem | null>(null);
+  useBodyScrollLock(Boolean(activeModalItem));
   const [searchQuery, setSearchQuery] = useState('');
   const [mediaFilter, setMediaFilter] = useState<'all' | 'images' | 'videos'>('all');
   const [visibleCount, setVisibleCount] = useState(18);
@@ -379,11 +381,11 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
       {/* Lightbox / Video Modal */}
       {activeModalItem && (
         <div 
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden animate-in fade-in duration-200"
           onClick={() => setActiveModalItem(null)}
         >
           <div 
-            className="relative w-full max-w-5xl bg-[#0b100e] border border-[#16241f] rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
+            className="relative w-full max-w-5xl bg-[#0b100e] border border-[#16241f] rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh] my-auto animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}

@@ -6,6 +6,7 @@ import {
   BookOpen, Radio, ShieldCheck, ArrowRight, Activity,
   Globe, Laptop, AlertCircle
 } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface ApplicationFormModalProps {
   isOpen: boolean;
@@ -83,6 +84,8 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
   const [existingRegistrations, setExistingRegistrations] = useState<RegistrationRecord[]>([]);
   const [successRecord, setSuccessRecord] = useState<RegistrationRecord | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useBodyScrollLock(isOpen);
 
   const isSubmittingRef = React.useRef(false);
 
@@ -233,11 +236,19 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#050706]/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(0,200,120,0.15)] p-5 sm:p-8 space-y-5 sm:space-y-6 max-h-[92vh] overflow-y-auto">
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 bg-[#050706]/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-200"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(0,200,120,0.15)] flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150 font-sans"
+      >
         
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#16241f] pb-4">
+        {/* Pinned Header */}
+        <div className="flex items-center justify-between border-b border-[#16241f] p-5 sm:p-6 pb-4 bg-[#0b100e] shrink-0">
           <div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#00c878] animate-ping" />
@@ -251,15 +262,18 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
           </div>
 
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#121a17] transition-colors"
+            className="p-2 rounded-xl text-[#8a9690] hover:text-[#f5f7f6] hover:bg-[#121a17] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Noticeable Course Registration Success View */}
-        {successRecord ? (
+        {/* Scrollable Modal Body */}
+        <div className="p-5 sm:p-8 overflow-y-auto overscroll-contain space-y-5 sm:space-y-6 flex-1 pr-4 sm:pr-6">
+          {/* Noticeable Course Registration Success View */}
+          {successRecord ? (
           <div className="py-4 text-center space-y-4 animate-in zoom-in-95 duration-200 font-sans">
             <div className="relative w-20 h-20 mx-auto">
               <div className="absolute inset-0 rounded-full bg-[#00c878]/30 blur-xl animate-pulse" />
@@ -522,6 +536,7 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
             </button>
           </form>
         )}
+        </div>
 
       </div>
     </div>

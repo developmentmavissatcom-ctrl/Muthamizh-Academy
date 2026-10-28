@@ -25,6 +25,7 @@ import {
   ShieldCheck,
   ArrowRight
 } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface CourseModalProps {
   course: Course | null;
@@ -39,6 +40,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
   onOpenAstraWithCourse,
   onOpenApplyModal
 }) => {
+  useBodyScrollLock(Boolean(course));
   const [expandedChapterIdx, setExpandedChapterIdx] = useState<number | null>(0);
   const [selectedTrackId, setSelectedTrackId] = useState<'2_weeks' | '4_weeks' | 'weekend'>('2_weeks');
   const [syllabusViewMode, setSyllabusViewMode] = useState<'tracks' | 'all_lessons'>('tracks');
@@ -59,8 +61,16 @@ export const CourseModal: React.FC<CourseModalProps> = ({
   const activeTrack = course.durationTracks?.find(t => t.id === selectedTrackId) || course.durationTracks?.[0];
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#050706]/90 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(0,200,120,0.15)] overflow-hidden max-h-[92vh] flex flex-col font-sans">
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 bg-[#050706]/90 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-4 overflow-hidden animate-in fade-in duration-200"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-4xl bg-[#0b100e] border border-[#16241f] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(0,200,120,0.15)] overflow-hidden max-h-[85vh] my-auto flex flex-col font-sans animate-in zoom-in-95 duration-150"
+      >
         
         {/* Modal Header */}
         <div className="relative h-48 sm:h-60 bg-[#050706] shrink-0">
@@ -121,7 +131,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
         </div>
 
         {/* Modal Scrollable Content */}
-        <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-[#8a9690] text-xs sm:text-sm">
+        <div className="p-6 sm:p-8 overflow-y-auto overscroll-contain space-y-6 text-[#8a9690] text-xs sm:text-sm flex-1 pr-4 sm:pr-6">
           
           {/* Overview & Highlight */}
           <div className="space-y-3">

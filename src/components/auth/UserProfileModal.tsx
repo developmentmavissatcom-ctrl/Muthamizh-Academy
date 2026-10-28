@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfile, CircularUpdate, RegistrationRecord } from '../../types';
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 import { 
   X, 
   User, 
@@ -37,6 +38,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   onLogout,
   onOpenApplyModal
 }) => {
+  useBodyScrollLock(isOpen);
   const [activeTab, setActiveTab] = useState<'status' | 'updates'>('status');
   const [circulars, setCirculars] = useState<CircularUpdate[]>([]);
   const [loadingCirculars, setLoadingCirculars] = useState(false);
@@ -105,14 +107,22 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   const currentStep = getCurrentStepIndex();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl rounded-3xl bg-[#070b09] border border-[#16241f] shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_30px_rgba(0,200,120,0.1)] overflow-hidden my-6">
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden animate-in fade-in duration-200"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-2xl rounded-3xl bg-[#070b09] border border-[#16241f] shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_30px_rgba(0,200,120,0.1)] flex flex-col max-h-[85vh] my-auto overflow-hidden animate-in zoom-in-95 duration-150"
+      >
         
         {/* Top Header Banner */}
-        <div className="h-2 w-full bg-gradient-to-r from-[#00c878] via-[#00c878] to-[#e6ad54]" />
+        <div className="h-2 w-full bg-gradient-to-r from-[#00c878] via-[#00c878] to-[#e6ad54] shrink-0" />
 
         {/* Modal Header */}
-        <div className="p-6 sm:p-7 pb-4 flex items-start justify-between border-b border-[#16241f]">
+        <div className="p-6 sm:p-7 pb-4 flex items-start justify-between border-b border-[#16241f] shrink-0">
           <div className="flex items-center gap-3.5">
             <div className="w-14 h-14 rounded-2xl bg-[#121a17] border border-[#00c878]/30 flex items-center justify-center text-[#00c878] font-mono text-xl font-extrabold shadow-md">
               {user.fullName.charAt(0).toUpperCase()}
@@ -143,7 +153,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="px-4 sm:px-6 flex gap-2 border-b border-[#16241f] bg-[#0b100e]/40 overflow-x-auto scrollbar-none">
+        <div className="px-4 sm:px-6 flex gap-2 border-b border-[#16241f] bg-[#0b100e]/40 overflow-x-auto scrollbar-none shrink-0">
           <button
             onClick={() => setActiveTab('status')}
             className={`py-3 px-3 sm:px-4 text-xs font-mono font-bold transition-all relative flex items-center gap-2 whitespace-nowrap shrink-0 ${
@@ -172,7 +182,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         </div>
 
         {/* Modal Content */}
-        <div className="p-6 sm:p-7 space-y-6 max-h-[60vh] overflow-y-auto">
+        <div className="p-6 sm:p-7 space-y-6 overflow-y-auto overscroll-contain flex-1 pr-4 sm:pr-6">
           
           {/* TAB 1: ADMISSION & REGISTRATION STATUS */}
           {activeTab === 'status' && (
