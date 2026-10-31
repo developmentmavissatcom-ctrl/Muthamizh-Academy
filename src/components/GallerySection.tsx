@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   GALLERY_ITEMS, 
   GalleryCategory, 
@@ -25,7 +26,10 @@ import {
   VolumeX,
   Gauge,
   Calendar,
-  ArrowRight
+  ArrowRight,
+  RefreshCw,
+  FolderCheck,
+  Sparkles
 } from 'lucide-react';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
@@ -34,6 +38,9 @@ interface GallerySectionProps {
 }
 
 export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal }) => {
+  const [dynamicItems, setDynamicItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<GalleryCategory>('all');
   const [activeModalItem, setActiveModalItem] = useState<GalleryItem | null>(null);
   useBodyScrollLock(Boolean(activeModalItem));
@@ -46,6 +53,27 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
   const [isMuted, setIsMuted] = useState(true);
   const [isSlowMo, setIsSlowMo] = useState(false);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
+
+  // Automatically discover photos and videos pasted into "public/gallery assets/Photos" & "Videos"
+  const fetchGalleryAssets = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch('/api/gallery/assets', { cache: 'no-store' });
+      const data = await res.json();
+      if (data && Array.isArray(data.items)) {
+        setDynamicItems(data.items);
+      }
+    } catch (err) {
+      console.warn('Could not auto-fetch gallery assets:', err);
+    } finally {
+      setIsSyncing(false);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGalleryAssets();
+  }, []);
 
   useEffect(() => {
     setVisibleCount(18);
@@ -96,8 +124,11 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
     { id: 'equipment', label: 'Cinema Gear & Campus', icon: <Film className="w-3.5 h-3.5" /> },
   ];
 
+  // Combine dynamically discovered assets from public/gallery assets with static data
+  const allGalleryItems = [...dynamicItems, ...GALLERY_ITEMS];
+
   // Filtering Logic
-  const filteredItems = GALLERY_ITEMS.filter((item) => {
+  const filteredItems = allGalleryItems.filter((item) => {
     // 1. Category Filter
     const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
 
@@ -139,7 +170,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
     <section className="py-12 px-4 sm:px-6 lg:px-8 xl:px-12 w-full max-w-[1440px] mx-auto text-[#f5f7f6]">
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto mb-8 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00c878]/15 border border-[#00c878]/30 text-[#00c878] text-xs font-mono font-bold tracking-wider uppercase">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#00c878]/15 border border-[#00c878]/30 text-[#00c878] text-xs font-mono font-bold tracking-wider uppercase">
           <Camera className="w-3.5 h-3.5 animate-pulse" />
           <span>Campus & Studio Infrastructure</span>
         </div>
@@ -154,55 +185,98 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
         <p className="text-[#8a9690] text-sm sm:text-base leading-relaxed">
           Take a look inside our 10,000+ sq.ft broadcast soundstages, 4K teleprompter newsrooms, Avid NLE edit suites, enterprise satellite MCR server rooms, and campus facilities.
         </p>
+
+        {/* Live Auto-Sync Status Bar */}
+        <div className="pt-2 flex items-center justify-center gap-2 text-xs font-mono text-[#8a9690]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121a17] border border-[#16241f]">
+            <FolderCheck className="w-3.5 h-3.5 text-[#00c878]" />
+            <span>Folder Auto-Discovery:</span>
+            <strong className="text-[#f5f7f6]">
+              {dynamicItems.length} media file{dynamicItems.length === 1 ? '' : 's'}
+            </strong>
+          </span>
+          <button
+            type="button"
+            onClick={fetchGalleryAssets}
+            disabled={isSyncing}
+            className="p-1.5 rounded-lg bg-[#121a17] hover:bg-[#16241f] text-[#00c878] border border-[#16241f] transition-all cursor-pointer flex items-center gap-1 hover:scale-105"
+            title="Scan public/gallery assets now"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+            <span className="text-[11px] font-bold">Refresh</span>
+          </button>
+        </div>
       </div>
 
-      {/* If Gallery is Empty: Clean, Prestigious Empty State */}
-      {GALLERY_ITEMS.length === 0 ? (
+      {/* If Gallery is Empty: Clean, Prestigious Dropzone / Empty State */}
+      {allGalleryItems.length === 0 ? (
         <div className="max-w-2xl mx-auto my-8 p-8 sm:p-12 rounded-3xl bg-[#0b100e]/95 border border-[#16241f] text-center space-y-6 shadow-2xl backdrop-blur-xl">
           <div className="w-16 h-16 mx-auto rounded-2xl bg-[#121a17] border border-[#00c878]/30 flex items-center justify-center text-[#00c878] shadow-inner">
             <Film className="w-8 h-8 text-[#00c878]" />
           </div>
 
           <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#00c878]/10 text-[#00c878] text-[11px] font-mono font-bold">
+              <Sparkles className="w-3 h-3" />
+              <span>Zero-Code Automatic Gallery</span>
+            </div>
             <h3 className="text-xl sm:text-2xl font-extrabold text-[#f5f7f6] font-sans">
-              Gallery Media Updating
+              Dynamic Gallery Folders Active
             </h3>
             <p className="text-xs sm:text-sm text-[#8a9690] leading-relaxed max-w-lg mx-auto">
-              New official high-definition video reels, studio floor walkthroughs, and photography for the 2026 academic batch are currently being cataloged and will be published here shortly.
+              Any photo or video you paste into the dedicated folders below will automatically appear in this gallery without any manual code editing:
             </p>
           </div>
 
-          {/* Studio Campus Facts */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-left">
-            <div className="p-3 rounded-2xl bg-[#050706] border border-[#16241f]">
-              <div className="text-[#00c878] font-mono font-bold text-xs uppercase">Studio Floor</div>
-              <div className="text-sm font-bold text-[#f5f7f6] mt-0.5">10,000+ Sq.Ft</div>
-              <div className="text-[11px] text-[#8a9690]">Acoustic soundstages</div>
+          {/* Dedicated Folder Paths Box */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-left font-mono">
+            <div className="p-4 rounded-2xl bg-[#050706] border border-[#16241f] space-y-1">
+              <div className="text-[#00c878] font-bold text-xs uppercase flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-[#00c878]" />
+                <span>Photos Folder</span>
+              </div>
+              <div className="text-xs text-[#f5f7f6] break-all font-bold">
+                public/gallery assets/Photos/
+              </div>
+              <div className="text-[10px] text-[#8a9690]">
+                Drop .jpg, .jpeg, .png, .webp, .svg
+              </div>
             </div>
 
-            <div className="p-3 rounded-2xl bg-[#050706] border border-[#16241f]">
-              <div className="text-[#e6ad54] font-mono font-bold text-xs uppercase">Location</div>
-              <div className="text-sm font-bold text-[#f5f7f6] mt-0.5">Chennai Campus</div>
-              <div className="text-[11px] text-[#8a9690]">Kalaimagal Nagar</div>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-[#050706] border border-[#16241f]">
-              <div className="text-[#38bdf8] font-mono font-bold text-xs uppercase">Partner Network</div>
-              <div className="text-sm font-bold text-[#f5f7f6] mt-0.5">Jaya TV</div>
-              <div className="text-[11px] text-[#8a9690]">Mavis Satcom Limited</div>
+            <div className="p-4 rounded-2xl bg-[#050706] border border-[#16241f] space-y-1">
+              <div className="text-red-400 font-bold text-xs uppercase flex items-center gap-1.5">
+                <Film className="w-3.5 h-3.5 text-red-400" />
+                <span>Videos Folder</span>
+              </div>
+              <div className="text-xs text-[#f5f7f6] break-all font-bold">
+                public/gallery assets/Videos/
+              </div>
+              <div className="text-[10px] text-[#8a9690]">
+                Drop .mp4, .webm, .mov, .m4v
+              </div>
             </div>
           </div>
 
-          {/* Interactive CTA to Visit Campus in Person */}
-          <div className="pt-4 border-t border-[#16241f] flex flex-col sm:flex-row items-center justify-center gap-3">
+          {/* Interactive Scan Button */}
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={fetchGalleryAssets}
+              disabled={isSyncing}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#00c878] hover:bg-[#00c878]/90 text-[#050706] font-mono font-bold text-xs shadow-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <RefreshCw className={`w-4 h-4 text-[#050706] ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>{isSyncing ? 'Scanning Folders...' : 'Detect Pasted Media Now'}</span>
+            </button>
+
             {onOpenApplyModal && (
               <button
+                type="button"
                 onClick={onOpenApplyModal}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-[#00c878] to-[#008c54] hover:from-[#00c878] hover:to-[#00c878] text-[#050706] font-mono font-bold text-xs shadow-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] font-mono font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Calendar className="w-4 h-4 text-[#050706]" />
-                <span>Schedule an In-Person Studio Tour</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#050706]" />
+                <Calendar className="w-4 h-4 text-[#e6ad54]" />
+                <span>Book Campus Studio Tour</span>
               </button>
             )}
           </div>
@@ -276,38 +350,8 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
             </div>
           </div>
 
-          {/* Category Navigation Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-            {categories.map((cat) => {
-              const isActive = selectedCategory === cat.id;
-              const count = cat.id === 'all' 
-                ? GALLERY_ITEMS.length 
-                : GALLERY_ITEMS.filter(i => i.category === cat.id).length;
-
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border ${
-                    isActive
-                      ? 'bg-[#00c878] text-[#050706] border-[#00c878] shadow-[0_4px_16px_rgba(0,200,120,0.3)] scale-[1.02]'
-                      : 'bg-[#0b100e]/80 text-[#8a9690] border-[#16241f] hover:text-[#f5f7f6] hover:border-[#00c878]/40 hover:bg-[#121a17]'
-                  }`}
-                >
-                  {cat.icon}
-                  <span>{cat.label}</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                    isActive ? 'bg-[#050706] text-[#00c878]' : 'bg-[#16241f] text-[#8a9690]'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Gallery Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {/* Gallery Grid - Pure Visual Media Tiles */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {filteredItems.slice(0, visibleCount).map((item) => {
               const isVideo = item.mediaType === 'video' || Boolean(item.videoSrc);
 
@@ -315,50 +359,51 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
                 <div
                   key={item.id}
                   onClick={() => setActiveModalItem(item)}
-                  className="group relative rounded-2xl overflow-hidden bg-[#0b100e] border border-[#16241f] hover:border-[#00c878]/60 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#00c878]/10 cursor-pointer flex flex-col"
+                  className="group relative rounded-3xl overflow-hidden bg-[#070b09] border border-[#16241f] hover:border-[#00c878]/60 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#00c878]/15 cursor-pointer aspect-[16/10] sm:aspect-[16/10]"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-black">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter brightness-95"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-
-                    <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                      <span className="px-2.5 py-1 rounded-lg bg-[#050706]/80 backdrop-blur-md border border-[#16241f] text-[10px] font-mono text-[#00c878] font-bold">
-                        {item.categoryLabel}
-                      </span>
-                    </div>
-
-                    {isVideo && (
-                      <div className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-600/90 text-white shadow-md">
-                        <Play className="w-3.5 h-3.5 fill-current" />
+                  {isVideo && item.videoSrc ? (
+                    <div className="relative w-full h-full bg-[#050706]">
+                      <video
+                        src={`${item.videoSrc}#t=0.1`}
+                        preload="metadata"
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover filter brightness-95 group-hover:brightness-105 group-hover:scale-105 transition-all duration-500 pointer-events-none"
+                      />
+                      {/* Centered Play Button */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-14 h-14 rounded-2xl bg-black/65 backdrop-blur-md border border-white/20 text-[#00c878] flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.6)] group-hover:scale-110 group-hover:bg-[#00c878] group-hover:text-[#050706] transition-all duration-300">
+                          <Play className="w-6 h-6 fill-current ml-0.5" />
+                        </div>
                       </div>
-                    )}
-
-                    <div className="absolute bottom-3 right-3 p-2 rounded-xl bg-black/60 backdrop-blur-md text-[#8a9690] group-hover:text-white group-hover:bg-[#00c878] group-hover:text-[#050706] transition-all">
-                      <Maximize2 className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                    <div>
-                      <h3 className="text-base font-bold text-[#f5f7f6] group-hover:text-[#00c878] transition-colors line-clamp-1">
-                        {item.title}
-                      </h3>
-                      <p className="text-xs text-[#8a9690] mt-1 line-clamp-2 leading-relaxed">
-                        {item.description}
-                      </p>
-                    </div>
-
-                    {item.location && (
-                      <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#e6ad54]">
-                        <MapPin className="w-3 h-3 shrink-0" />
-                        <span className="truncate">{item.location}</span>
+                      {/* Subtle Top-Right Video Indicator */}
+                      <div className="absolute top-3 right-3 px-2 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono font-bold flex items-center gap-1 shadow-md">
+                        <Film className="w-3 h-3 text-red-400" />
+                        <span>VIDEO</span>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="relative w-full h-full bg-[#050706]">
+                      <img
+                        src={item.image}
+                        alt=""
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          if (!target.src.includes('/camera_setup.png')) {
+                            target.src = '/camera_setup.png';
+                          }
+                        }}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter brightness-95 group-hover:brightness-105"
+                      />
+                      {/* Subtle Hover Maximize Button */}
+                      <div className="absolute bottom-3 right-3 p-2 rounded-xl bg-black/60 backdrop-blur-md text-[#8a9690] opacity-0 group-hover:opacity-100 group-hover:text-white group-hover:bg-[#00c878] group-hover:text-[#050706] transition-all shadow-md">
+                        <Maximize2 className="w-4 h-4" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Gradient Vignette on Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </div>
               );
             })}
@@ -366,51 +411,51 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
 
           {/* Load More Button */}
           {visibleCount < filteredItems.length && (
-            <div className="mt-12 text-center">
+            <div className="mt-10 text-center">
               <button
+                type="button"
                 onClick={() => setVisibleCount((prev) => prev + 12)}
-                className="px-6 py-3 rounded-xl bg-[#121a17] hover:bg-[#16241f] border border-[#00c878]/40 hover:border-[#00c878] text-[#00c878] font-mono text-xs font-bold transition-all shadow-md"
+                className="px-6 py-3 rounded-xl bg-[#121a17] hover:bg-[#16241f] border border-[#00c878]/40 hover:border-[#00c878] text-[#00c878] font-mono text-xs font-bold transition-all shadow-md cursor-pointer"
               >
-                Load More Facilities (+12)
+                Load More Media (+12)
               </button>
             </div>
           )}
         </>
       )}
 
-      {/* Lightbox / Video Modal */}
-      {activeModalItem && (
+      {/* Pure Media Player / Lightbox Modal - Mounted with createPortal */}
+      {activeModalItem && typeof document !== 'undefined' && createPortal(
         <div 
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden animate-in fade-in duration-200"
+          className="fixed inset-0 z-[9999] bg-black/92 backdrop-blur-xl flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden animate-in fade-in duration-200"
           onClick={() => setActiveModalItem(null)}
         >
           <div 
-            className="relative w-full max-w-5xl bg-[#0b100e] border border-[#16241f] rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh] my-auto animate-in zoom-in-95 duration-150"
+            className="relative w-full max-w-5xl bg-[#070b09] border border-[#16241f] rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-[#16241f] bg-[#070b09]">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#00c878]/15 text-[#00c878] font-bold border border-[#00c878]/30">
-                    {activeModalItem.categoryLabel}
+            {/* Minimal Floating Controls Header */}
+            <div className="p-3.5 sm:p-4 flex items-center justify-between border-b border-[#16241f]/70 bg-[#070b09]">
+              <div className="flex items-center gap-2">
+                {activeModalItem.mediaType === 'video' || activeModalItem.videoSrc ? (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-500/15 border border-red-500/30 text-red-400 font-mono text-[10px] font-bold uppercase">
+                    <Film className="w-3 h-3" />
+                    <span>Video Player</span>
                   </span>
-                  {(activeModalItem.mediaType === 'video' || activeModalItem.videoSrc) && (
-                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold border border-red-500/40">
-                      VIDEO CLIP
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-lg sm:text-xl font-bold text-[#f5f7f6]">
-                  {activeModalItem.title}
-                </h3>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#00c878]/15 border border-[#00c878]/30 text-[#00c878] font-mono text-[10px] font-bold uppercase">
+                    <Camera className="w-3 h-3" />
+                    <span>Photo View</span>
+                  </span>
+                )}
               </div>
 
               <div className="flex items-center gap-2">
                 {activeModalItem.videoSrc && (
                   <button
+                    type="button"
                     onClick={toggleSlowMo}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold border transition-colors cursor-pointer ${
                       isSlowMo
                         ? 'bg-[#00c878]/20 text-[#00c878] border-[#00c878]'
                         : 'bg-[#121a17] text-[#8a9690] border-[#16241f]'
@@ -423,18 +468,20 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
                 )}
 
                 <button
+                  type="button"
                   onClick={() => setActiveModalItem(null)}
-                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] transition-colors"
+                  className="p-2 rounded-xl bg-[#121a17] hover:bg-[#16241f] text-[#8a9690] hover:text-[#f5f7f6] border border-[#16241f] transition-colors cursor-pointer"
+                  title="Close Media Window"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            {/* Modal Media Viewport */}
-            <div className="relative flex-1 bg-black flex items-center justify-center overflow-hidden min-h-[300px] sm:min-h-[440px]">
+            {/* Pure Media Viewport */}
+            <div className="relative flex-1 bg-black flex items-center justify-center overflow-hidden min-h-[320px] sm:min-h-[480px]">
               {activeModalItem.videoSrc ? (
-                <div className="relative w-full h-full max-h-[65vh] flex items-center justify-center">
+                <div className="relative w-full h-full max-h-[75vh] flex items-center justify-center">
                   <video
                     ref={modalVideoRef}
                     src={activeModalItem.videoSrc}
@@ -442,20 +489,24 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
                     loop
                     muted={isMuted}
                     playsInline
-                    className="max-h-[65vh] w-auto max-w-full object-contain"
+                    className="max-h-[75vh] w-auto max-w-full object-contain"
                   />
 
-                  {/* Video Overlay Controls */}
-                  <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-black/80 p-1.5 rounded-xl border border-white/10 z-20">
+                  {/* Video Overlay Playback Controls */}
+                  <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-black/80 backdrop-blur-md p-2 rounded-2xl border border-white/15 z-20 shadow-xl">
                     <button
+                      type="button"
                       onClick={toggleModalVideoPlay}
-                      className="p-1.5 rounded-lg text-white hover:text-[#00c878]"
+                      className="p-2 rounded-xl bg-white/10 text-white hover:bg-[#00c878] hover:text-[#050706] transition-all cursor-pointer"
+                      title={isPlaying ? 'Pause' : 'Play'}
                     >
                       {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
                     </button>
                     <button
+                      type="button"
                       onClick={toggleModalVideoMute}
-                      className="p-1.5 rounded-lg text-white hover:text-[#00c878]"
+                      className="p-2 rounded-xl bg-white/10 text-white hover:bg-[#00c878] hover:text-[#050706] transition-all cursor-pointer"
+                      title={isMuted ? 'Unmute' : 'Mute'}
                     >
                       {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                     </button>
@@ -464,58 +515,38 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenApplyModal
               ) : (
                 <img
                   src={activeModalItem.image}
-                  alt={activeModalItem.title}
-                  className="max-h-[65vh] w-auto max-w-full object-contain"
+                  alt=""
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (!target.src.includes('/camera_setup.png')) {
+                      target.src = '/camera_setup.png';
+                    }
+                  }}
+                  className="max-h-[75vh] w-auto max-w-full object-contain"
                 />
               )}
 
               {/* Prev / Next Arrows */}
               <button
+                type="button"
                 onClick={handlePrev}
-                className="absolute left-4 p-2.5 rounded-full bg-[#050706]/80 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] border border-[#16241f] transition-colors z-10"
-                title="Previous Facility"
+                className="absolute left-4 p-2.5 rounded-full bg-[#050706]/80 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] border border-[#16241f] transition-colors z-10 cursor-pointer shadow-lg"
+                title="Previous Media"
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <button
+                type="button"
                 onClick={handleNext}
-                className="absolute right-4 p-2.5 rounded-full bg-[#050706]/80 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] border border-[#16241f] transition-colors z-10"
-                title="Next Facility"
+                className="absolute right-4 p-2.5 rounded-full bg-[#050706]/80 hover:bg-[#00c878] hover:text-[#050706] text-[#f5f7f6] border border-[#16241f] transition-colors z-10 cursor-pointer shadow-lg"
+                title="Next Media"
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
             </div>
-
-            {/* Modal Footer Description */}
-            <div className="p-5 border-t border-[#16241f] bg-[#070b09] space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-2">
-                  {activeModalItem.location && (
-                    <div className="flex items-center gap-1.5 text-xs text-[#e6ad54] font-mono">
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>{activeModalItem.location}</span>
-                    </div>
-                  )}
-                  {activeModalItem.specs && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {activeModalItem.specs.map((spec, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-0.5 rounded bg-[#121a17] text-[10px] font-mono text-[#00c878] border border-[#00c878]/30"
-                        >
-                          {spec}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <p className="text-xs sm:text-sm text-[#8a9690] leading-relaxed">
-                {activeModalItem.description}
-              </p>
-            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   );

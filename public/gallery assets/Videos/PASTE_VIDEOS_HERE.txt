@@ -1,0 +1,2 @@
+Drop or paste your gallery videos (.mp4, .webm, .mov, .m4v, .mkv) here in this Videos folder.
+They will immediately appear on the Muthamizh Academy Gallery tab automatically with player controls!

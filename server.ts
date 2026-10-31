@@ -70,6 +70,14 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Explicit static serving for dynamic gallery assets folder
+const galleryAssetsStaticDir = path.join(process.cwd(), "public", "gallery assets");
+if (!fs.existsSync(galleryAssetsStaticDir)) {
+  fs.mkdirSync(galleryAssetsStaticDir, { recursive: true });
+}
+app.use("/gallery%20assets", express.static(galleryAssetsStaticDir));
+app.use("/gallery assets", express.static(galleryAssetsStaticDir));
+
 const PORT = 3000;
 
 // Rate limiting for general authentication endpoints
@@ -2171,6 +2179,199 @@ app.get("/api/media/stream/:fileId", mediaStreamLimiter, (req, res) => {
   };
 
   requestStream(initialUrl);
+});
+
+// ==========================================
+// Dynamic Gallery Assets Auto-Discovery API
+// Automatically reads "public/gallery assets/Videos" & "public/gallery assets/Photos"
+// Any image or video pasted into these folders is immediately listed without manual coding
+// ==========================================
+app.get("/api/gallery/assets", (req, res) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
+  try {
+    const baseDir = path.join(process.cwd(), "public", "gallery assets");
+    
+    // Case-insensitive directory lookup helper
+    const resolveSubdir = (dirName: string) => {
+      if (!fs.existsSync(baseDir)) {
+        fs.mkdirSync(baseDir, { recursive: true });
+      }
+      const directPath = path.join(baseDir, dirName);
+      if (fs.existsSync(directPath)) return directPath;
+      
+      const allEntries = fs.readdirSync(baseDir);
+      const match = allEntries.find((e) => e.toLowerCase() === dirName.toLowerCase());
+      if (match) return path.join(baseDir, match);
+
+      fs.mkdirSync(directPath, { recursive: true });
+      return directPath;
+    };
+
+    const photosDir = resolveSubdir("Photos");
+    const videosDir = resolveSubdir("Videos");
+
+    const photoExts = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".avif", ".bmp"]);
+    const videoExts = new Set([".mp4", ".webm", ".ogg", ".mov", ".mkv", ".m4v"]);
+
+    const items: any[] = [];
+
+    // Helper to format clean user-friendly titles from filenames
+    const formatTitle = (filename: string) => {
+      const nameWithoutExt = path.parse(filename).name;
+      const cleaned = nameWithoutExt
+        .replace(/[-_]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      return cleaned
+        .split(" ")
+        .map((w) => (w.length > 0 ? w[0].toUpperCase() + w.slice(1) : ""))
+        .join(" ") || "Campus Facility Showcase";
+    };
+
+    // Helper to intelligently infer facility category from filename
+    const inferCategory = (filename: string, defaultCat: string = "studios") => {
+      const lower = filename.toLowerCase();
+      if (lower.includes("studio") || lower.includes("floor") || lower.includes("soundstage") || lower.includes("anchor")) return "studios";
+      if (lower.includes("news") || lower.includes("pcr") || lower.includes("control") || lower.includes("teleprompter")) return "newsrooms";
+      if (lower.includes("edit") || lower.includes("grade") || lower.includes("color") || lower.includes("vfx") || lower.includes("audio") || lower.includes("mixing")) return "edit_suites";
+      if (lower.includes("server") || lower.includes("mcr") || lower.includes("rack") || lower.includes("network") || lower.includes("transmission") || lower.includes("satellite") || lower.includes("ccna") || lower.includes("cisco")) return "server_rooms";
+      if (lower.includes("class") || lower.includes("lab") || lower.includes("lecture") || lower.includes("student") || lower.includes("training") || lower.includes("workshop")) return "classrooms";
+      if (lower.includes("cam") || lower.includes("gear") || lower.includes("lens") || lower.includes("light") || lower.includes("rig") || lower.includes("dolly") || lower.includes("drone") || lower.includes("switch")) return "equipment";
+      return defaultCat;
+    };
+
+    const categoryLabels: Record<string, string> = {
+      studios: "Studios & Soundstages",
+      newsrooms: "Newsrooms & PCR",
+      edit_suites: "Edit & Grading Suites",
+      server_rooms: "Server Rooms & MCR",
+      classrooms: "Classrooms & Labs",
+      equipment: "Cinema Gear & Campus"
+    };
+
+    // 1. Scan Photos folder
+    if (fs.existsSync(photosDir)) {
+      const photoFiles = fs.readdirSync(photosDir);
+      for (const file of photoFiles) {
+        if (file.startsWith(".") || file.toLowerCase().startsWith("readme")) continue;
+        const ext = path.extname(file).toLowerCase();
+        if (photoExts.has(ext)) {
+          const fullPath = path.join(photosDir, file);
+          const stat = fs.statSync(fullPath);
+          const cat = inferCategory(file, "studios");
+          const title = formatTitle(file);
+          items.push({
+            id: `photo-${encodeURIComponent(file)}`,
+            title: title,
+            category: cat,
+            categoryLabel: categoryLabels[cat] || "Campus Media",
+            image: `/gallery assets/Photos/${encodeURIComponent(file)}`,
+            description: `Muthamizh Academy media asset (${ext.replace(".", "").toUpperCase()}) captured across our active Jaya TV studio complex.`,
+            mediaType: "image",
+            fileName: file,
+            fileSize: stat.size,
+            createdAt: stat.mtimeMs,
+            location: "Jaya TV Teleport & Studio Complex, Chennai"
+          });
+        }
+      }
+    }
+
+    // 2. Scan Videos folder
+    if (fs.existsSync(videosDir)) {
+      const videoFiles = fs.readdirSync(videosDir);
+      for (const file of videoFiles) {
+        if (file.startsWith(".") || file.toLowerCase().startsWith("readme") || file.toLowerCase().endsWith(".txt")) continue;
+        const ext = path.extname(file).toLowerCase();
+        if (videoExts.has(ext)) {
+          const fullPath = path.join(videosDir, file);
+          const stat = fs.statSync(fullPath);
+          const cat = inferCategory(file, "studios");
+          const title = formatTitle(file);
+          items.push({
+            id: `video-${encodeURIComponent(file)}`,
+            title: title,
+            category: cat,
+            categoryLabel: categoryLabels[cat] || "Broadcast Video",
+            image: `/gallery assets/Photos/${encodeURIComponent(path.parse(file).name + ".jpg")}`,
+            videoSrc: `/gallery assets/Videos/${encodeURIComponent(file)}`,
+            description: `Live recorded broadcast sequence (${ext.replace(".", "").toUpperCase()}) demonstrating production workflows and studio infrastructure.`,
+            mediaType: "video",
+            fileName: file,
+            fileSize: stat.size,
+            createdAt: stat.mtimeMs,
+            location: "Broadcast Floor & Soundstages, Chennai"
+          });
+        }
+      }
+    }
+
+    // 3. Also scan root gallery assets folder (in case files are pasted directly into "gallery assets")
+    if (fs.existsSync(baseDir)) {
+      const rootFiles = fs.readdirSync(baseDir);
+      for (const file of rootFiles) {
+        if (file.startsWith(".") || file.toLowerCase().startsWith("readme") || file.toLowerCase().endsWith(".txt")) continue;
+        const fullPath = path.join(baseDir, file);
+        if (fs.statSync(fullPath).isDirectory()) continue;
+        const ext = path.extname(file).toLowerCase();
+        const stat = fs.statSync(fullPath);
+        const cat = inferCategory(file, "studios");
+        const title = formatTitle(file);
+
+        if (videoExts.has(ext)) {
+          items.push({
+            id: `video-root-${encodeURIComponent(file)}`,
+            title: title,
+            category: cat,
+            categoryLabel: categoryLabels[cat] || "Broadcast Video",
+            image: `/gallery assets/${encodeURIComponent(path.parse(file).name + ".jpg")}`,
+            videoSrc: `/gallery assets/${encodeURIComponent(file)}`,
+            description: `Live recorded broadcast sequence (${ext.replace(".", "").toUpperCase()}) demonstrating production workflows and studio infrastructure.`,
+            mediaType: "video",
+            fileName: file,
+            fileSize: stat.size,
+            createdAt: stat.mtimeMs,
+            location: "Broadcast Floor & Soundstages, Chennai"
+          });
+        } else if (photoExts.has(ext)) {
+          items.push({
+            id: `photo-root-${encodeURIComponent(file)}`,
+            title: title,
+            category: cat,
+            categoryLabel: categoryLabels[cat] || "Campus Media",
+            image: `/gallery assets/${encodeURIComponent(file)}`,
+            description: `Muthamizh Academy media asset (${ext.replace(".", "").toUpperCase()}) captured across our active Jaya TV studio complex.`,
+            mediaType: "image",
+            fileName: file,
+            fileSize: stat.size,
+            createdAt: stat.mtimeMs,
+            location: "Jaya TV Teleport & Studio Complex, Chennai"
+          });
+        }
+      }
+    }
+
+    // Sort newest files first by file modification timestamp
+    items.sort((a, b) => b.createdAt - a.createdAt);
+
+    return res.json({
+      success: true,
+      total: items.length,
+      photosCount: items.filter((i) => i.mediaType === "image").length,
+      videosCount: items.filter((i) => i.mediaType === "video").length,
+      items
+    });
+  } catch (error: any) {
+    console.error("Error discovering gallery assets:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to scan gallery assets: " + error.message,
+      items: []
+    });
+  }
 });
 
 // ==================== SEO & CRAWLER DISCOVERY ENDPOINTS ====================
