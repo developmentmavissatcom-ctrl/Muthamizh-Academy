@@ -74,6 +74,11 @@ export interface Course {
   fee: string;
   jayaTvHandsOn?: string;
   onlineHandsOn?: string;
+  coursePolicy?: {
+    title: string;
+    description: string;
+  };
+  classContinuationPolicy?: string;
 }
 
 export interface FacultyMember {

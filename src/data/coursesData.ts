@@ -1099,7 +1099,12 @@ export const COURSES_DATA: Course[] = [
       }
     ],
     fee: 'From ₹15,000',
-    jayaTvHandsOn: 'Full hands-on training in the Jaya TV 4K newsroom with live teleprompters, studio multi-cam pedestal rigs, and live director ear-piece (IFB) feedback across all 10 lessons.'
+    jayaTvHandsOn: 'Full hands-on training in the Jaya TV 4K newsroom with live teleprompters, studio multi-cam pedestal rigs, and live director ear-piece (IFB) feedback across all 10 lessons.',
+    coursePolicy: {
+      title: 'Class Continuation Policy',
+      description: 'The course fee paid is strictly non-refundable under any circumstances. However, students are permitted to pause their classes and resume them at a later date according to their convenience. Prior intimation to the institute is required before discontinuing or resuming classes. The remaining classes can be continued based on the available course duration and schedule, subject to coordination with the institute.'
+    },
+    classContinuationPolicy: 'The course fee paid is strictly non-refundable under any circumstances. However, students are permitted to pause their classes and resume them at a later date according to their convenience. Prior intimation to the institute is required before discontinuing or resuming classes. The remaining classes can be continued based on the available course duration and schedule, subject to coordination with the institute.'
   },
 
   {

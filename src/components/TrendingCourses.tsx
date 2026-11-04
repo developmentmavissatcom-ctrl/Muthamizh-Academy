@@ -19,7 +19,9 @@ import {
   Search,
   GraduationCap,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  ShieldCheck,
+  PauseCircle
 } from 'lucide-react';
 
 interface TrendingCoursesProps {
@@ -394,6 +396,17 @@ export const TrendingCourses: React.FC<TrendingCoursesProps> = ({
                             </button>
                           ))}
                         </div>
+                      </div>
+                    )}
+
+                    {/* Course Term Policy Indicator if available */}
+                    {(course.coursePolicy || course.classContinuationPolicy) && (
+                      <div className="p-2 rounded-xl bg-[#00c878]/10 border border-[#00c878]/30 flex items-center justify-between text-[11px] font-mono">
+                        <div className="flex items-center gap-1.5 text-[#00c878] font-bold">
+                          <ShieldCheck className="w-3.5 h-3.5 text-[#00c878]" />
+                          <span>{course.coursePolicy?.title || 'Class Continuation Policy'}</span>
+                        </div>
+                        <span className="text-[10px] text-[#e6ad54] font-medium">Pause &amp; Resume</span>
                       </div>
                     )}
 

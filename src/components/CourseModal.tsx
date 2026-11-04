@@ -23,7 +23,10 @@ import {
   Radio,
   Eye,
   ShieldCheck,
-  ArrowRight
+  ArrowRight,
+  AlertCircle,
+  PauseCircle,
+  FileText
 } from 'lucide-react';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
@@ -683,6 +686,33 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               ))}
             </div>
           </div>
+
+          {/* Course Policy / Class Continuation Policy Note */}
+          {(course.coursePolicy || course.classContinuationPolicy) && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-[#121a17] via-[#0b100e] to-[#121a17] border border-[#00c878]/35 shadow-[0_4px_24px_rgba(0,200,120,0.08)] space-y-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2 font-mono font-bold text-xs uppercase text-[#00c878] tracking-wider">
+                  <ShieldCheck className="w-4 h-4 text-[#00c878] shrink-0" />
+                  <span>{course.coursePolicy?.title || 'Class Continuation Policy'}</span>
+                </div>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#e6ad54]/15 border border-[#e6ad54]/30 text-[10px] font-mono font-bold text-[#e6ad54]">
+                  <PauseCircle className="w-3 h-3 text-[#e6ad54]" />
+                  <span>Pause &amp; Resume Permitted</span>
+                </span>
+              </div>
+              <p className="text-xs text-[#d1dad5] leading-relaxed font-sans">
+                {course.coursePolicy?.description || course.classContinuationPolicy}
+              </p>
+              <div className="pt-1 flex flex-wrap items-center gap-2 text-[11px] font-mono text-[#8a9690]">
+                <span className="text-[#e6ad54]">Note:</span>
+                <span>Non-refundable fee</span>
+                <span>•</span>
+                <span>Prior intimation required</span>
+                <span>•</span>
+                <span>Flexible schedule resumption</span>
+              </div>
+            </div>
+          )}
 
           {/* Career Roles & Eligibility */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#16241f]">

@@ -444,6 +444,29 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
                   );
                 })}
               </select>
+
+              {/* Show Class Continuation Policy Note if selected course has a policy */}
+              {(() => {
+                const selectedCourse = COURSES_DATA.find(
+                  c => normalizeCourseName(c.title) === targetProgNorm || 
+                       normalizeCourseName(c.id) === targetProgNorm ||
+                       formData.program_interest.toLowerCase().includes(c.title.toLowerCase())
+                );
+                const policy = selectedCourse?.coursePolicy?.description || selectedCourse?.classContinuationPolicy;
+                if (!policy) return null;
+
+                return (
+                  <div className="mt-2 p-3 rounded-xl bg-[#00c878]/10 border border-[#00c878]/30 text-xs space-y-1">
+                    <div className="flex items-center gap-1.5 text-[#00c878] font-bold font-mono text-[11px] uppercase tracking-wider">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#00c878] shrink-0" />
+                      <span>{selectedCourse?.coursePolicy?.title || 'Class Continuation Policy'}</span>
+                    </div>
+                    <p className="text-[11px] text-[#f5f7f6] leading-relaxed">
+                      {policy}
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Qualification Dropdown */}
